@@ -44,10 +44,13 @@
                             <a th:href="@{/community}" class="text-gray-500 hover:text-gray-900">커뮤니티</a>
                         </nav>
                     </div>
-                    <button class="!rounded-button bg-custom text-white px-6 py-2 hover:bg-custom/90">
-                        <a th:href="@{/login}"
-                           class="!rounded-button bg-custom text-white px-6 py-2 hover:bg-custom/90">로그인</a>
+                    <button id="openModalBtn" class="bg-custom text-white px-6 py-2 rounded hover:bg-custom/90">
+                        로그인
                     </button>
+                    <!--                    <button class="!rounded-button bg-custom text-white px-6 py-2 hover:bg-custom/90">-->
+                    <!--                        <a th:href="@{/login}"-->
+                    <!--                           class="!rounded-button bg-custom text-white px-6 py-2 hover:bg-custom/90">로그인</a>-->
+                    <!--                    </button>-->
                 </div>
             </div>
         </header>
@@ -65,14 +68,66 @@
         <footer class="bg-white border-t mt-auto">
             <div class="max-w-8xl mx-auto px-6 py-8">
                 <div class="text-gray-500 text-sm">
-                    <p>주식회사 조기축구 | 대표: 홍길동</p>
-                    <p>사업자등록번호: 123-45-67890 | 서울특별시 강남구 테헤란로 123</p>
-                    <p>전화: 02-1234-5678 | 이메일: support@jokisoccer.com</p>
-                    <p class="mt-4">© 2024 조기축구. All rights reserved.</p>
+                    <p>개인 프로젝트 | Kimsehw 김승환</p>
+                    <p>사업자등록번호: 123-45-67890 | 서울특별시 강남구 테헤란로 가고싶음</p>
+                    <p>전화: 02-1234-5678 | 이메일: xxxx@xxxx.com</p>
+                    <p class="mt-4">© 2025 MyTeam. All rights reserved.</p>
                 </div>
             </div>
         </footer>
     </div>
 </div>
+
+<!-- 로그인 모달 -->
+<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white p-8 rounded-lg w-96">
+        <h2 class="text-2xl font-bold mb-6">로그인</h2>
+
+        <form th:action="@{/login}" method="post" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">아이디</label>
+                <input type="text" id="username" name="username"
+                       class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2"/>
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">비밀번호</label>
+                <input type="password" id="password" name="password"
+                       class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2"/>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <a th:href="@{/signUp}" class="text-custom text-sm hover:underline">회원가입</a>
+                <button type="submit" class="bg-custom text-white px-6 py-2 rounded hover:bg-custom/90">
+                    로그인
+                </button>
+            </div>
+        </form>
+
+        <button id="closeModalBtn" class="mt-4 text-sm text-gray-500 hover:underline">닫기</button>
+    </div>
+</div>
+
+<!-- 모달 열고 닫기 스크립트 -->
+<script>
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const loginModal = document.getElementById('loginModal');
+
+    openModalBtn.addEventListener('click', () => {
+        loginModal.classList.remove('hidden');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        loginModal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+            loginModal.classList.add('hidden');
+        }
+    });
+</script>
+
 </body>
 </html>
