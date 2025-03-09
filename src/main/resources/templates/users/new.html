@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+
+<th:block layout:fragment="css">
+    <style>
+        .fieldError {
+            color: #bd2130
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            var errorMessage = [[${errorMessage}]];
+            if(errorMessage != null) {
+                alert(errorMessage)
+            }
+        });
+    </script>
+</th:block>
+
+<div layout:fragment="content" class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6">회원가입</h2>
+
+    <form th:action="@{/users/new}" method="post" class="space-y-4" th:object="${userFormDto}">
+        <!-- 이메일(아이디) -->
+        <div th:replace="users/fragments/formField::formField(text, '이메일 (아이디)', 'email', '이메일 (아이디)을 입력해주세요.', '(이메일이 아이디를 대체합니다.)')">
+        </div>
+
+        <!-- 이름 -->
+        <div th:replace="users/fragments/formField::formField(text, '이름', 'name', '이름을 입력해주세요.','')"></div>
+
+        <!-- 비밀번호 -->
+        <div th:replace="users/fragments/formField::formField(text, '비밀번호', 'password', '비밀번호를 입력해주세요.','')"></div>
+
+        <!-- 회원가입 버튼 -->
+        <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-custom text-white px-6 py-2 rounded-lg hover:bg-custom/90">
+                회원가입
+            </button>
+        </div>
+    </form>
+</div>
+</html>
