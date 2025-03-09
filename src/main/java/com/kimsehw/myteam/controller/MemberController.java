@@ -1,8 +1,8 @@
 package com.kimsehw.myteam.controller;
 
-import com.kimsehw.myteam.dto.UserFormDto;
-import com.kimsehw.myteam.entity.User;
-import com.kimsehw.myteam.service.UserService;
+import com.kimsehw.myteam.dto.MemberFormDto;
+import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,30 +13,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
-    @GetMapping("/users/new")
-    public String newUserForm(Model model) {
-        model.addAttribute("userFormDto", new UserFormDto());
-        return "users/new";
+    @GetMapping("/members/new")
+    public String newMemberForm(Model model) {
+        model.addAttribute("userFormDto", new MemberFormDto());
+        return "members/new";
     }
 
-    @PostMapping("/users/new")
-    public String newUser(@Valid UserFormDto userFormDto,
+    @PostMapping("/members/new")
+    public String newUser(@Valid MemberFormDto memberFormDto,
                           BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "users/new";
+            return "members/new";
         }
 
         try {
-            User user = User.createMember(userFormDto);
-            Long l = userService.saveUser(user);
+            Member user = Member.createMember(memberFormDto);
+            Long l = memberService.saveUser(user);
         } catch (IllegalStateException e) {
             //에러 메시지 뷰로 전달 -> script 에서 javaScript 통해 스프링으로부터 (모델에 담겨)넘어온 errorMessage 처리
             model.addAttribute("errorMessage", e.getMessage());
-            return "users/new";
+            return "members/new";
         }
 
         return "redirect:/";

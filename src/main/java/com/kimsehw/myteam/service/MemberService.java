@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.service;
 
-import com.kimsehw.myteam.entity.User;
-import com.kimsehw.myteam.repository.UserRepository;
+import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,20 +9,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService {
+public class MemberService {
 
     public static final String DUPLICATE_MEMBER_EXIST = "중복된 회원이 존재합니다.";
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public Long saveUser(User user) {
+    public Long saveUser(Member user) {
         validateDuplicate(user);
-        userRepository.save(user);
+        memberRepository.save(user);
         return user.getId();
     }
 
-    private void validateDuplicate(User user) {
-        User findUser = userRepository.findByEmail(user.getEmail());
+    private void validateDuplicate(Member user) {
+        Member findUser = memberRepository.findByEmail(user.getEmail());
         if (findUser != null) {
             throw new IllegalStateException(DUPLICATE_MEMBER_EXIST);
         }

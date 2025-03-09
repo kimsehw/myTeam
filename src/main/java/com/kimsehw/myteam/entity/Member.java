@@ -1,8 +1,11 @@
 package com.kimsehw.myteam.entity;
 
-import com.kimsehw.myteam.dto.UserFormDto;
+import com.kimsehw.myteam.constant.Role;
+import com.kimsehw.myteam.dto.MemberFormDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,14 +18,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user")
+@Table(name = "members")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "member_id")
     private Long id;
 
     private String name;
@@ -32,16 +35,20 @@ public class User {
 
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy = "member")
     private List<Team> teams = new ArrayList<>();
 
-    private User(UserFormDto userFormDto) {
-        name = userFormDto.getName();
-        email = userFormDto.getEmail();
-        password = userFormDto.getPassword();
+    private Member(MemberFormDto memberFormDto) {
+        name = memberFormDto.getName();
+        email = memberFormDto.getEmail();
+        password = memberFormDto.getPassword();
+        role = Role.MEMBER;
     }
 
-    public static User createMember(UserFormDto userFormDto) {
-        return new User(userFormDto);
+    public static Member createMember(MemberFormDto memberFormDto) {
+        return new Member(memberFormDto);
     }
 }

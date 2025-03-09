@@ -31,16 +31,16 @@
 <div layout:fragment="content" class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md">
     <h2 class="text-3xl font-bold text-gray-900 mb-6">회원가입</h2>
 
-    <form th:action="@{/users/new}" method="post" class="space-y-4" th:object="${userFormDto}">
+    <form th:action="@{/members/new}" method="post" class="space-y-4" th:object="${memberFormDto}">
         <!-- 이메일(아이디) -->
-        <div th:replace="users/fragments/formField::formField(text, '이메일 (아이디)', 'email', '이메일 (아이디)을 입력해주세요.', '(이메일이 아이디를 대체합니다.)')">
+        <div th:replace="members/fragments/formField::formField(text, '이메일 (아이디)', 'email', '이메일 (아이디)을 입력해주세요.', '(이메일이 아이디를 대체합니다.)')">
         </div>
 
         <!-- 이름 -->
-        <div th:replace="users/fragments/formField::formField(text, '이름', 'name', '이름을 입력해주세요.','')"></div>
+        <div th:replace="members/fragments/formField::formField(text, '이름', 'name', '이름을 입력해주세요.','')"></div>
 
         <!-- 비밀번호 -->
-        <div th:replace="users/fragments/formField::formField(text, '비밀번호', 'password', '비밀번호를 입력해주세요.','')"></div>
+        <div th:replace="members/fragments/formField::formField(text, '비밀번호', 'password', '비밀번호를 입력해주세요.','')"></div>
 
         <!-- 회원가입 버튼 -->
         <div class="flex justify-end">
