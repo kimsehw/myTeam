@@ -16,6 +16,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "members")
@@ -41,14 +42,14 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Team> teams = new ArrayList<>();
 
-    private Member(MemberFormDto memberFormDto) {
+    private Member(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
         name = memberFormDto.getName();
         email = memberFormDto.getEmail();
-        password = memberFormDto.getPassword();
+        password = passwordEncoder.encode(memberFormDto.getPassword());
         role = Role.MEMBER;
     }
 
-    public static Member createMember(MemberFormDto memberFormDto) {
-        return new Member(memberFormDto);
+    public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
+        return new Member(memberFormDto, passwordEncoder);
     }
 }

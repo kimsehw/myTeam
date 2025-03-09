@@ -5,6 +5,7 @@ import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,23 +17,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MemberController {
 
     private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/members/new")
     public String newMemberForm(Model model) {
-        model.addAttribute("userFormDto", new MemberFormDto());
+        model.addAttribute("memberFormDto", new MemberFormDto());
         return "members/new";
     }
 
     @PostMapping("/members/new")
-    public String newUser(@Valid MemberFormDto memberFormDto,
-                          BindingResult bindingResult, Model model) {
+    public String newMember(@Valid MemberFormDto memberFormDto,
+                            BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "members/new";
         }
 
         try {
-            Member user = Member.createMember(memberFormDto);
-            Long l = memberService.saveUser(user);
+            Member member = Member.createMember(memberFormDto, passwordEncoder);
+            Long l = memberService.saveMember(member, passwordEncoder);
         } catch (IllegalStateException e) {
             //에러 메시지 뷰로 전달 -> script 에서 javaScript 통해 스프링으로부터 (모델에 담겨)넘어온 errorMessage 처리
             model.addAttribute("errorMessage", e.getMessage());
