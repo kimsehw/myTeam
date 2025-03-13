@@ -52,4 +52,11 @@ public class Member {
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
         return new Member(memberFormDto, passwordEncoder);
     }
+
+    public void addTeam(Team team) {
+        teams.add(team);
+        if (role == Role.MEMBER) {
+            role = Role.LEADER;
+        }
+    }
 }
