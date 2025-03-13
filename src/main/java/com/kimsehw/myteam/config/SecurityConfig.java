@@ -32,7 +32,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auto -> auto
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                         .requestMatchers("/", "/members/**", "/images/**", "/test/**").permitAll()
-                        .requestMatchers("/team/**").hasAnyRole("MEMBER", "LEADER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
@@ -68,7 +67,21 @@ public class SecurityConfig {
                 /*.exceptionHandling(exception -> exception
                                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                         //인증 되지 않은 사용자가 리소스 접근 시 수행 되는 핸들러 등록
-                )*/;
+                );*/
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            if (request.getHeader("X-Requested-With") != null && request.getHeader("X-Requested-With")
+                                    .equals("XMLHttpRequest")) {
+                                // AJAX 요청일 경우 JSON 응답
+                                response.setContentType("application/json; charset=UTF-8");
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 응답
+                                response.getWriter().write("{\"error\": \"로그인이 필요합니다.\"}");
+                            } else {
+                                // 일반 요청은 로그인 페이지로 리다이렉트
+                                response.sendRedirect("/members/login/unauthorized");
+                            }
+                        })
+                );
 
         return http.build();
     }

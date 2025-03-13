@@ -47,7 +47,13 @@ public class MemberController {
     }
 
     @GetMapping("/members/login")
+    public String login() {
+        return "members/login";
+    }
+
+    @GetMapping("/members/login/unauthorized")
     public String login(Model model) {
+        model.addAttribute("errorMessage", "접근 권한이 없습니다. 로그인이 필요합니다.");
         return "members/login";
     }
 
