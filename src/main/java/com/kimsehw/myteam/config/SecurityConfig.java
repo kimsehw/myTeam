@@ -41,15 +41,23 @@ public class SecurityConfig {
                         .loginProcessingUrl("/members/login")
                         .defaultSuccessUrl("/")
                         .usernameParameter("email")
+                        .passwordParameter("password")
+                        // AJAX 요청 시 json 응답, 로그인 페이지 폼 요청 시 로그인 페이지 렌더링
                         .successHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK); // 로그인 성공 시 200 응답
-                            response.encodeRedirectURL("/test");
+                            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) { // AJAX 요청 확인
+                                response.setStatus(HttpServletResponse.SC_OK); // 모달 로그인 성공 시 200 응답
+                            } else {
+                                response.sendRedirect("/");
+                            }
                         })
                         .failureHandler((request, response, exception) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 로그인 실패 시 401 응답
-                            response.encodeRedirectURL("/error");
-                            response.setContentType("application/json; charset=UTF-8");
-                            response.getWriter().write("{\"error\": \"로그인 실패: 아이디 또는 비밀번호가 틀렸습니다.\"}");
+                            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) { // AJAX 실패 처리
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.setContentType("application/json; charset=UTF-8");
+                                response.getWriter().write("{\"error\": \"로그인 실패: 아이디 또는 비밀번호가 틀렸습니다.\"}");
+                            } else { // 폼 로그인 실패 시 리다이렉트
+                                response.sendRedirect("/members/login/error");
+                            }
                         })
                 )
                 .logout(logout -> logout
@@ -59,7 +67,21 @@ public class SecurityConfig {
                 /*.exceptionHandling(exception -> exception
                                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                         //인증 되지 않은 사용자가 리소스 접근 시 수행 되는 핸들러 등록
-                )*/;
+                );*/
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            if (request.getHeader("X-Requested-With") != null && request.getHeader("X-Requested-With")
+                                    .equals("XMLHttpRequest")) {
+                                // AJAX 요청일 경우 JSON 응답
+                                response.setContentType("application/json; charset=UTF-8");
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 응답
+                                response.getWriter().write("{\"error\": \"로그인이 필요합니다.\"}");
+                            } else {
+                                // 일반 요청은 로그인 페이지로 리다이렉트
+                                response.sendRedirect("/members/login/unauthorized");
+                            }
+                        })
+                );
 
         return http.build();
     }

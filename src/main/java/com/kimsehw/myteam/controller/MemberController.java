@@ -5,6 +5,7 @@ import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
+@Log
 public class MemberController {
 
     private final MemberService memberService;
@@ -42,5 +44,22 @@ public class MemberController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/members/login")
+    public String login() {
+        return "members/login";
+    }
+
+    @GetMapping("/members/login/unauthorized")
+    public String login(Model model) {
+        model.addAttribute("errorMessage", "접근 권한이 없습니다. 로그인이 필요합니다.");
+        return "members/login";
+    }
+
+    @GetMapping("/members/login/error")
+    public String loginError(Model model) {
+        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
+        return "members/login";
     }
 }

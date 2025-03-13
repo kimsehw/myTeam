@@ -13,7 +13,7 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
             'Content-Type': 'application/x-www-form-urlencoded',
             [csrfHeader]: csrfToken
         },
-        body: new URLSearchParams({ email })
+        body: new URLSearchParams({ email, password })
     })
     .then(response => {
         if (response.ok) {
