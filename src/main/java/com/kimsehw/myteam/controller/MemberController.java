@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.controller;
 
-import com.kimsehw.myteam.dto.MemberFormDto;
+import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
 import jakarta.validation.Valid;
@@ -36,7 +36,7 @@ public class MemberController {
 
         try {
             Member member = Member.createMember(memberFormDto, passwordEncoder);
-            Long l = memberService.saveMember(member, passwordEncoder);
+            Long l = memberService.saveMember(member);
         } catch (IllegalStateException e) {
             //에러 메시지 뷰로 전달 -> script 에서 javaScript 통해 스프링으로부터 (모델에 담겨)넘어온 errorMessage 처리
             model.addAttribute("errorMessage", e.getMessage());

@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.dto;
+package com.kimsehw.myteam.dto.member;
 
 import lombok.Data;
 

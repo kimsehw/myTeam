@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.entity;
 
 import com.kimsehw.myteam.constant.Role;
-import com.kimsehw.myteam.dto.MemberFormDto;
+import com.kimsehw.myteam.dto.member.MemberFormDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

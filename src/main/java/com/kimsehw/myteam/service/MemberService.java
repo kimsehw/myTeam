@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +17,9 @@ public class MemberService implements UserDetailsService {
 
     public static final String DUPLICATE_MEMBER_EXIST = "중복된 회원이 존재합니다.";
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long saveMember(Member member, PasswordEncoder passwordEncoder) {
+    public Long saveMember(Member member) {
         validateDuplicate(member);
         memberRepository.save(member);
         return member.getId();
@@ -47,5 +45,9 @@ public class MemberService implements UserDetailsService {
                 .password(findMember.getPassword())
                 .roles(findMember.getRole().toString())
                 .build();
+    }
+
+    public Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email);
     }
 }

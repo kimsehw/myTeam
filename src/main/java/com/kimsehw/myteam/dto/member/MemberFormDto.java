@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.dto;
+package com.kimsehw.myteam.dto.member;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
