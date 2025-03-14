@@ -23,12 +23,12 @@ public class TeamController {
 
     @GetMapping("/team/new")
     public String teamForm(Model model) {
-        addRegionAndAgeRangeSelction(model);
+        addRegionAndAgeRangeSelection(model);
         model.addAttribute("teamFormDto", new TeamFormDto());
         return "team/teamForm";
     }
 
-    private void addRegionAndAgeRangeSelction(Model model) {
+    private void addRegionAndAgeRangeSelection(Model model) {
         model.addAttribute("regions", Region.values());
         model.addAttribute("ageRanges", AgeRange.values());
     }
@@ -37,18 +37,28 @@ public class TeamController {
     public String newTeam(@Valid TeamFormDto teamFormDto, BindingResult bindingResult,
                           Model model, Principal principal) {
         if (bindingResult.hasErrors()) {
-            addRegionAndAgeRangeSelction(model);
+            addRegionAndAgeRangeSelection(model);
             return "team/teamForm";
         }
 
         try {
             String email = principal.getName();
             teamFacade.createTeam(email, teamFormDto);
+        } catch (IllegalStateException e) {
+            addAttributeWhenDuplicatedName(model, e);
+            return "team/teamForm";
         } catch (RuntimeException e) {
+            addRegionAndAgeRangeSelection(model);
             model.addAttribute("errorMessage", "팀 생성 중 에러 발생");
             return "team/teamForm";
         }
 
         return "redirect:/";
+    }
+
+    private void addAttributeWhenDuplicatedName(Model model, IllegalStateException e) {
+        addRegionAndAgeRangeSelection(model);
+        model.addAttribute("errorMessage", e.getMessage());
+        model.addAttribute("resetName", true);
     }
 }

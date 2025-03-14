@@ -17,6 +17,10 @@ public class TeamService {
 
     @Transactional
     public Long saveTeam(Member member, TeamFormDto teamFormDto) {
+        if (teamRepository.findByMemberIdAndTeamName(member.getId(), teamFormDto.getTeamName()) != null) {
+            throw new IllegalStateException("같은 이름의 팀이 존재합니다. 같은 이름의 팀은 한 개 이상 만들 수 없습니다.");
+        }
+
         Team team = Team.createTeam(teamFormDto, member);
         teamRepository.save(team);
         return team.getId();

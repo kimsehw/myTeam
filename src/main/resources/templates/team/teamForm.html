@@ -26,6 +26,13 @@
             }
         });
     </script>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            if ([[${resetName}]]) {
+                document.querySelector('input[name="teamName"]').value = ''; // 뷰 레벨에서 초기화
+            }
+        });
+    </script>
 </th:block>
 
 <div layout:fragment="content" class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md">
