@@ -15,6 +15,7 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
 
+    @Transactional
     public Long saveTeam(Member member, TeamFormDto teamFormDto) {
         Team team = Team.createTeam(teamFormDto, member);
         teamRepository.save(team);
