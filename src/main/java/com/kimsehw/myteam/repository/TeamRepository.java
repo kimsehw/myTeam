@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
     @Query("select t from Team t"
-            + " where t.member.id = :memberId"
+            + " where t.member.email = :email"
             + " and t.teamName = :teamName")
-    Team findByMemberIdAndTeamName(Long memberId, String teamName);
+    Team findByMemberIdAndTeamName(String email, String teamName);
 
 }

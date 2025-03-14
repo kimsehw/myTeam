@@ -3,7 +3,7 @@ package com.kimsehw.myteam.controller;
 import com.kimsehw.myteam.application.TeamFacade;
 import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;
-import com.kimsehw.myteam.dto.TeamFormDto;
+import com.kimsehw.myteam.dto.team.TeamFormDto;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;

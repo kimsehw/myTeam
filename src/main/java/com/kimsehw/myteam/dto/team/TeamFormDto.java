@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.dto;
+package com.kimsehw.myteam.dto.team;
 
 import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;

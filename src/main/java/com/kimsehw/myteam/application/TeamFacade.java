@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.application;
 
-import com.kimsehw.myteam.dto.TeamFormDto;
+import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamService;

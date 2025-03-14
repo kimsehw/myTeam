@@ -2,7 +2,7 @@ package com.kimsehw.myteam.entity;
 
 import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;
-import com.kimsehw.myteam.dto.TeamFormDto;
+import com.kimsehw.myteam.dto.team.TeamFormDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,7 +38,7 @@ public class Team {
     private AgeRange ageRange;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "email")
     private Member member;
 
     private Team(TeamFormDto teamFormDto, Member member) {

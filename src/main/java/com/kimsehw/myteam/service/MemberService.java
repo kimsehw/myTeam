@@ -3,6 +3,7 @@ package com.kimsehw.myteam.service;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Log
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService implements UserDetailsService {
@@ -19,26 +21,21 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long saveMember(Member member) {
+    public String saveMember(Member member) {
         validateDuplicate(member);
         memberRepository.save(member);
-        return member.getId();
+        return member.getEmail();
     }
 
     private void validateDuplicate(Member member) {
-        Member findMember = memberRepository.findByEmail(member.getEmail());
-        if (findMember != null) {
+        if (memberRepository.findById(member.getEmail()).isPresent()) {
             throw new IllegalStateException(DUPLICATE_MEMBER_EXIST);
         }
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member findMember = memberRepository.findByEmail(email);
-
-        if (findMember == null) {
-            throw new UsernameNotFoundException(email);
-        }
+        Member findMember = memberRepository.findById(email).orElseThrow(() -> new UsernameNotFoundException(email));
 
         return User.builder()
                 .username(findMember.getEmail())
@@ -48,6 +45,6 @@ public class MemberService implements UserDetailsService {
     }
 
     public Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
+        return memberRepository.findById(email).orElseThrow();
     }
 }
