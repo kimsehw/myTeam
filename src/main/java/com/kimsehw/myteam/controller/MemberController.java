@@ -36,7 +36,7 @@ public class MemberController {
 
         try {
             Member member = Member.createMember(memberFormDto, passwordEncoder);
-            String email = memberService.saveMember(member);
+            Long id = memberService.saveMember(member);
         } catch (IllegalStateException e) {
             //에러 메시지 뷰로 전달 -> script 에서 javaScript 통해 스프링으로부터 (모델에 담겨)넘어온 errorMessage 처리
             model.addAttribute("errorMessage", e.getMessage());

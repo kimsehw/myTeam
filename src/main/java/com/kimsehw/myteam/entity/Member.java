@@ -8,6 +8,8 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -27,6 +29,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class Member {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_NAME")
+    private Long id;
+
     @Column(nullable = false, unique = true)
     private String email;
 

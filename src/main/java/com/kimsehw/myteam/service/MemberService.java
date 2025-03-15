@@ -21,21 +21,21 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public String saveMember(Member member) {
+    public Long saveMember(Member member) {
         validateDuplicate(member);
         memberRepository.save(member);
-        return member.getEmail();
+        return member.getId();
     }
 
     private void validateDuplicate(Member member) {
-        if (memberRepository.findById(member.getEmail()).isPresent()) {
+        if (memberRepository.findByEmail(member.getEmail()).isPresent()) {
             throw new IllegalStateException(DUPLICATE_MEMBER_EXIST);
         }
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member findMember = memberRepository.findById(email).orElseThrow(() -> new UsernameNotFoundException(email));
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
 
         return User.builder()
                 .username(findMember.getEmail())
@@ -45,6 +45,6 @@ public class MemberService implements UserDetailsService {
     }
 
     public Member findMemberByEmail(String email) {
-        return memberRepository.findById(email).orElseThrow();
+        return memberRepository.findByEmail(email).orElseThrow();
     }
 }
