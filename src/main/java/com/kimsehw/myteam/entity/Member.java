@@ -2,7 +2,9 @@ package com.kimsehw.myteam.entity;
 
 import com.kimsehw.myteam.constant.Role;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
+import com.kimsehw.myteam.embedded.record.PersonalRecord;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -36,6 +38,9 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Embedded
+    private PersonalRecord memberRecord;
 
     @OneToMany(mappedBy = "member")
     private List<Team> teams = new ArrayList<>();

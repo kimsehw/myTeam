@@ -3,7 +3,9 @@ package com.kimsehw.myteam.entity;
 import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
+import com.kimsehw.myteam.embedded.record.TeamRecord;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,16 +31,22 @@ public class Team {
     @Column(name = "team_id")
     private Long id;
 
+    @Column(nullable = false)
     private String teamName;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Region region;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AgeRange ageRange;
 
+    @Embedded
+    private TeamRecord teamRecord;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     private Team(TeamFormDto teamFormDto, Member member) {
