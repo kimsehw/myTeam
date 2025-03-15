@@ -4,6 +4,7 @@ import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.embedded.record.TeamRecord;
+import com.kimsehw.myteam.entity.baseentity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "team")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Team {
+public class Team extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

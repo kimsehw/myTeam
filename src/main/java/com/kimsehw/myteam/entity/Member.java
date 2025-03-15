@@ -3,6 +3,7 @@ package com.kimsehw.myteam.entity;
 import com.kimsehw.myteam.constant.Role;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.embedded.record.PersonalRecord;
+import com.kimsehw.myteam.entity.baseentity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -26,11 +27,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_NAME")
+    @Column(name = "member_id")
     private Long id;
 
     @Column(nullable = false, unique = true)

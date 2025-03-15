@@ -2,6 +2,7 @@ package com.kimsehw.myteam.entity;
 
 import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.embedded.record.PersonalRecord;
+import com.kimsehw.myteam.entity.baseentity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -16,11 +17,11 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class TeamMember {
+public class TeamMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_NAME")
+    @Column(name = "teamMember_id")
     private Long id;
 
     private String detail;
