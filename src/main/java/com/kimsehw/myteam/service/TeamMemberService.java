@@ -31,6 +31,7 @@ public class TeamMemberService {
      * @param teamRole 팀내 직책
      * @return teamMemberId
      */
+    @Transactional
     public Long addTeamMemberIn(Team team, Member member, TeamRole teamRole) {
         TeamMember teamMember = TeamMember.createTeamMember(team, member, teamRole);
         return teamMember.getId();

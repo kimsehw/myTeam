@@ -9,8 +9,9 @@ import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,12 +33,11 @@ public class TeamFacade {
         return team.getId();
     }
 
-    public List<TeamsDto> getMyTeams(String email) {
+    public Page<TeamsDto> getMyTeams(String email, Pageable pageable) {
         Member member = memberService.findMemberByEmail(email);
         if (member == null) {
             throw new EntityNotFoundException();
         }
-
-        return null;
+        return teamMemberService.getTeamsDtoPage(member.getId(), pageable);
     }
 }

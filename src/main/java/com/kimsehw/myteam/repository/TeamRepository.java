@@ -11,4 +11,5 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             + " and t.teamName = :teamName")
     Team findByMemberIdAndTeamName(Long memberId, String teamName);
 
+    Team findByMemberId(Long memberId);
 }

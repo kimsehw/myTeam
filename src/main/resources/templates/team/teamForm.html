@@ -38,7 +38,7 @@
 <div layout:fragment="content" class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md">
     <h2 class="text-3xl font-bold text-gray-900 mb-6">팀 생성</h2>
 
-    <form th:action="@{/team/new}" method="post" class="space-y-4" th:object="${teamFormDto}">
+    <form th:action="@{/teams/new}" method="post" class="space-y-4" th:object="${teamFormDto}">
         <!-- 이름 -->
         <div th:replace="team/fragments/formField::formField(text, '이름', 'teamName', '이름을 입력해주세요.','')"></div>
 

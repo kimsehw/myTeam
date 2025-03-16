@@ -1,5 +1,12 @@
 package com.kimsehw.myteam.constant;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum TeamRole {
-    MEMBER, LEADER, SUB_LEADER, SECRETARY
+    MEMBER("선 수"), LEADER("회 장"), SUB_LEADER("부회장"), SECRETARY("총 무");
+
+    private String roleName;
 }

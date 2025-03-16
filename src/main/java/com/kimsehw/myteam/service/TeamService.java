@@ -26,4 +26,9 @@ public class TeamService {
         teamRepository.save(team);
         return team;
     }
+
+    public Team findTeamByMemberId(Long memberId) {
+        return teamRepository.findByMemberId(memberId);
+    }
+
 }
