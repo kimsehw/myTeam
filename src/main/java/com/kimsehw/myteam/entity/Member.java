@@ -4,6 +4,7 @@ import com.kimsehw.myteam.constant.Role;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.embedded.record.PersonalRecord;
 import com.kimsehw.myteam.entity.baseentity.BaseTimeEntity;
+import com.kimsehw.myteam.entity.team.Team;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

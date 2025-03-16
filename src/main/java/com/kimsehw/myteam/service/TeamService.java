@@ -2,7 +2,7 @@ package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.entity.Member;
-import com.kimsehw.myteam.entity.Team;
+import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

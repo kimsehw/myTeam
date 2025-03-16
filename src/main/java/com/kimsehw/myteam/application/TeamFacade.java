@@ -4,7 +4,7 @@ import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.dto.TeamsDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.entity.Member;
-import com.kimsehw.myteam.entity.Team;
+import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;

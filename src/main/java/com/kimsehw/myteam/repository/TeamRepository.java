@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.repository;
 
-import com.kimsehw.myteam.entity.Team;
+import com.kimsehw.myteam.entity.team.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

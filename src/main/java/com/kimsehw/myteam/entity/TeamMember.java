@@ -3,6 +3,7 @@ package com.kimsehw.myteam.entity;
 import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.embedded.record.PersonalRecord;
 import com.kimsehw.myteam.entity.baseentity.BaseEntity;
+import com.kimsehw.myteam.entity.team.Team;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
