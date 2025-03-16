@@ -1,9 +1,9 @@
 package com.kimsehw.myteam.repository.teammember;
 
 import com.kimsehw.myteam.dto.QTeamsDto;
-import com.kimsehw.myteam.dto.TeamsDto;
-import com.kimsehw.myteam.entity.QTeam;
+import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.entity.QTeamMember;
+import com.kimsehw.myteam.entity.team.QTeam;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;

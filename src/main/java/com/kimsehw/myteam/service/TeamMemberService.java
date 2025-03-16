@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.constant.TeamRole;
-import com.kimsehw.myteam.dto.TeamsDto;
+import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.entity.team.Team;
