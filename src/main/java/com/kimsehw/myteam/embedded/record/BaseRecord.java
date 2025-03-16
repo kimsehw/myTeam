@@ -1,9 +1,9 @@
 package com.kimsehw.myteam.embedded.record;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 
-@Embeddable
+@MappedSuperclass
 @Getter
 public class BaseRecord {
 

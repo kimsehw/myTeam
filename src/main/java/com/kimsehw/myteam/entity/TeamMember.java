@@ -14,12 +14,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Setter
+@Table(name = "team_member")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamMember extends BaseEntity {
 
     @Id
@@ -43,4 +46,15 @@ public class TeamMember extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    private TeamMember(Team team, Member member, TeamRole teamRole) {
+        this.team = team;
+        this.member = member;
+        this.teamRole = teamRole;
+        teamMemberRecord = new PersonalRecord(member.getMemberRecord().getPosition());
+        team.addTeamMember(this);
+    }
+
+    public static TeamMember createTeamMember(Team team, Member member, TeamRole teamRole) {
+        return new TeamMember(team, member, teamRole);
+    }
 }

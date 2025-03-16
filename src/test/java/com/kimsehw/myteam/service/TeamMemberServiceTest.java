@@ -76,10 +76,14 @@ class TeamMemberServiceTest {
         Long teamB = createTeam(member.getEmail(), "teamB");
         Long teamC = createTeam(member2.getEmail(), "teamB");
         Long teamD = createTeam(member2.getEmail(), "teamD");
-        TeamMember teamMemberA = createTeamMember(member, teamA);
-        TeamMember teamMemberB = createTeamMember(member, teamB);
-        TeamMember teamMemberC = createTeamMember(member2, teamC);
-        TeamMember teamMemberD = createTeamMember(member2, teamD);
+        TeamMember teamMemberA = TeamMember.createTeamMember(teamRepository.findById(teamA).orElseThrow(), member,
+                TeamRole.LEADER);
+        TeamMember teamMemberB = TeamMember.createTeamMember(teamRepository.findById(teamB).orElseThrow(), member,
+                TeamRole.LEADER);
+        TeamMember teamMemberC = TeamMember.createTeamMember(teamRepository.findById(teamC).orElseThrow(), member2,
+                TeamRole.LEADER);
+        TeamMember teamMemberD = TeamMember.createTeamMember(teamRepository.findById(teamD).orElseThrow(), member2,
+                TeamRole.LEADER);
         teamMemberRepository.save(teamMemberA);
         teamMemberRepository.save(teamMemberB);
         teamMemberRepository.save(teamMemberC);
@@ -89,14 +93,6 @@ class TeamMemberServiceTest {
         for (TeamsDto teamsDto : teamsDtoPage) {
             System.out.println("teamsDto = " + teamsDto);
         }
-    }
-
-    private TeamMember createTeamMember(Member member, Long teamA) {
-        TeamMember teamMember = new TeamMember();
-        teamMember.setMember(member);
-        teamMember.setTeamRole(TeamRole.LEADER);
-        teamMember.setTeam(teamRepository.findById(teamA).orElseThrow());
-        return teamMember;
     }
 
 }

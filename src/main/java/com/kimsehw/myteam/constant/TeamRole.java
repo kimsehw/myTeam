@@ -1,5 +1,5 @@
 package com.kimsehw.myteam.constant;
 
 public enum TeamRole {
-    MEMBER, LEADER
+    MEMBER, LEADER, SUB_LEADER, SECRETARY
 }

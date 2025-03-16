@@ -17,13 +17,13 @@ public class TeamService {
     private final TeamRepository teamRepository;
 
     @Transactional
-    public Long saveTeam(Member member, TeamFormDto teamFormDto) {
-        if (teamRepository.findByMemberIdAndTeamName(member.getEmail(), teamFormDto.getTeamName()) != null) {
+    public Team saveTeam(Member member, TeamFormDto teamFormDto) {
+        if (teamRepository.findByMemberIdAndTeamName(member.getId(), teamFormDto.getTeamName()) != null) {
             throw new IllegalStateException(DUPLICATE_TEAM_NAME_EXCEPTION);
         }
 
         Team team = Team.createTeam(teamFormDto, member);
         teamRepository.save(team);
-        return team.getId();
+        return team;
     }
 }

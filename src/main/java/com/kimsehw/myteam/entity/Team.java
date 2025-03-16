@@ -5,6 +5,7 @@ import com.kimsehw.myteam.constant.Region;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.embedded.record.TeamRecord;
 import com.kimsehw.myteam.entity.baseentity.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -16,7 +17,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +50,9 @@ public class Team extends BaseEntity {
     @Embedded
     private TeamRecord teamRecord;
 
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TeamMember> teamMembers = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -60,5 +67,9 @@ public class Team extends BaseEntity {
 
     public static Team createTeam(TeamFormDto teamFormDto, Member member) {
         return new Team(teamFormDto, member);
+    }
+
+    public void addTeamMember(TeamMember teamMember) {
+        teamMembers.add(teamMember);
     }
 }

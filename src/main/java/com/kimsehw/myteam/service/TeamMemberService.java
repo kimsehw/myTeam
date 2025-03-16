@@ -1,6 +1,10 @@
 package com.kimsehw.myteam.service;
 
+import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.dto.TeamsDto;
+import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.entity.Team;
+import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,5 +21,18 @@ public class TeamMemberService {
 
     public Page<TeamsDto> getTeamsDtoPage(Long memberId, Pageable pageable) {
         return teamMemberRepository.getTeamsDtoPage(memberId, pageable);
+    }
+
+    /**
+     * 회원이 팀 멤버로 소속 됨
+     *
+     * @param team     소속 팀
+     * @param member   팀원이 될 회원
+     * @param teamRole 팀내 직책
+     * @return teamMemberId
+     */
+    public Long addTeamMemberIn(Team team, Member member, TeamRole teamRole) {
+        TeamMember teamMember = TeamMember.createTeamMember(team, member, teamRole);
+        return teamMember.getId();
     }
 }
