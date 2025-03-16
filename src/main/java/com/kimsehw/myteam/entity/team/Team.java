@@ -1,9 +1,11 @@
-package com.kimsehw.myteam.entity;
+package com.kimsehw.myteam.entity.team;
 
 import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.embedded.record.TeamRecord;
+import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.entity.baseentity.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,6 +48,8 @@ public class Team extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AgeRange ageRange;
+
+    private String detail;
 
     @Embedded
     private TeamRecord teamRecord;
