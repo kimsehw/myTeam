@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.dto.team.TeamFormDto;
+import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.entity.team.TeamLogo;
@@ -39,8 +40,8 @@ public class TeamService {
         Team team = Team.createTeam(teamFormDto, member);
         teamRepository.save(team);
 
-        if (!teamLogoFile.isEmpty()) {
-            TeamLogo teamLogo = TeamLogo.of(team);
+        TeamLogo teamLogo = TeamLogo.of(team);
+        if (teamLogoFile != null & !teamLogoFile.isEmpty()) {
             saveTeamLogo(teamLogo, teamLogoFile);
         }
         return team;
@@ -69,5 +70,10 @@ public class TeamService {
 
         teamLogo.updateItemImg(originImgName, imgUrl, imgName);
         teamLogoRepository.save(teamLogo);
+    }
+
+    public TeamInfoDto getTeamInfoDtoOf(Long teamId) {
+        Team team = teamRepository.findWithTeamMembersAndTeamLogoById(teamId);
+        return TeamInfoDto.of(team);
     }
 }

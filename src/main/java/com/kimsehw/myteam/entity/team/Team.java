@@ -74,6 +74,7 @@ public class Team extends BaseEntity {
         teamDetail = teamFormDto.getTeamDetail();
         this.member = member;
         member.addTeam(this);
+        teamRecord = new TeamRecord();
     }
 
     public static Team createTeam(TeamFormDto teamFormDto, Member member) {

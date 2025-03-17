@@ -4,6 +4,7 @@ import com.kimsehw.myteam.application.TeamFacade;
 import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
+import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,5 +83,12 @@ public class TeamController {
         model.addAttribute("maxPage", MAX_TEAM_SHOW);
         model.addAttribute("page", pageable.getPageNumber());
         return "team/teamList";
+    }
+
+    @GetMapping("/teams/{teamId}")
+    public String test(Model model, Principal principal, @PathVariable("teamId") Long teamId) {
+        TeamInfoDto teamInfoDto = teamFacade.getTeamInfoOf(teamId);
+        model.addAttribute("teamInfoDto", teamInfoDto);
+        return "team/teamDetail";
     }
 }

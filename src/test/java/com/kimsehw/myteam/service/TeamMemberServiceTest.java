@@ -54,7 +54,7 @@ class TeamMemberServiceTest {
         teamFormDto.setTeamName(teamName);
         teamFormDto.setRegion(Region.GYEONGGIDO);
         teamFormDto.setAgeRange(AgeRange.TWENTY);
-        return teamFacade.createTeam(email, teamFormDto);
+        return teamFacade.createTeam(email, teamFormDto, null);
     }
 
     @Test

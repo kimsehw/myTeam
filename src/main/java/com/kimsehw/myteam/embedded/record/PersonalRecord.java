@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Getter
 @NoArgsConstructor
-public class PersonalRecord extends BaseRecord implements RecordCalculator {
+public class PersonalRecord extends BaseRecord {
 
     private String winRate;
 
@@ -18,6 +18,7 @@ public class PersonalRecord extends BaseRecord implements RecordCalculator {
     private Position position;
 
     public PersonalRecord(Position position) {
+        this.winRate = this.calcWinRate(getWins(), getLoses(), getDraws());
         this.position = position;
     }
 }
