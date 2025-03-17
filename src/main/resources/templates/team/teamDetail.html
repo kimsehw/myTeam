@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팀 정보</title>
+</head>
+
+<th:block layout:fragment="script">
+    <script src="/js/calendar.js"></script>
+</th:block>
+
+<div layout:fragment="content" class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8" th:field="teamInfoDto">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-6">
+            <img th:src="${teamInfoDto.logoUrl}" alt="팀 로고" class="w-32 h-32 rounded-lg shadow-sm"/>
+            <div>
+                <h2 class="text-2xl font-bold mb-2" th:text="${teamInfoDto.teamName}"></h2>
+                <div class="text-gray-600">
+                    <span class="mr-4" th:text="'팀원 ' + ${teamInfoDto.memberNum} + '명'"></span>
+                    <span class="mr-4"
+                          th:text="${teamInfoDto.wins} + '승 ' + ${teamInfoDto.draws}+'무 ' + ${teamInfoDto.loses} + '패'"></span>
+                    <span th:text="'승률 ' + ${teamInfoDto.winRate} + '%'"></span>
+                </div>
+                <div class="text-gray-600">
+                    <span class="mr-4" th:text="'지역 : ' + ${teamInfoDto.region.getRegionName}"></span>
+                    <span class="mr-4" th:text="'나이대 : ' + ${teamInfoDto.ageRange.getRange}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-lg font-semibold mb-4">팀 소개</h3>
+    <p th:if="${teamInfoDto.teamDetail.isEmpty()}" class="text-gray-600 leading-relaxed" th:text="'(공 백)'"></p>
+    <p th:unless="${teamInfoDto.teamDetail.isEmpty()}" class="text-gray-600 leading-relaxed"
+       th:text="${teamInfoDto.teamDetail}"></p>
+
+    <div class="prose max-w-none mb-8 pt-8">
+        <h3 class="text-lg font-semibold mb-4">팀 일정</h3>
+        <div class="bg-white rounded-lg overflow-hidden max-w-xl mx-auto">
+            <div class="flex items-center justify-between p-4 bg-gray-50">
+                <button id="prevMonth" class="text-gray-600 hover:text-custom">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h4 id="calendarMonth" class="font-semibold">2024년 3월</h4>
+                <button id="nextMonth" class="text-gray-600 hover:text-custom">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-7 gap-px bg-gray-200">
+                <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">일</div>
+                <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">월</div>
+                <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">화</div>
+                <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">수</div>
+                <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">목</div>
+                <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">금</div>
+                <div class="bg-gray-50 p-2 text-center text-sm font-medium text-gray-500">토</div>
+            </div>
+
+            <div id="calendarDays" class="grid grid-cols-7 gap-px bg-gray-200">
+                <!-- JavaScript가 날짜 추가 -->
+            </div>
+        </div>
+    </div>
+    <div class="flex space-x-4">
+        <button class="px-6 py-2 bg-custom text-white rounded-lg hover:bg-custom/90">팀 정보 수정</button>
+        <button class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">팀 삭제</button>
+    </div>
+    <div class="fixed inset-0 bg-black opacity-0 pointer-events-none transition-opacity duration-300 hidden group-hover:block group-hover:opacity-30 z-40"
+         id="overlay"></div>
+</div>
+
+
