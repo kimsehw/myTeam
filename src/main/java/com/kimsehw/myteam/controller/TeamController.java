@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Log
 @Controller
@@ -41,7 +42,7 @@ public class TeamController {
 
     @PostMapping("/teams/new")
     public String newTeam(@Valid TeamFormDto teamFormDto, BindingResult bindingResult,
-                          Model model, Principal principal) {
+                          Model model, Principal principal, @RequestParam("teamLogoFile") MultipartFile teamLogoFile) {
         if (bindingResult.hasErrors()) {
             addRegionAndAgeRangeSelection(model);
             return "team/teamForm";
@@ -49,12 +50,13 @@ public class TeamController {
 
         try {
             String email = principal.getName();
-            teamFacade.createTeam(email, teamFormDto);
+            teamFacade.createTeam(email, teamFormDto, teamLogoFile);
         } catch (IllegalStateException e) {
             addAttributeWhenDuplicatedName(model, e);
             return "team/teamForm";
         } catch (RuntimeException e) {
             addRegionAndAgeRangeSelection(model);
+            log.info(e.getMessage());
             model.addAttribute("errorMessage", "팀 생성 중 에러 발생");
             return "team/teamForm";
         }

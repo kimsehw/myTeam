@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +23,13 @@ public class TeamFacade {
     private final MemberService memberService;
     private final TeamMemberService teamMemberService;
 
-    public Long createTeam(String email, TeamFormDto teamFormDto) {
+    public Long createTeam(String email, TeamFormDto teamFormDto, MultipartFile teamLogoFile) {
         Member member = memberService.findMemberByEmail(email);
         if (member == null) {
             throw new EntityNotFoundException();
         }
 
-        Team team = teamService.saveTeam(member, teamFormDto);
+        Team team = teamService.saveTeam(member, teamFormDto, teamLogoFile);
         teamMemberService.addTeamMemberIn(team, member, TeamRole.LEADER);
         return team.getId();
     }

@@ -37,6 +37,7 @@ public class TeamLogo extends BaseEntity {
 
     private TeamLogo(Team team) {
         this.team = team;
+        team.setTeamLogo(this);
     }
 
     public static TeamLogo of(Team team) {

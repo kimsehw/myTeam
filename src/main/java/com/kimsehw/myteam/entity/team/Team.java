@@ -20,12 +20,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -49,7 +51,7 @@ public class Team extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AgeRange ageRange;
 
-    private String detail;
+    private String teamDetail;
 
     @Embedded
     private TeamRecord teamRecord;
@@ -61,10 +63,15 @@ public class Team extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private TeamLogo teamLogo;
+
     private Team(TeamFormDto teamFormDto, Member member) {
         teamName = teamFormDto.getTeamName();
         region = teamFormDto.getRegion();
         ageRange = teamFormDto.getAgeRange();
+        teamDetail = teamFormDto.getTeamDetail();
         this.member = member;
         member.addTeam(this);
     }
@@ -76,4 +83,5 @@ public class Team extends BaseEntity {
     public void addTeamMember(TeamMember teamMember) {
         teamMembers.add(teamMember);
     }
+
 }

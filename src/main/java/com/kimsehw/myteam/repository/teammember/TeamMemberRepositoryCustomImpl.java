@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.repository.teammember;
 
-import com.kimsehw.myteam.dto.QTeamsDto;
+import com.kimsehw.myteam.dto.team.QTeamsDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.entity.QTeamMember;
 import com.kimsehw.myteam.entity.team.QTeam;

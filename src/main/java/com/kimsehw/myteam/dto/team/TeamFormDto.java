@@ -17,4 +17,6 @@ public class TeamFormDto {
 
     @NotNull(message = "나이대를 최소 하나 설정해주세요.")
     private AgeRange ageRange;
+
+    private String teamDetail;
 }
