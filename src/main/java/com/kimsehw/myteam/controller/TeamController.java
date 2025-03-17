@@ -89,6 +89,7 @@ public class TeamController {
     public String test(Model model, Principal principal, @PathVariable("teamId") Long teamId) {
         TeamInfoDto teamInfoDto = teamFacade.getTeamInfoOf(teamId);
         model.addAttribute("teamInfoDto", teamInfoDto);
+        addRegionAndAgeRangeSelection(model);
         return "team/teamDetail";
     }
 }
