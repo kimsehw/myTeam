@@ -67,10 +67,10 @@ public class TeamController {
         return "redirect:/";
     }
 
-    private void addAttributeWhenDuplicatedName(Model model, IllegalStateException e, String trueAtrributeType) {
+    private void addAttributeWhenDuplicatedName(Model model, IllegalStateException e, String trueAttributeType) {
         addRegionAndAgeRangeSelection(model);
         model.addAttribute("errorMessage", e.getMessage());
-        model.addAttribute(trueAtrributeType, true);
+        model.addAttribute(trueAttributeType, true);
     }
 
     @GetMapping(value = {"/teams"})

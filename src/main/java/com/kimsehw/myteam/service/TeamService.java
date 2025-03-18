@@ -100,4 +100,18 @@ public class TeamService {
         return teamRepository.findByMemberIdAndTeamName(member.getId(), updateTeamInfoDto.getTeamName()) != null &&
                 !updateTeamInfoDto.getTeamName().equals(team.getTeamName());
     }
+
+    @Transactional
+    public void deleteTeam(Long teamId, String logoUrl) {
+        teamRepository.deleteById(teamId);
+        if (logoUrl != null && !logoUrl.isEmpty()) {
+            String logoImgName = getLogoImgName(logoUrl);
+            fileService.deleteFiles(logoImgLocation + "/" + logoImgName);
+        }
+    }
+
+    private static String getLogoImgName(String logoUrl) {
+        String[] split = logoUrl.split("/");
+        return split[split.length - 1];
+    }
 }

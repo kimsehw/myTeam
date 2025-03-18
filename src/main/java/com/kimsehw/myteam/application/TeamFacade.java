@@ -62,4 +62,8 @@ public class TeamFacade {
 
         teamService.updateTeam(member, updateTeamInfoDto, updateTeamLogoFile);
     }
+
+    public void deleteTeam(Long teamId, String logoUrl) {
+        teamService.deleteTeam(teamId, logoUrl);
+    }
 }
