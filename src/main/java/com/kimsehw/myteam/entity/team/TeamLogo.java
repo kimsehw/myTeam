@@ -44,7 +44,7 @@ public class TeamLogo extends BaseEntity {
         return new TeamLogo(team);
     }
 
-    public void updateItemImg(String oriImgName, String imgUrl, String imgName) {
+    public void updateLogoImg(String oriImgName, String imgUrl, String imgName) {
         this.oriImgName = oriImgName;
         this.imgUrl = imgUrl;
         this.imgName = imgName;

@@ -7,6 +7,7 @@ import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.entity.team.TeamLogo;
 import com.kimsehw.myteam.repository.TeamLogoRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -47,10 +48,6 @@ public class TeamService {
         return team;
     }
 
-    public Team findTeamByMemberId(Long memberId) {
-        return teamRepository.findByMemberId(memberId);
-    }
-
     @Transactional
     public void saveTeamLogo(TeamLogo teamLogo, MultipartFile teamLogoFile) {
         String originImgName = teamLogoFile.getOriginalFilename();
@@ -68,12 +65,39 @@ public class TeamService {
             imgUrl = "/images/logoimgs/" + imgName;
         }
 
-        teamLogo.updateItemImg(originImgName, imgUrl, imgName);
+        teamLogo.updateLogoImg(originImgName, imgUrl, imgName);
         teamLogoRepository.save(teamLogo);
     }
 
     public TeamInfoDto getTeamInfoDtoOf(Long teamId) {
         Team team = teamRepository.findWithTeamMembersAndTeamLogoById(teamId);
         return TeamInfoDto.of(team);
+    }
+
+    @Transactional
+    public void updateTeam(Member member, TeamInfoDto updateTeamInfoDto, MultipartFile updateTeamLogoFile) {
+
+        log.info(updateTeamInfoDto.toString());
+        Team team = teamRepository.findById(updateTeamInfoDto.getTeamId()).orElseThrow(EntityNotFoundException::new);
+
+        if (updateNameIsDuplicate(member, updateTeamInfoDto, team)) {
+            log.info(DUPLICATE_TEAM_NAME_EXCEPTION);
+            throw new IllegalStateException(DUPLICATE_TEAM_NAME_EXCEPTION);
+        }
+
+        if (updateTeamLogoFile != null & !updateTeamLogoFile.isEmpty()) {
+            TeamLogo teamLogo = team.getTeamLogo();
+            String pastImgName = teamLogo.getImgName();
+            saveTeamLogo(teamLogo, updateTeamLogoFile);
+            fileService.deleteFiles(logoImgLocation + "/" + pastImgName);
+            updateTeamInfoDto.setLogoUrl(teamLogo.getImgUrl());
+        }
+        team.updateTeam(updateTeamInfoDto);
+        log.info(team.toString());
+    }
+
+    private boolean updateNameIsDuplicate(Member member, TeamInfoDto updateTeamInfoDto, Team team) {
+        return teamRepository.findByMemberIdAndTeamName(member.getId(), updateTeamInfoDto.getTeamName()) != null &&
+                !updateTeamInfoDto.getTeamName().equals(team.getTeamName());
     }
 }

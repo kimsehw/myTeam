@@ -3,6 +3,7 @@ package com.kimsehw.myteam.entity.team;
 import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
+import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.embedded.record.TeamRecord;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.entity.TeamMember;
@@ -85,4 +86,10 @@ public class Team extends BaseEntity {
         teamMembers.add(teamMember);
     }
 
+    public void updateTeam(TeamInfoDto updateTeamInfoDto) {
+        teamName = updateTeamInfoDto.getTeamName();
+        region = updateTeamInfoDto.getRegion();
+        ageRange = updateTeamInfoDto.getAgeRange();
+        teamDetail = updateTeamInfoDto.getTeamDetail();
+    }
 }

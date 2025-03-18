@@ -46,4 +46,20 @@ public class TeamFacade {
     public TeamInfoDto getTeamInfoOf(Long teamId) {
         return teamService.getTeamInfoDtoOf(teamId);
     }
+
+    /**
+     * 팀 정보를 업데이트 합니다.
+     *
+     * @param email              회원 아이디
+     * @param updateTeamInfoDto  업데이트 정보
+     * @param updateTeamLogoFile 업데이트 로고 파일
+     */
+    public void updateTeam(String email, TeamInfoDto updateTeamInfoDto, MultipartFile updateTeamLogoFile) {
+        Member member = memberService.findMemberByEmail(email);
+        if (member == null) {
+            throw new EntityNotFoundException();
+        }
+
+        teamService.updateTeam(member, updateTeamInfoDto, updateTeamLogoFile);
+    }
 }

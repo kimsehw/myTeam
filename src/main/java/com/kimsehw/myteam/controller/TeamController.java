@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,7 +55,7 @@ public class TeamController {
             String email = principal.getName();
             teamFacade.createTeam(email, teamFormDto, teamLogoFile);
         } catch (IllegalStateException e) {
-            addAttributeWhenDuplicatedName(model, e);
+            addAttributeWhenDuplicatedName(model, e, "resetName");
             return "team/teamForm";
         } catch (RuntimeException e) {
             addRegionAndAgeRangeSelection(model);
@@ -66,10 +67,10 @@ public class TeamController {
         return "redirect:/";
     }
 
-    private void addAttributeWhenDuplicatedName(Model model, IllegalStateException e) {
+    private void addAttributeWhenDuplicatedName(Model model, IllegalStateException e, String trueAtrributeType) {
         addRegionAndAgeRangeSelection(model);
         model.addAttribute("errorMessage", e.getMessage());
-        model.addAttribute("resetName", true);
+        model.addAttribute(trueAtrributeType, true);
     }
 
     @GetMapping(value = {"/teams"})
@@ -78,7 +79,7 @@ public class TeamController {
         String email = principal.getName();
         Pageable pageable = PageRequest.of(page, MAX_TEAM_SHOW);
         Page<TeamsDto> teams = teamFacade.getMyTeams(email, pageable);
-        log.info(String.valueOf(teams.getContent()));
+
         model.addAttribute("teams", teams);
         model.addAttribute("maxPage", MAX_TEAM_SHOW);
         model.addAttribute("page", pageable.getPageNumber());
@@ -86,10 +87,41 @@ public class TeamController {
     }
 
     @GetMapping("/teams/{teamId}")
-    public String test(Model model, Principal principal, @PathVariable("teamId") Long teamId) {
+    public String teamDetail(Model model, @PathVariable("teamId") Long teamId) {
         TeamInfoDto teamInfoDto = teamFacade.getTeamInfoOf(teamId);
         model.addAttribute("teamInfoDto", teamInfoDto);
         addRegionAndAgeRangeSelection(model);
         return "team/teamDetail";
+    }
+
+    @PostMapping("/teams/{teamId}")
+    public String teamUpdate(@ModelAttribute("teamInfoDto") @Valid TeamInfoDto updateTeamInfoDto,
+                             BindingResult bindingResult, Model model, Principal principal,
+                             @RequestParam("teamLogoFile") MultipartFile updateTeamLogoFile,
+                             @PathVariable("teamId") Long teamId) {
+
+        if (bindingResult.hasErrors()) {
+            addAttributeWhenUpdateNotDone(model);
+            return "team/teamDetail";
+        }
+
+        try {
+            String email = principal.getName();
+            teamFacade.updateTeam(email, updateTeamInfoDto, updateTeamLogoFile);
+        } catch (IllegalStateException e) {
+            addAttributeWhenDuplicatedName(model, e, "updateNotDone");
+            return "team/teamDetail";
+        } catch (RuntimeException e) {
+            addAttributeWhenUpdateNotDone(model);
+            log.info(e.getMessage());
+            model.addAttribute("errorMessage", "팀 변경 중 에러 발생");
+            return "team/teamDetail";
+        }
+        return "redirect:/teams/" + teamId;
+    }
+
+    private void addAttributeWhenUpdateNotDone(Model model) {
+        addRegionAndAgeRangeSelection(model);
+        model.addAttribute("updateNotDone", true);
     }
 }
