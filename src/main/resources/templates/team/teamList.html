@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팀 목록</title>
+</head>
+
+<div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">팀 목록 조회</h2>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
+            <thead class="bg-gray-200">
+            <tr class="text-gray-700 text-left">
+                <th class="px-6 py-3 border-b-2 border-gray-300">Role</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">팀 명</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">지역</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">지난 경기</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">다음 경기 일정</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-center">팀 정보</th>
+            </tr>
+            </thead>
+            <tbody th:if="${teams != null and not #lists.isEmpty(teams.content)}">
+            <tr th:each="team : ${teams.content}"
+                class="hover:bg-gray-100 transition cursor-pointer"
+                th:attr="data-team-id=${team.teamId}">
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${team.teamRole.roleName}"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${team.teamName}"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${team.region.regionName}"></td>
+                <td th:if="${team.lastMatchDate != null}" class="px-6 py-4 border-b border-gray-300"
+                    th:text="${team.lastMatchDate}"></td>
+                <td th:unless="${team.lastMatchDate != null}" class="px-6 py-4 border-b border-gray-300"
+                    th:text="없음"></td>
+                <td th:if="${team.nextMatchDate != null}" class="px-6 py-4 border-b border-gray-300"
+                    th:text="${team.nextMatchDate}"></td>
+                <td th:unless="${team.nextMatchDate != null}" class="px-6 py-4 border-b border-gray-300"
+                    th:text="없음"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <a th:href="@{/teams/{teamId}(teamId=${team.teamId})}"
+                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        팀 정보
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+            <tbody th:if="${teams == null or #lists.isEmpty(teams.content)}">
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                    등록된 팀이 없습니다.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+<!-- 페이지네이션 -->
+<div class="mt-6 flex justify-center"
+     th:with="start=${(teams.number/maxPage)*maxPage + 1},
+              end=(${(teams.totalPages == 0) ? 1 : (start + (maxPage - 1) < teams.totalPages ? start + (maxPage - 1) : teams.totalPages)})">
+    <ul class="flex space-x-2">
+
+        <li th:classappend="${teams.first}?'opacity-50 pointer-events-none'"
+            class="bg-gray-300 px-3 py-2 rounded">
+            <a th:onclick="'javascript:page(' + ${teams.number - 1} + ')'" class="cursor-pointer">« 이전</a>
+        </li>
+
+        <li th:each="page: ${#numbers.sequence(start, end)}"
+            th:classappend="${teams.number eq page-1}?'bg-blue-500 text-white'"
+            class="px-3 py-2 rounded cursor-pointer hover:bg-gray-200">
+            <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text">[[${page}]]</a>
+        </li>
+
+        <li th:classappend="${teams.last}?'opacity-50 pointer-events-none'"
+            class="bg-gray-300 px-3 py-2 rounded">
+            <a th:onclick="'javascript:page(' + ${teams.number + 1} + ')'" class="cursor-pointer">다음 »</a>
+        </li>
+
+    </ul>
+</div>
+
+<!-- JavaScript 페이지 이동 함수 -->
+<script>
+    function page(pageNumber) {
+        window.location.href = '/teams?page=' + pageNumber;
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 모든 <tr> 요소 가져오기
+        let rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            row.addEventListener("click", function() {
+                let teamId = this.getAttribute("data-team-id"); // data-team-id 속성에서 값 가져오기
+                if (teamId) {
+                    window.location.href = "/teams/" + teamId;
+                }
+            });
+        });
+    });
+</script>
+
+</html>

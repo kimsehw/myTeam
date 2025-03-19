@@ -11,7 +11,8 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            [csrfHeader]: csrfToken
+            [csrfHeader]: csrfToken,
+            'X-Requested-With': 'XMLHttpRequest' // AJAX 요청임을 명시
         },
         body: new URLSearchParams({ email, password })
     })
