@@ -2,12 +2,15 @@ package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.dto.team.TeamsDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,5 +38,10 @@ public class TeamMemberService {
     public Long addTeamMemberIn(Team team, Member member, TeamRole teamRole) {
         TeamMember teamMember = TeamMember.createTeamMember(team, member, teamRole);
         return teamMember.getId();
+    }
+
+    public Page<TeamMemberDto> getTeamMemberDtoPagesOf(Long teamId, Pageable pageable) {
+        List<TeamMemberDto> teamMemberDtos = teamMemberRepository.findAllTeamMemberDtoByTeamId(teamId, pageable);
+        return new PageImpl<>(teamMemberDtos, pageable, teamMemberDtos.size());
     }
 }

@@ -6,10 +6,12 @@ import com.kimsehw.myteam.constant.Region;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.repository.MemberRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -74,4 +76,20 @@ class TeamMemberServiceTest {
         }
     }
 
+    @Test
+    void test() {
+        Member member = createMember("test@naver.com");
+        Member member2 = createMember("test2@naver.com");
+        memberRepository.save(member);
+        memberRepository.save(member2);
+        Long teamA = createTeam(member.getEmail(), "teamA");
+        Long teamB = createTeam(member.getEmail(), "teamB");
+        Long teamC = createTeam(member2.getEmail(), "teamB");
+        Long teamD = createTeam(member2.getEmail(), "teamD");
+
+        List<TeamMemberDto> allTeamMemberDtoByTeamId = teamMemberRepository.findAllTeamMemberDtoByTeamId(teamA);
+        for (TeamMemberDto teamMemberDto : allTeamMemberDtoByTeamId) {
+            System.out.println("teamMemberDto.toString() = " + teamMemberDto.toString());
+        }
+    }
 }

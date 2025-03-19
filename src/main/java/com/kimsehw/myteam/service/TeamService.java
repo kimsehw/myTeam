@@ -42,7 +42,7 @@ public class TeamService {
         teamRepository.save(team);
 
         TeamLogo teamLogo = TeamLogo.of(team);
-        if (teamLogoFile != null & !teamLogoFile.isEmpty()) {
+        if (teamLogoFile != null && !teamLogoFile.isEmpty()) {
             saveTeamLogo(teamLogo, teamLogoFile);
         }
         return team;

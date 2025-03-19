@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팀원 목록</title>
+</head>
+
+
+<div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">팀원 목록</h2>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
+            <thead class="bg-gray-200">
+            <tr class="text-gray-700 text-left">
+                <th class="px-6 py-3 border-b-2 border-gray-300">직 급</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">등 번호</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">이름</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">포지션</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">Goal</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">Assist</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">경기 수</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-center">선수 정보</th>
+            </tr>
+            </thead>
+            <tbody th:if="${teamMembers != null and not #lists.isEmpty(teamMembers.content)}">
+            <tr th:each="teamMem : ${teamMembers.content}"
+                class="hover:bg-gray-100 transition cursor-pointer"
+                th:attr="data-teamMem-id=${teamMem.teamMemId}">
+                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.teamRole.roleName}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.playerNum}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.name}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center"
+                    th:text="${teamMem.position.positionDetail}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.goals}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.assist}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.attendance}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <a th:href="@{/teamMembers/{teamMemId}/?=(teamMemId=${teamMem.teamMemId})}"
+                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        선수 정보
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+            <tbody th:if="${teamMembers == null or #lists.isEmpty(teamMembers.content)}">
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                    등록된 팀원이 없습니다.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="mt-6 flex justify-center"
+         th:with="start=${(teamMembers.number/maxPage)*maxPage + 1},
+              end=(${(teamMembers.totalPages == 0) ? 1 : (start + (maxPage - 1) < teamMembers.totalPages ? start + (maxPage - 1) : teamMembers.totalPages)})">
+        <ul class="flex space-x-2">
+
+            <li th:classappend="${teamMembers.first}?'opacity-50 pointer-events-none'"
+                class="bg-gray-300 px-3 py-2 rounded">
+                <a th:onclick="'javascript:page(' + ${teamMembers.number - 1} + ')'" class="cursor-pointer">« 이전</a>
+            </li>
+
+            <li th:each="page: ${#numbers.sequence(start, end)}"
+                th:classappend="${teamMembers.number eq page-1}?'bg-blue-500 text-white'"
+                class="px-3 py-2 rounded cursor-pointer hover:bg-gray-200">
+                <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text">[[${page}]]</a>
+            </li>
+
+            <li th:classappend="${teamMembers.last}?'opacity-50 pointer-events-none'"
+                class="bg-gray-300 px-3 py-2 rounded">
+                <a th:onclick="'javascript:page(' + ${teamMembers.number + 1} + ')'" class="cursor-pointer">다음 »</a>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- JavaScript 페이지 이동 함수 -->
+    <script>
+        function page(pageNumber) {
+            window.location.href = '/teamMembers?page=' + pageNumber;
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 모든 <tr> 요소 가져오기
+            let rows = document.querySelectorAll("tbody tr");
+
+            rows.forEach(row => {
+                row.addEventListener("click", function() {
+                    let teamMemId = this.getAttribute("data-teamMem-id"); // data-team-id 속성에서 값 가져오기
+                    if (teamMemId) {
+                        window.location.href = "/teamMembers/" + teamMemId;
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+</html>

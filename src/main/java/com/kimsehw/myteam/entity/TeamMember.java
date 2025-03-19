@@ -31,7 +31,13 @@ public class TeamMember extends BaseEntity {
     @Column(name = "teamMember_id")
     private Long id;
 
+    private String name;
     private String detail;
+    private int attendance;
+
+    //나중에
+    //@Column(unique = true)
+    private int playerNum;
 
     @Enumerated(EnumType.STRING)
     private TeamRole teamRole;
@@ -51,6 +57,7 @@ public class TeamMember extends BaseEntity {
         this.team = team;
         this.member = member;
         this.teamRole = teamRole;
+        name = member.getName();
         teamMemberRecord = new PersonalRecord(member.getMemberRecord().getPosition());
         team.addTeamMember(this);
     }
