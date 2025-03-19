@@ -58,7 +58,7 @@ public class Member extends BaseTimeEntity {
         email = memberFormDto.getEmail();
         password = passwordEncoder.encode(memberFormDto.getPassword());
         role = Role.MEMBER;
-        memberRecord = new PersonalRecord();
+        memberRecord = new PersonalRecord(memberFormDto.getPosition());
     }
 
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {

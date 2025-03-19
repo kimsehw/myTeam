@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.controller;
 
+import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
@@ -24,6 +25,7 @@ public class MemberController {
     @GetMapping("/members/new")
     public String newMemberForm(Model model) {
         model.addAttribute("memberFormDto", new MemberFormDto());
+        model.addAttribute("positions", Position.values());
         return "members/new";
     }
 

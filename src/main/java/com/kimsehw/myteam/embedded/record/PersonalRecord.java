@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PersonalRecord extends BaseRecord {
 
+
+    private int assist = 0;
+
     private String winRate;
 
     @Enumerated(EnumType.STRING)
