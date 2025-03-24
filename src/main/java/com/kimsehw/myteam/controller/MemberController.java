@@ -33,6 +33,7 @@ public class MemberController {
     public String newMember(@Valid MemberFormDto memberFormDto,
                             BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("positions", Position.values());
             return "members/new";
         }
 
@@ -42,6 +43,7 @@ public class MemberController {
         } catch (IllegalStateException e) {
             //에러 메시지 뷰로 전달 -> script 에서 javaScript 통해 스프링으로부터 (모델에 담겨)넘어온 errorMessage 처리
             model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("positions", Position.values());
             return "members/new";
         }
 
