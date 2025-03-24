@@ -68,11 +68,15 @@
                 </div>
 
                 <div>
-                    <h2 id="teamNameText" class="text-2xl font-bold mb-2" th:text="${teamInfoDto.teamName}"></h2>
+                    <h2 id="teamNameText" class="text-2xl font-bold mb-2"
+                        th:text="${#fields.hasErrors('teamName') || nameDuplicateError != null} ? ${originTeamName} : ${teamInfoDto.teamName}">
+                    </h2>
                     <div id="teamNameInput" class="hidden">
                         <input th:field="*{teamName}" type="text"
                                class="border p-2 rounded-md w-full"/>
                         <p th:if="${#fields.hasErrors('teamName')}" th:errors="*{teamName}" class="fieldError"></p>
+                        <p th:if="${nameDuplicateError != null}" th:text="${nameDuplicateError}"
+                           class="fieldError"></p>
                     </div>
 
 

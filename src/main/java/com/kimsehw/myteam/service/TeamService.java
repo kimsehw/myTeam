@@ -114,4 +114,9 @@ public class TeamService {
         String[] split = logoUrl.split("/");
         return split[split.length - 1];
     }
+
+    public String getTeamName(Long teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
+        return team.getTeamName();
+    }
 }

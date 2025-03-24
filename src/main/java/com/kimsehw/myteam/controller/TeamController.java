@@ -102,6 +102,7 @@ public class TeamController {
 
         if (bindingResult.hasErrors()) {
             addAttributeWhenUpdateNotDone(model);
+            keepOriginTeamName(model, teamId);
             return "team/teamDetail";
         }
 
@@ -110,6 +111,8 @@ public class TeamController {
             teamFacade.updateTeam(email, updateTeamInfoDto, updateTeamLogoFile);
         } catch (IllegalStateException e) {
             addAttributeWhenDuplicatedName(model, e, "updateNotDone");
+            model.addAttribute("nameDuplicateError", e.getMessage());
+            keepOriginTeamName(model, teamId);
             return "team/teamDetail";
         } catch (RuntimeException e) {
             addAttributeWhenUpdateNotDone(model);
@@ -118,6 +121,11 @@ public class TeamController {
             return "team/teamDetail";
         }
         return "redirect:/teams/" + teamId;
+    }
+
+    private void keepOriginTeamName(Model model, Long teamId) {
+        String teamName = teamFacade.getTeamName(teamId);
+        model.addAttribute("originTeamName", teamName);
     }
 
     private void addAttributeWhenUpdateNotDone(Model model) {
