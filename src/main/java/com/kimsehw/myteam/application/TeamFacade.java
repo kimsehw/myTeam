@@ -31,7 +31,7 @@ public class TeamFacade {
         }
 
         Team team = teamService.saveTeam(member, teamFormDto, teamLogoFile);
-        teamMemberService.addTeamMemberIn(team, member, TeamRole.LEADER);
+        teamMemberService.addInitialTeamMember(team, member, TeamRole.LEADER);
         return team.getId();
     }
 

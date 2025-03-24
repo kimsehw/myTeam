@@ -1,5 +1,7 @@
 package com.kimsehw.myteam.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.kimsehw.myteam.application.TeamFacade;
 import com.kimsehw.myteam.constant.AgeRange;
 import com.kimsehw.myteam.constant.Region;
@@ -72,7 +74,7 @@ class TeamMemberServiceTest {
         Pageable pageable = PageRequest.of(0, 6);
         Page<TeamsDto> teamsDtoPage = teamMemberService.getTeamsDtoPage(member2.getId(), pageable);
         for (TeamsDto teamsDto : teamsDtoPage) {
-            System.out.println("teamsDto = " + teamsDto);
+            assertThat(teamsDto.getTeamName()).containsAnyOf("teamB", "teamD");
         }
     }
 
@@ -86,10 +88,19 @@ class TeamMemberServiceTest {
         Long teamB = createTeam(member.getEmail(), "teamB");
         Long teamC = createTeam(member2.getEmail(), "teamB");
         Long teamD = createTeam(member2.getEmail(), "teamD");
-
-        List<TeamMemberDto> allTeamMemberDtoByTeamId = teamMemberRepository.findAllTeamMemberDtoByTeamId(teamA);
+        Pageable pageable = PageRequest.of(0, 5);
+        List<TeamMemberDto> allTeamMemberDtoByTeamId = teamMemberRepository.findAllTeamMemberDtoByTeamId(teamA,
+                pageable);
         for (TeamMemberDto teamMemberDto : allTeamMemberDtoByTeamId) {
-            System.out.println("teamMemberDto.toString() = " + teamMemberDto.toString());
+            assertThat(teamMemberDto.getName()).isEqualTo(member.getName());
         }
+    }
+
+    @Test
+    void xx() {
+        Member member = createMember("test@naver.com");
+        memberRepository.save(member);
+        Long teamA = createTeam(member.getEmail(), "teamA");
+        assertThat(teamMemberRepository.findByPlayerNumAndTeamId(0, teamA).getName()).isEqualTo(member.getName());
     }
 }

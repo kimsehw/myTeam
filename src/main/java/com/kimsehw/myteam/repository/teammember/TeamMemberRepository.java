@@ -19,4 +19,6 @@ public interface TeamMemberRepository extends JpaRepository<TeamMember, Long>, T
             + " from TeamMember tm"
             + " where tm.team.id = :teamId")
     List<TeamMemberDto> findAllTeamMemberDtoByTeamId(@Param("teamId") Long teamId, Pageable pageable);
+
+    TeamMember findByPlayerNumAndTeamId(int playerNum, Long teamId);
 }

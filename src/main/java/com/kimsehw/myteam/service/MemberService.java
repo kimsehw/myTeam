@@ -2,6 +2,7 @@ package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.security.core.userdetails.User;
@@ -45,6 +46,6 @@ public class MemberService implements UserDetailsService {
     }
 
     public Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow();
+        return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 }

@@ -29,10 +29,7 @@ public class TeamMemberController {
                               @RequestParam(value = "page", defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, MAX_TEAM_MEM_SHOW);
         Page<TeamMemberDto> teamMemberDtos = teamMemberService.getTeamMemberDtoPagesOf(teamId, pageable);
-        for (TeamMemberDto teamMemberDto : teamMemberDtos) {
-            log.info(teamMemberDto.toString());
-        }
-        log.info(String.valueOf(teamMemberDtos.getNumber()));
+
         model.addAttribute("teamMembers", teamMemberDtos);
         model.addAttribute("maxPage", MAX_TEAM_MEM_SHOW);
         model.addAttribute("page", pageable.getPageNumber());
