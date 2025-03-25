@@ -9,14 +9,13 @@ import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 @Service
 @Transactional(readOnly = true)
@@ -77,18 +76,17 @@ public class TeamMemberService {
         return new PageImpl<>(teamMemberDtos, pageable, teamMemberDtos.size());
     }
 
-    public void validatePlayerNum(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, BindingResult bindingResult) {
+    public void validatePlayerNum(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors) {
         Integer playerNum = teamMemInviteFormDto.getPlayerNum();
         if (playerNum == null) {
-            bindingResult.addError(new FieldError("teamMemInviteInfo", "playerNum", "등 번호를 입력해주세요."));
+            errors.put("playerNum", "등 번호를 입력해주세요.");
             return;
         }
 
         TeamMember byPlayerNumAndTeamId = teamMemberRepository.findByPlayerNumAndTeamId(
                 playerNum, teamId);
         if (byPlayerNumAndTeamId != null) {
-            bindingResult.addError(new FieldError("teamMemInviteInfo", "playerNum", "중복된 등 번호 선수가 존재합니다."));
+            errors.put("playerNum", "중복된 등 번호 선수가 존재합니다.");
         }
     }
-
 }

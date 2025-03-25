@@ -11,6 +11,7 @@ import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
@@ -28,8 +29,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -61,16 +60,16 @@ class TeamMemFacadeTest {
         String email = member.getEmail();
         Long teamId = createTeam(email, "test Team");
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(teamMemInviteFormDto, "teamMemInviteFormDto");
+        Map<String, String> errors = new HashMap<>();
 
         // when
-        teamMemFacade.validateInviteInfo(teamId, teamMemInviteFormDto, bindingResult);
+        teamMemFacade.validateInviteInfo(teamId, teamMemInviteFormDto, errors);
 
         //then
-        assertThat(bindingResult.hasFieldErrors()).isTrue();
+        assertThat(!errors.isEmpty()).isTrue();
 
         for (Entry<String, String> entry : errorMessages.entrySet()) {
-            assertThat(bindingResult.getFieldError(entry.getKey()).getDefaultMessage()).isEqualTo(entry.getValue());
+            assertThat(errors.get(entry.getKey())).isEqualTo(entry.getValue());
         }
     }
 
