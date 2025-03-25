@@ -119,4 +119,8 @@ public class TeamService {
         Team team = teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
         return team.getTeamName();
     }
+
+    public Team findById(Long teamId) {
+        return teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
+    }
 }

@@ -10,9 +10,28 @@
     <title>팀원 목록</title>
 </head>
 
+<th:block layout:fragment="css">
+    <style>
+        .fieldError {
+            color: #bd2130
+        }
+    </style>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" src="/js/modal.js"></script>
+    <script th:inline="javascript" src="/js/teamMemInvite.js"></script>
+</th:block>
 
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
+
     <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">팀원 목록</h2>
+    <div class="flex justify-end space-x-4 mb-3">
+        <button class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                th:onclick="toggleModal('inviteModal',true)">
+            팀 초대 보내기
+        </button>
+    </div>
 
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
@@ -104,5 +123,7 @@
             });
         });
     </script>
+    <div th:insert="team/teamMem/fragments/inviteModal"></div>
+
 </div>
 </html>
