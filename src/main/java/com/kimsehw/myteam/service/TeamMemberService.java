@@ -4,11 +4,13 @@ import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -90,5 +92,10 @@ public class TeamMemberService {
         if (byPlayerNumAndTeamId != null) {
             errors.put("playerNum", "중복된 등 번호 선수가 존재합니다.");
         }
+    }
+
+    public TeamMemberDetailDto getTeamMemberDetailDto(Long teamMemId) {
+        TeamMember teamMember = teamMemberRepository.findById(teamMemId).orElseThrow(EntityNotFoundException::new);
+        return TeamMemberDetailDto.of(teamMember);
     }
 }

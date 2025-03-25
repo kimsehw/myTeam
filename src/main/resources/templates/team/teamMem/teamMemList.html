@@ -60,7 +60,7 @@
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.assist}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.attendance}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center">
-                    <a th:href="@{/teamMembers/{teamMemId}/?=(teamMemId=${teamMem.teamMemId})}"
+                    <a th:href="@{/team-members/{teamMemId}(teamMemId=${teamMem.teamMemId}, teamId=${teamId})}"
                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                         선수 정보
                     </a>
@@ -107,21 +107,6 @@
         function page(pageNumber) {
             window.location.href = '/teamMembers?page=' + pageNumber;
         }
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 모든 <tr> 요소 가져오기
-            let rows = document.querySelectorAll("tbody tr");
-
-            rows.forEach(row => {
-                row.addEventListener("click", function() {
-                    let teamMemId = this.getAttribute("data-teamMem-id"); // data-team-id 속성에서 값 가져오기
-                    if (teamMemId) {
-                        window.location.href = "/teamMembers/" + teamMemId;
-                    }
-                });
-            });
-        });
     </script>
     <div th:insert="team/teamMem/fragments/inviteModal"></div>
 

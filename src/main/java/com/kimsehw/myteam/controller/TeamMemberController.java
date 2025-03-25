@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.controller;
 
-import com.kimsehw.myteam.application.TeamFacade;
 import com.kimsehw.myteam.constant.Position;
+import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.service.TeamMemberService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,6 @@ public class TeamMemberController {
 
     public static final int MAX_TEAM_MEM_SHOW = 20;
 
-    private final TeamFacade teamFacade;
     private final TeamMemberService teamMemberService;
 
     @GetMapping("/teams/{teamId}/team-members")
@@ -37,5 +36,14 @@ public class TeamMemberController {
         model.addAttribute("maxPage", MAX_TEAM_MEM_SHOW);
         model.addAttribute("page", pageable.getPageNumber());
         return "team/teamMem/teamMemList";
+    }
+
+    @GetMapping("/team-members/{teamMemId}")
+    public String teamMemDetail(Model model, @PathVariable("teamMemId") Long teamMemId,
+                                @RequestParam("teamId") Long teamId) {
+        log.info(teamMemId.toString() + " && " + teamId.toString());
+        TeamMemberDetailDto teamMemberDetailDto = teamMemberService.getTeamMemberDetailDto(teamMemId);
+        model.addAttribute("teamMemDetail", teamMemberDetailDto);
+        return "team/teamMem/teamMemDetail";
     }
 }
