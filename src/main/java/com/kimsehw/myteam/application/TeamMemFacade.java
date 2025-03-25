@@ -31,6 +31,9 @@ public class TeamMemFacade {
                                    BindingResult bindingResult) {
         teamMemberService.validatePlayerNum(teamId, teamMemInviteFormDto, bindingResult);
         if (teamMemInviteFormDto.isNotUser()) {
+            if (!StringUtils.hasText(teamMemInviteFormDto.getName())) {
+                bindingResult.addError(new FieldError("teamMemInviteInfo", "name", "이름을 입력해주세요"));
+            }
             return;
         }
         validateOfInviteeEmail(teamMemInviteFormDto, bindingResult); // 자기 자신 경우 추가
@@ -60,7 +63,7 @@ public class TeamMemFacade {
                     Alarm.createInviteAlarm(fromMember, toMember, teamId, teamMemInviteFormDto.getPlayerNum()));
             return;
         }
-        teamMemberService.addTeamMemberIn(teamService.findById(teamId), null, TeamRole.MEMBER,
+        teamMemberService.addTeamMemberIn(teamService.findById(teamId), teamMemInviteFormDto.getName(), TeamRole.MEMBER,
                 teamMemInviteFormDto.getPlayerNum());
     }
 }

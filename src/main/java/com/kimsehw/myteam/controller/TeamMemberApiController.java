@@ -3,7 +3,7 @@ package com.kimsehw.myteam.controller;
 import com.kimsehw.myteam.application.TeamMemFacade;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import java.security.Principal;
-import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +30,8 @@ public class TeamMemberApiController {
                                        @RequestBody TeamMemInviteFormDto teamMemInviteFormDto,
                                        BindingResult bindingResult,
                                        Model model) {
-        log.info(LocalDateTime.now().toString());
-        log.info(teamMemInviteFormDto.toString());
+        /*log.info(LocalDateTime.now().toString());
+        log.info(teamMemInviteFormDto.toString());*/
 
         teamMemFacade.validateInviteInfo(teamId, teamMemInviteFormDto, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -41,12 +41,13 @@ public class TeamMemberApiController {
             for (FieldError fieldError : fieldErrors) {
                 errors.put(fieldError.getField(), fieldError.getDefaultMessage());
             }
+//            log.info(errors.toString());
             return ResponseEntity.badRequest().body(errors);
         }
 
         String email = principal.getName();
         teamMemFacade.invite(email, teamId, teamMemInviteFormDto);
 
-        return ResponseEntity.ok("Success Invite");
+        return ResponseEntity.ok(Collections.emptyMap());
     }
 }

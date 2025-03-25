@@ -30,7 +30,7 @@ public class TeamMemberService {
     }
 
     /**
-     * 팀 생성 시 팀 초기 멤버(리더)를 소속시킴
+     * 팀 생성 시 팀 초기 멤버(리더)를 등록
      *
      * @param team     소속 팀
      * @param member   팀원이 될 회원
@@ -39,12 +39,12 @@ public class TeamMemberService {
      */
     @Transactional
     public Long addInitialTeamMember(Team team, Member member, TeamRole teamRole) {
-        TeamMember teamMember = TeamMember.createTeamMember(team, member, teamRole);
+        TeamMember teamMember = TeamMember.createInitialTeamMember(team, member, teamRole);
         return teamMember.getId();
     }
 
     /**
-     * 등번호를 배정하며 회원이 팀 멤버로 소속 됨
+     * 등번호를 배정하며 회원인 팀 멤버 등록
      *
      * @param team      소속 팀
      * @param member    팀원이 될 회원
@@ -55,6 +55,20 @@ public class TeamMemberService {
     @Transactional
     public Long addTeamMemberIn(Team team, Member member, TeamRole teamRole, int playerNum) {
         TeamMember teamMember = TeamMember.createTeamMember(team, member, teamRole, playerNum);
+        return teamMember.getId();
+    }
+
+    /**
+     * 비회원 팀 멤버 등록
+     *
+     * @param team
+     * @param name
+     * @param teamRole
+     * @param playerNum
+     */
+    @Transactional
+    public Long addTeamMemberIn(Team team, String name, TeamRole teamRole, Integer playerNum) {
+        TeamMember teamMember = TeamMember.createNotUserTeamMember(team, name, teamRole, playerNum);
         return teamMember.getId();
     }
 
@@ -76,4 +90,5 @@ public class TeamMemberService {
             bindingResult.addError(new FieldError("teamMemInviteInfo", "playerNum", "중복된 등 번호 선수가 존재합니다."));
         }
     }
+
 }

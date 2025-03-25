@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.entity;
 
+import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.embedded.record.PersonalRecord;
 import com.kimsehw.myteam.entity.baseentity.BaseEntity;
@@ -62,7 +63,34 @@ public class TeamMember extends BaseEntity {
         team.addTeamMember(this);
     }
 
-    public static TeamMember createTeamMember(Team team, Member member, TeamRole teamRole) {
+    public TeamMember(Team team, Member member, TeamRole teamRole, int playerNum) {
+        this.team = team;
+        this.member = member;
+        this.teamRole = teamRole;
+        this.playerNum = playerNum;
+        name = member.getName();
+        teamMemberRecord = new PersonalRecord(member.getMemberRecord().getPosition());
+        team.addTeamMember(this);
+    }
+
+    public TeamMember(Team team, String name, TeamRole teamRole, Integer playerNum) {
+        this.team = team;
+        this.teamRole = teamRole;
+        this.playerNum = playerNum;
+        this.name = name;
+        teamMemberRecord = new PersonalRecord(Position.CUSTOM);
+        team.addTeamMember(this);
+    }
+
+    public static TeamMember createInitialTeamMember(Team team, Member member, TeamRole teamRole) {
         return new TeamMember(team, member, teamRole);
+    }
+
+    public static TeamMember createTeamMember(Team team, Member member, TeamRole teamRole, int playerNum) {
+        return new TeamMember(team, member, teamRole, playerNum);
+    }
+
+    public static TeamMember createNotUserTeamMember(Team team, String name, TeamRole teamRole, Integer playerNum) {
+        return new TeamMember(team, name, teamRole, playerNum);
     }
 }

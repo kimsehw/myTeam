@@ -10,11 +10,17 @@
                 <input type="checkbox" id="isNotUser" name="isNotUser" class="mr-2">
             </div>
 
-            <div>
+            <div id="emailInputContainer">
                 <label for="email" class="block text-sm font-medium text-gray-700">초대 할 팀원 아이디를 입력해주세요.</label>
                 <input type="text" id="email" name="email"
                        class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2 mb-1 transition-all"/>
                 <p class="hidden fieldError text-sm error" id="emailError"></p>
+            </div>
+            <div id="nameInputContainer" class="hidden">
+                <label for="name" class="block text-sm font-medium text-gray-700">초대 할 팀원 이름을 입력해주세요. (비회원)</label>
+                <input type="text" id="name" name="name"
+                       class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2 mb-1 transition-all"/>
+                <p class="hidden fieldError text-sm error" id="nameError"></p>
             </div>
 
             <div>
@@ -40,18 +46,22 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const isNorUserCheckbox = document.getElementById('isNotUser');
+        const emailInputContainer = document.getElementById('emailInputContainer');
         const emailInput = document.getElementById('email');
+        const nameInputContainer = document.getElementById('nameInputContainer');
+        const nameInput = document.getElementById('name');
 
         isNorUserCheckbox.addEventListener('change', () => {
             if (isNorUserCheckbox.checked) {
                 // 비회원 초대 시: 입력 필드 비활성화 + 스타일 변경
-                emailInput.disabled = true;
                 emailInput.value = "";
-                emailInput.classList.add("bg-gray-300", "cursor-not-allowed");
+                emailInputContainer.classList.add("hidden");
+                nameInputContainer.classList.remove("hidden");
             } else {
                 // 회원 초대 시: 입력 가능하도록 복구
-                emailInput.disabled = false;
-                emailInput.classList.remove("bg-gray-300", "cursor-not-allowed");
+                nameInput.value = "";
+                nameInputContainer.classList.add("hidden");
+                emailInputContainer.classList.remove("hidden");
             }
         });
     });
