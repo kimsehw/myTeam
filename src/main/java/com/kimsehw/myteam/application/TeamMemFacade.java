@@ -26,14 +26,20 @@ public class TeamMemFacade {
     private final AlarmService alarmService;
 
 
-    public void validateInviteInfo(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors) {
+    public void validateInviteInfo(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors,
+                                   String email) {
         teamMemberService.validatePlayerNum(teamId, teamMemInviteFormDto, errors);
 
         if (teamMemInviteFormDto.isNotUser()) {
             validateNotUserInfo(teamMemInviteFormDto, errors);
             return;
         }
-        validateOfInviteeEmail(teamMemInviteFormDto, errors); // 자기 자신 경우 추가
+        Long inviteeId = validateOfInviteeEmail(teamMemInviteFormDto, errors, email);
+        if (inviteeId != -1) {
+            Member member = memberService.findMemberByEmail(email);
+            alarmService.validateDuplicateInviteAlarm(teamId, member.getId(), inviteeId, errors);
+        }
+
     }
 
     private static void validateNotUserInfo(TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors) {
@@ -45,20 +51,27 @@ public class TeamMemFacade {
         }
     }
 
-    private void validateOfInviteeEmail(TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors) {
+    private Long validateOfInviteeEmail(TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors,
+                                        String email) {
         String emailOfInvitee = teamMemInviteFormDto.getEmail();
 //        log.info("emailOfInvitee: " + emailOfInvitee);
 
         if (!StringUtils.hasText(emailOfInvitee)) {
-            errors.put("email", "초대 회원의 이메일을 입력해주세요");
-            return;
+            errors.put("email", "초대 회원의 이메일을 입력해주세요.");
+            return -1L;
         }
-
+        if (emailOfInvitee.equals(email)) {
+            errors.put("email", "올바르지 않은 이메일 입니다. 자기 자신은 초대할 수 없습니다. 이메일을 확인해주세요.");
+            return -1L;
+        }
+        Member invitee;
         try {
-            Member invitee = memberService.findMemberByEmail(emailOfInvitee);
+            invitee = memberService.findMemberByEmail(emailOfInvitee);
         } catch (EntityNotFoundException e) {
-            errors.put("email", "존재하지 않는 회원입니다. 초대 회원의 이메일을 확인해주세요");
+            errors.put("email", "존재하지 않는 회원입니다. 초대 회원의 이메일을 확인해주세요.");
+            return -1L;
         }
+        return invitee.getId();
     }
 
     public void invite(String email, Long teamId, TeamMemInviteFormDto teamMemInviteFormDto) {

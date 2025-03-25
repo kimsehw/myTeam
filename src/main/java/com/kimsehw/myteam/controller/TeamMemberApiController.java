@@ -30,14 +30,16 @@ public class TeamMemberApiController {
                                        Model model) {
         /*log.info(LocalDateTime.now().toString());
         log.info(teamMemInviteFormDto.toString());*/
+
+        String email = principal.getName();
         Map<String, String> errors = new HashMap<>();
-        teamMemFacade.validateInviteInfo(teamId, teamMemInviteFormDto, errors);
+
+        teamMemFacade.validateInviteInfo(teamId, teamMemInviteFormDto, errors, email);
         if (!errors.keySet().isEmpty()) {
             log.info(errors.toString());
             return ResponseEntity.badRequest().body(errors);
         }
 
-        String email = principal.getName();
         teamMemFacade.invite(email, teamId, teamMemInviteFormDto);
 
         return ResponseEntity.ok(Collections.emptyMap());
