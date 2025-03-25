@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.dto.teammember;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kimsehw.myteam.constant.Position;
 import lombok.Data;
 
 @Data
@@ -11,4 +12,5 @@ public class TeamMemInviteFormDto {
     private boolean isNotUser;
     private Integer playerNum;
     private String name;
+    private Position position;
 }

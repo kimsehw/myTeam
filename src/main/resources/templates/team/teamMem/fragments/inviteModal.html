@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <div id="inviteModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
     <div class="bg-white p-8 rounded-lg w-96 shadow-lg">
@@ -21,6 +21,19 @@
                 <input type="text" id="name" name="name"
                        class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2 mb-1 transition-all"/>
                 <p class="hidden fieldError text-sm error" id="nameError"></p>
+            </div>
+            <div id="positionInputContainer" class="hidden">
+                <label for="name" class="block text-sm font-medium text-gray-700">포지션을 선택해주세요. (비회원)</label>
+                <select id="position" name="position"
+                        class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2 mb-1 transition-all">
+                    <option value="" selected>-- 선택하세요 --</option>
+                    <option th:each="pos : ${positions}"
+                            th:value="${pos.name()}"
+                            th:text="${pos.getPositionDetail}"
+                            th:unless="${pos.name() == 'CUSTOM'}">
+                    </option>
+                </select>
+                <p class="hidden fieldError text-sm error" id="positionError"></p>
             </div>
 
             <div>
@@ -50,6 +63,8 @@
         const emailInput = document.getElementById('email');
         const nameInputContainer = document.getElementById('nameInputContainer');
         const nameInput = document.getElementById('name');
+        const positionInputContainer = document.getElementById('positionInputContainer');
+        const positionInput = document.getElementById('position');
 
         isNorUserCheckbox.addEventListener('change', () => {
             if (isNorUserCheckbox.checked) {
@@ -57,10 +72,13 @@
                 emailInput.value = "";
                 emailInputContainer.classList.add("hidden");
                 nameInputContainer.classList.remove("hidden");
+                positionInputContainer.classList.remove("hidden");
             } else {
                 // 회원 초대 시: 입력 가능하도록 복구
                 nameInput.value = "";
+                positionInput.value = null;
                 nameInputContainer.classList.add("hidden");
+                positionInputContainer.classList.add("hidden");
                 emailInputContainer.classList.remove("hidden");
             }
         });

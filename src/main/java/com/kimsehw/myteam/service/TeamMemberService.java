@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.service;
 
+import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
@@ -64,10 +65,11 @@ public class TeamMemberService {
      * @param name
      * @param teamRole
      * @param playerNum
+     * @param position
      */
     @Transactional
-    public Long addTeamMemberIn(Team team, String name, TeamRole teamRole, Integer playerNum) {
-        TeamMember teamMember = TeamMember.createNotUserTeamMember(team, name, teamRole, playerNum);
+    public Long addTeamMemberIn(Team team, String name, TeamRole teamRole, Integer playerNum, Position position) {
+        TeamMember teamMember = TeamMember.createNotUserTeamMember(team, name, teamRole, playerNum, position);
         return teamMember.getId();
     }
 

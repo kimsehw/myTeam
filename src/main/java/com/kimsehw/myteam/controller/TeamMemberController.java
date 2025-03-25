@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.controller;
 
 import com.kimsehw.myteam.application.TeamFacade;
+import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.service.TeamMemberService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class TeamMemberController {
         Page<TeamMemberDto> teamMemberDtos = teamMemberService.getTeamMemberDtoPagesOf(teamId, pageable);
 
         model.addAttribute("teamId", teamId);
+        model.addAttribute("positions", Position.values());
         model.addAttribute("teamMembers", teamMemberDtos);
         model.addAttribute("maxPage", MAX_TEAM_MEM_SHOW);
         model.addAttribute("page", pageable.getPageNumber());

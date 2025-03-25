@@ -73,12 +73,12 @@ public class TeamMember extends BaseEntity {
         team.addTeamMember(this);
     }
 
-    public TeamMember(Team team, String name, TeamRole teamRole, Integer playerNum) {
+    public TeamMember(Team team, String name, TeamRole teamRole, Integer playerNum, Position position) {
         this.team = team;
         this.teamRole = teamRole;
         this.playerNum = playerNum;
         this.name = name;
-        teamMemberRecord = new PersonalRecord(Position.CUSTOM);
+        teamMemberRecord = new PersonalRecord(position);
         team.addTeamMember(this);
     }
 
@@ -90,7 +90,8 @@ public class TeamMember extends BaseEntity {
         return new TeamMember(team, member, teamRole, playerNum);
     }
 
-    public static TeamMember createNotUserTeamMember(Team team, String name, TeamRole teamRole, Integer playerNum) {
-        return new TeamMember(team, name, teamRole, playerNum);
+    public static TeamMember createNotUserTeamMember(Team team, String name, TeamRole teamRole, Integer playerNum,
+                                                     Position position) {
+        return new TeamMember(team, name, teamRole, playerNum, position);
     }
 }

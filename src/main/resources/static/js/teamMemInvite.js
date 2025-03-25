@@ -8,18 +8,22 @@ document.addEventListener('DOMContentLoaded', function () {
         var playerNumError = document.getElementById("playerNumError");
         var emailError = document.getElementById("emailError");
         var nameError = document.getElementById("nameError");
+        var positionError = document.getElementById("positionError");
         playerNumError.textContent = "";
         emailError.textContent = "";
         nameError.textContent = "";
+        positionError.textContent = "";
 
+        const positionValue = document.getElementById('position').value;
         const formData = {
             email: document.getElementById('email').value,
-            isNotUser: document.getElementById('isNotUser').checked === true,
+            isNotUser: document.getElementById('isNotUser').checked,
             playerNum: document.getElementById('playerNum').value,
-            name: document.getElementById('name').value
+            name: document.getElementById('name').value,
+            position: positionValue === "" ? null : positionValue
         };
 
-//        console.log("formData: ", formData)
+        console.log("formData: ", formData)
 
         fetch('/teams/' + teamId + '/team-members/invite', {
             method: 'POST',
@@ -34,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     playerNumError.classList.toggle('hidden',true);
                     emailError.classList.toggle('hidden',true);
                     nameError.classList.toggle('hidden',true);
+                    positionError.classList.toggle('hidden',true);
 
                     alert("초대가 성공적으로 전송되었습니다!");
                     window.location.href = '/teams/' + teamId+ '/team-members';
@@ -57,6 +62,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (errors.name) {
                 nameError.textContent = errors.name;
                 nameError.classList.toggle('hidden',false);
+            }
+
+            if (errors.position) {
+                positionError.textContent = errors.position;
+                positionError.classList.toggle('hidden',false);
             }
         })
         .catch(error => {
