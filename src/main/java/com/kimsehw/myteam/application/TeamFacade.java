@@ -31,7 +31,7 @@ public class TeamFacade {
         }
 
         Team team = teamService.saveTeam(member, teamFormDto, teamLogoFile);
-        teamMemberService.addTeamMemberIn(team, member, TeamRole.LEADER);
+        teamMemberService.addInitialTeamMember(team, member, TeamRole.LEADER);
         return team.getId();
     }
 
@@ -65,5 +65,9 @@ public class TeamFacade {
 
     public void deleteTeam(Long teamId, String logoUrl) {
         teamService.deleteTeam(teamId, logoUrl);
+    }
+
+    public String getTeamName(Long teamId) {
+        return teamService.getTeamName(teamId);
     }
 }

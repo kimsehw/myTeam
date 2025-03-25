@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.controller;
 
+import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
@@ -24,6 +25,7 @@ public class MemberController {
     @GetMapping("/members/new")
     public String newMemberForm(Model model) {
         model.addAttribute("memberFormDto", new MemberFormDto());
+        model.addAttribute("positions", Position.values());
         return "members/new";
     }
 
@@ -31,6 +33,7 @@ public class MemberController {
     public String newMember(@Valid MemberFormDto memberFormDto,
                             BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("positions", Position.values());
             return "members/new";
         }
 
@@ -40,6 +43,7 @@ public class MemberController {
         } catch (IllegalStateException e) {
             //에러 메시지 뷰로 전달 -> script 에서 javaScript 통해 스프링으로부터 (모델에 담겨)넘어온 errorMessage 처리
             model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("positions", Position.values());
             return "members/new";
         }
 

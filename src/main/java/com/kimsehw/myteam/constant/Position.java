@@ -9,5 +9,5 @@ public enum Position {
 
     FW("공격수"), MF("미드필더"), DF("수비수"), CUSTOM("");
 
-    private String positionDetails;
+    private String positionDetail;
 }

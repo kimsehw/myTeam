@@ -42,7 +42,7 @@ public class TeamService {
         teamRepository.save(team);
 
         TeamLogo teamLogo = TeamLogo.of(team);
-        if (teamLogoFile != null & !teamLogoFile.isEmpty()) {
+        if (teamLogoFile != null && !teamLogoFile.isEmpty()) {
             saveTeamLogo(teamLogo, teamLogoFile);
         }
         return team;
@@ -113,5 +113,14 @@ public class TeamService {
     private static String getLogoImgName(String logoUrl) {
         String[] split = logoUrl.split("/");
         return split[split.length - 1];
+    }
+
+    public String getTeamName(Long teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
+        return team.getTeamName();
+    }
+
+    public Team findById(Long teamId) {
+        return teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
     }
 }

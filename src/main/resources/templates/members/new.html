@@ -42,6 +42,20 @@
         <!-- 비밀번호 -->
         <div th:replace="members/fragments/formField::formField(text, '비밀번호', 'password', '비밀번호를 입력해주세요.','')"></div>
 
+        <div class="mb-3">
+            <label th:for=="${position}" th:text="'주 포지션'" class="block text-sm font-medium text-gray-700"></label>
+            <select th:field="*{position}"
+                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2 mt-1">>
+                <option value="">-- 선택하세요 --</option>
+                <option th:each="pos : ${positions}"
+                        th:value="${pos.name()}"
+                        th:text="${pos.getPositionDetail}"
+                        th:unless="${pos.name() == 'CUSTOM'}">
+                </option>
+            </select>
+            <p th:if="${#fields.hasErrors('position')}" th:errors="*{position}" class="fieldError"></p>
+        </div>
+
         <!-- 회원가입 버튼 -->
         <div class="flex justify-end">
             <button type="submit"
