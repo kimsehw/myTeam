@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.dto.teammember;
 
+import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.entity.TeamMember;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class TeamMemberDetailDto {
     private int loses;
     private int draws;
     private String winRate;
+    private Position position;
     /*매치 관련 추가 예정*/
 
     private TeamMemberDetailDto(TeamMember teamMember) {
@@ -32,11 +34,11 @@ public class TeamMemberDetailDto {
         this.attendance = teamMember.getAttendance();
         this.goals = teamMember.getTeamMemberRecord().getGoals();
         this.assist = teamMember.getTeamMemberRecord().getAssist();
-        ;
         this.wins = teamMember.getTeamMemberRecord().getWins();
         this.loses = teamMember.getTeamMemberRecord().getLoses();
-        this.draws = teamMember.getTeamMemberRecord().getWins();
+        this.draws = teamMember.getTeamMemberRecord().getDraws();
         this.winRate = teamMember.getTeamMemberRecord().getWinRate();
+        this.position = teamMember.getTeamMemberRecord().getPosition();
     }
 
     public static TeamMemberDetailDto of(TeamMember teamMember) {

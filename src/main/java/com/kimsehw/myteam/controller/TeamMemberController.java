@@ -41,9 +41,8 @@ public class TeamMemberController {
     @GetMapping("/team-members/{teamMemId}")
     public String teamMemDetail(Model model, @PathVariable("teamMemId") Long teamMemId,
                                 @RequestParam("teamId") Long teamId) {
-        log.info(teamMemId.toString() + " && " + teamId.toString());
         TeamMemberDetailDto teamMemberDetailDto = teamMemberService.getTeamMemberDetailDto(teamMemId);
-        model.addAttribute("teamMemDetail", teamMemberDetailDto);
+        model.addAttribute("teamMemDetailDto", teamMemberDetailDto);
         return "team/teamMem/teamMemDetail";
     }
 }

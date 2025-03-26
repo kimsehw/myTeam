@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팀원 정보</title>
+</head>
+
+<div layout:fragment="content" class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8"
+     th:object="${teamMemDetailDto}">
+    <div class="flex item-center">
+        <img id="uniformImg" th:src="null" alt="유니폼 이미지" class="w-36 h-36 rounded-lg shadow-sm"/>
+        <div class="flex-col items-center ml-40">
+            <div class="flex items-center space-x-6 mr-4">
+                <div class="text-gray-600 flex items-start space-x-4">
+                    <h2 id="nameText" class="text-2xl font-bold mb-0 mr-8" th:text="*{name}"></h2>
+                    <div class="flex flex-col space-y-2">
+                        <p class="font-bold" th:text="'팀내 직책 : ' + *{teamRole.roleName}"></p>
+                        <p class="font-bold" th:text="'주 포지션 : ' + *{position.positionDetail}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-between mt-4 p-4 bg-gray-100 rounded-lg items-center">
+                <div class="text-gray-600 flex-col justify-center w-full">
+                    <div class="flex mb-2">
+                        <p class="mr-4" th:text="'경기 수 : ' + *{attendance}"></p>
+                        <p class="mr-4" th:text="'득점 : ' + *{goals}"></p>
+                        <p class="mr-4" th:text="'도움 : ' + *{assist}"></p>
+                    </div>
+                    <div class="flex mt-2">
+                        <p class="mr-4" th:text="'승 : ' + *{wins}"></p>
+                        <p class="mr-4" th:text="'무 : ' + *{draws}"></p>
+                        <p class="mr-4" th:text="'패 : ' + *{loses}"></p>
+                        <p class="mr-4"
+                           th:text="*{winRate} != '기록 없음' ? '승률 : ' + *{winRate} + ' %' : '승률 : 기록 없음'">
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-xl bg-white p-4 mt-5">
+        <h3 class="text-lg font-semibold mb-4 border-b-2 border-gray-400 pb-2">팀원 소개</h3>
+        <p id="detailText" class="text-gray-600 leading-relaxed"
+           th:text="*{detail} == null or *{detail} == '' ? '(공 백)' : *{detail}"></p>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
+            <thead class="bg-gray-200">
+            <tr class="text-gray-700 text-left">
+                <th class="px-6 py-3 border-b-2 border-gray-300">날 짜</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">상 대</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">득 점</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">도 움</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">스코어</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="hover:bg-gray-100 transition cursor-pointer">
+                <td class="px-6 py-4 border-b border-gray-300" th:text="'test'"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="'test'"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="'test'"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="'test'"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="'test'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</html>
