@@ -21,6 +21,8 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript" src="/js/modal.js"></script>
     <script th:inline="javascript" src="/js/teamMem/teamMemInvite.js"></script>
+    <script th:inline="javascript" src="/js/teamMem/teamMemsEdit.js"></script>
+    <script th:inline="javascript" src="/js/teamMem/teamMemDelete.js"></script>
 </th:block>
 
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
@@ -75,9 +77,12 @@
                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2">
                         선수 상세 정보
                     </a>
-                    <button type="button" id="deleteButton"
-                            class="bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 hidden">
-                        선수 삭제
+                    <button type="button" id="deleteModalButton"
+                            class="bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 hidden"
+                            th:attr="data-teamMem-id=${teamMem.teamMemId}, data-teamMem-name=${teamMem.name},
+                             data-team-id=${teamId}"
+                            th:onclick="openTeamMemDeleteModal(this, 'deleteModal')">
+                        선수 방출
                     </button>
                 </td>
             </tr>
@@ -120,10 +125,10 @@
     <!-- JavaScript 페이지 이동 함수 -->
     <script>
         function page(pageNumber) {
-            window.location.href = '/teamMembers?page=' + pageNumber;
+            window.location.href = '/teams/[[${teamId}]]/team-members?page=' + pageNumber;
         }
     </script>
     <div th:insert="~{team/teamMem/fragments/inviteModal}"></div>
-
+    <div th:insert="~{team/teamMem/fragments/deleteModal}"></div>
 </div>
 </html>

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,12 +42,11 @@ public class TeamMemberApiController {
     }
 
     @DeleteMapping("/team-members/{teamMemId}")
-    public ResponseEntity deleteTeamMem(@PathVariable("teamMemId") Long teamMemId,
-                                        @RequestParam("name") String teamMemName) {
+    public ResponseEntity deleteTeamMem(@PathVariable("teamMemId") Long teamMemId) {
         if (teamMemId == null) {
             return ResponseEntity.badRequest().body(WRONG_TEAM_MEM_ID);
         }
         teamMemFacade.deleteTeamMem(teamMemId);
-        return ResponseEntity.ok(teamMemName + " 팀원을 삭제 하였습니다.");
+        return ResponseEntity.ok().build();
     }
 }
