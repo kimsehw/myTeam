@@ -9,11 +9,11 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,16 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Log
 public class TeamMemberApiController {
 
+    public static final String WRONG_TEAM_MEM_ID = "잘못된 팀 멤버가 삭제 요청되었습니다.";
     private final TeamMemFacade teamMemFacade;
 
     @PostMapping("/teams/{teamId}/team-members/invite")
     public ResponseEntity inviteMember(@PathVariable("teamId") Long teamId, Principal principal,
-                                       @RequestBody TeamMemInviteFormDto teamMemInviteFormDto,
-                                       BindingResult bindingResult,
-                                       Model model) {
+                                       @RequestBody TeamMemInviteFormDto teamMemInviteFormDto) {
         /*log.info(LocalDateTime.now().toString());
         log.info(teamMemInviteFormDto.toString());*/
-
         String email = principal.getName();
         Map<String, String> errors = new HashMap<>();
 
@@ -41,7 +39,16 @@ public class TeamMemberApiController {
         }
 
         teamMemFacade.invite(email, teamId, teamMemInviteFormDto);
-
         return ResponseEntity.ok(Collections.emptyMap());
+    }
+
+    @DeleteMapping("/team-members/{teamMemId}")
+    public ResponseEntity deleteTeamMem(@PathVariable("teamMemId") Long teamMemId,
+                                        @RequestParam("name") String teamMemName) {
+        if (teamMemId == null) {
+            return ResponseEntity.badRequest().body(WRONG_TEAM_MEM_ID);
+        }
+        teamMemFacade.deleteTeamMem(teamMemId);
+        return ResponseEntity.ok(teamMemName + " 팀원을 삭제 하였습니다.");
     }
 }

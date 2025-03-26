@@ -11,11 +11,9 @@ import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,8 +74,7 @@ public class TeamMemberService {
     }
 
     public Page<TeamMemberDto> getTeamMemberDtoPagesOf(Long teamId, Pageable pageable) {
-        List<TeamMemberDto> teamMemberDtos = teamMemberRepository.findAllTeamMemberDtoByTeamId(teamId, pageable);
-        return new PageImpl<>(teamMemberDtos, pageable, teamMemberDtos.size());
+        return teamMemberRepository.findAllTeamMemberDtoByTeamId(teamId, pageable);
     }
 
     public void validatePlayerNum(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors) {
@@ -97,5 +94,16 @@ public class TeamMemberService {
     public TeamMemberDetailDto getTeamMemberDetailDto(Long teamMemId) {
         TeamMember teamMember = teamMemberRepository.findById(teamMemId).orElseThrow(EntityNotFoundException::new);
         return TeamMemberDetailDto.of(teamMember);
+    }
+
+    @Transactional
+    public void deleteTeamMemById(Long teamMemId) {
+        teamMemberRepository.deleteById(teamMemId);
+    }
+
+    public boolean isAuthorizeMemberToManageTeam(Long memberId, Long teamId) {
+        TeamMember teamMem = teamMemberRepository.findByMemberIdAndTeamId(memberId, teamId);
+        TeamRole teamRole = teamMem.getTeamRole();
+        return teamRole.isAuthorizedToManageTeam();
     }
 }

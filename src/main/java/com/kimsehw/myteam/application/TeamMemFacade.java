@@ -2,6 +2,8 @@ package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.entity.Alarm;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.AlarmService;
@@ -9,9 +11,12 @@ import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
+import java.security.Principal;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -84,5 +89,22 @@ public class TeamMemFacade {
         }
         teamMemberService.addTeamMemberIn(teamService.findById(teamId), teamMemInviteFormDto.getName(), TeamRole.MEMBER,
                 teamMemInviteFormDto.getPlayerNum(), teamMemInviteFormDto.getPosition());
+    }
+
+    public void deleteTeamMem(Long teamMemId) {
+        teamMemberService.deleteTeamMemById(teamMemId);
+    }
+
+    public Page<TeamMemberDto> getTeamMemberDtoPagesOf(Long teamId, Pageable pageable) {
+        return teamMemberService.getTeamMemberDtoPagesOf(teamId, pageable);
+    }
+
+    public TeamMemberDetailDto getTeamMemberDetailDto(Long teamMemId) {
+        return teamMemberService.getTeamMemberDetailDto(teamMemId);
+    }
+
+    public boolean isAuthorizeToManageTeam(Principal principal, Long teamId) {
+        Member member = memberService.findMemberByEmail(principal.getName());
+        return teamMemberService.isAuthorizeMemberToManageTeam(member.getId(), teamId);
     }
 }

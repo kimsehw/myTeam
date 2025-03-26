@@ -3,6 +3,7 @@ package com.kimsehw.myteam.repository.teammember;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.entity.TeamMember;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,13 +13,18 @@ public interface TeamMemberRepository extends JpaRepository<TeamMember, Long>, T
 
     @Query("select tm from TeamMember tm"
             + " where tm.member.id = :memberId")
-    List<TeamMember> findByMemberId(Long memberId);
+    List<TeamMember> findAllByMemberId(Long memberId);
 
     @Query("select new com.kimsehw.myteam.dto.teammember.TeamMemberDto(tm.id, tm.teamRole, tm.playerNum,"
             + " tm.name, tm.teamMemberRecord, tm.attendance)"
             + " from TeamMember tm"
             + " where tm.team.id = :teamId")
-    List<TeamMemberDto> findAllTeamMemberDtoByTeamId(@Param("teamId") Long teamId, Pageable pageable);
+    Page<TeamMemberDto> findAllTeamMemberDtoByTeamId(@Param("teamId") Long teamId, Pageable pageable);
 
     TeamMember findByPlayerNumAndTeamId(int playerNum, Long teamId);
+
+    @Query("select tm from TeamMember tm"
+            + " where tm.member.id = :memberId"
+            + " and tm.team.id = :teamId")
+    TeamMember findByMemberIdAndTeamId(Long memberId, Long teamId);
 }

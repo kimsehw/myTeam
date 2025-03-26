@@ -20,15 +20,26 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript" src="/js/modal.js"></script>
-    <script th:inline="javascript" src="/js/teamMemInvite.js"></script>
+    <script th:inline="javascript" src="/js/teamMem/teamMemInvite.js"></script>
 </th:block>
 
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
 
     <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">팀원 목록</h2>
     <div class="flex justify-end space-x-4 mb-3">
-        <button class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        <button id="editButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                th:classappend="${manageTeam}?'':'hidden'">
+            팀원 편집
+        </button>
+        <button id="saveButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden"
                 th:onclick="toggleModal('inviteModal',true)">
+            저장
+        </button>
+        <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden">
+            취소
+        </button>
+        <button class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                th:classappend="${manageTeam}?'':'hidden'" th:onclick="toggleModal('inviteModal',true)">
             팀 초대 보내기
         </button>
     </div>
@@ -61,9 +72,13 @@
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.attendance}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center">
                     <a th:href="@{/team-members/{teamMemId}(teamMemId=${teamMem.teamMemId}, teamId=${teamId})}"
-                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        선수 정보
+                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2">
+                        선수 상세 정보
                     </a>
+                    <button type="button" id="deleteButton"
+                            class="bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 hidden">
+                        선수 삭제
+                    </button>
                 </td>
             </tr>
             </tbody>
