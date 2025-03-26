@@ -4,6 +4,7 @@ import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import com.kimsehw.myteam.entity.Alarm;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.AlarmService;
@@ -12,6 +13,7 @@ import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -106,5 +108,9 @@ public class TeamMemFacade {
     public boolean isAuthorizeToManageTeam(Principal principal, Long teamId) {
         Member member = memberService.findMemberByEmail(principal.getName());
         return teamMemberService.isAuthorizeMemberToManageTeam(member.getId(), teamId);
+    }
+
+    public void updateTeamMems(List<TeamMemberUpdateDto> teamMemberUpdateDtos) {
+        teamMemberService.updateTeamMems(teamMemberUpdateDtos);
     }
 }

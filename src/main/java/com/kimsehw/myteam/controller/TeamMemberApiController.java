@@ -2,14 +2,17 @@ package com.kimsehw.myteam.controller;
 
 import com.kimsehw.myteam.application.TeamMemFacade;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +50,12 @@ public class TeamMemberApiController {
             return ResponseEntity.badRequest().body(WRONG_TEAM_MEM_ID);
         }
         teamMemFacade.deleteTeamMem(teamMemId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/team-members")
+    public ResponseEntity updateTeamMems(@RequestBody List<TeamMemberUpdateDto> teamMemberUpdateDtos) {
+        teamMemFacade.updateTeamMems(teamMemberUpdateDtos);
         return ResponseEntity.ok().build();
     }
 }

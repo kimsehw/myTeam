@@ -15,7 +15,7 @@ public interface TeamMemberRepository extends JpaRepository<TeamMember, Long>, T
             + " where tm.member.id = :memberId")
     List<TeamMember> findAllByMemberId(Long memberId);
 
-    @Query("select new com.kimsehw.myteam.dto.teammember.TeamMemberDto(tm.id, tm.teamRole, tm.playerNum,"
+    @Query("select new com.kimsehw.myteam.dto.teammember.TeamMemberDto(tm.id, tm.member.id, tm.teamRole, tm.playerNum,"
             + " tm.name, tm.teamMemberRecord, tm.attendance)"
             + " from TeamMember tm"
             + " where tm.team.id = :teamId")

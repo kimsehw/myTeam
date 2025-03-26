@@ -64,7 +64,8 @@
             <tr th:each="teamMem : ${teamMembers.content}"
                 class="hover:bg-gray-100 transition cursor-pointer"
                 th:attr="data-teamMem-id=${teamMem.teamMemId}">
-                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.teamRole.roleName}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.teamRole.roleName}"
+                    th:classappend="${teamMem.memberId == null}?'text-red-500':''"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.playerNum}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.name}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center"

@@ -2,6 +2,7 @@ package com.kimsehw.myteam.entity;
 
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import com.kimsehw.myteam.embedded.record.PersonalRecord;
 import com.kimsehw.myteam.entity.baseentity.BaseEntity;
 import com.kimsehw.myteam.entity.team.Team;
@@ -93,5 +94,12 @@ public class TeamMember extends BaseEntity {
     public static TeamMember createNotUserTeamMember(Team team, String name, TeamRole teamRole, Integer playerNum,
                                                      Position position) {
         return new TeamMember(team, name, teamRole, playerNum, position);
+    }
+
+    public void updateBy(TeamMemberUpdateDto teamMemberUpdateDto) {
+        this.teamRole = teamMemberUpdateDto.getTeamRole();
+        this.name = teamMemberUpdateDto.getName();
+        this.playerNum = teamMemberUpdateDto.getPlayerNum();
+        this.teamMemberRecord.changePosition(teamMemberUpdateDto.getPosition());
     }
 }

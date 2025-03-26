@@ -6,11 +6,14 @@ import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -96,14 +99,61 @@ public class TeamMemberService {
         return TeamMemberDetailDto.of(teamMember);
     }
 
+    /**
+     * 팀원 삭제
+     *
+     * @param teamMemId
+     */
     @Transactional
     public void deleteTeamMemById(Long teamMemId) {
         teamMemberRepository.deleteById(teamMemId);
     }
 
+    /**
+     * 해당 회원이 편집 권한이 있는 직책인지 알려줍니다.
+     *
+     * @param memberId
+     * @param teamId
+     * @return
+     */
     public boolean isAuthorizeMemberToManageTeam(Long memberId, Long teamId) {
         TeamMember teamMem = teamMemberRepository.findByMemberIdAndTeamId(memberId, teamId);
         TeamRole teamRole = teamMem.getTeamRole();
         return teamRole.isAuthorizedToManageTeam();
+    }
+
+    /**
+     * 편집 요청한 팀원들의 정보를 받아 update 합니다.
+     *
+     * @param teamMemberUpdateDtos
+     */
+    @Transactional
+    public void updateTeamMems(List<TeamMemberUpdateDto> teamMemberUpdateDtos) {
+        List<Long> teamMemIds = teamMemberUpdateDtos.stream().map(TeamMemberUpdateDto::getTeamMemId).toList();
+        List<TeamMember> allById = teamMemberRepository.findAllById(teamMemIds);
+
+        Map<Long, TeamMember> forSorting = new HashMap<>();
+        for (TeamMember teamMember : allById) {
+            forSorting.put(teamMember.getId(), teamMember);
+        }
+        List<TeamMember> sortedTeamMembers = teamMemIds.stream()
+                .map(forSorting::get)
+                .toList();
+        for (int i = 0; i < sortedTeamMembers.size(); i++) {
+            TeamMember teamMember = sortedTeamMembers.get(i);
+            teamMember.updateBy(teamMemberUpdateDtos.get(i));
+        }
+    }
+
+    /*
+     * 나중 블로그 정리
+     * */
+    @Transactional
+    public void updateTeamMems2(List<TeamMemberUpdateDto> teamMemberUpdateDtos) {
+        for (TeamMemberUpdateDto teamMemberUpdateDto : teamMemberUpdateDtos) {
+            TeamMember teamMember = teamMemberRepository.findById(teamMemberUpdateDto.getTeamMemId())
+                    .orElseThrow(EntityNotFoundException::new);
+            teamMember.updateBy(teamMemberUpdateDto);
+        }
     }
 }
