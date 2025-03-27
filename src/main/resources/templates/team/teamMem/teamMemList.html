@@ -15,6 +15,19 @@
         .fieldError {
             color: #bd2130
         }
+        .flex-container {
+            display: flex;
+            align-items: center;
+            gap: 2px; /* 요소 간 간격 최소화 */
+        }
+
+        .flex-container select,
+        .flex-container input {
+            width: 60px;
+            height: 24px;
+            font-size: 14px;
+            padding: 2px 2px;
+        }
     </style>
 </th:block>
 
@@ -33,8 +46,7 @@
                 th:classappend="${manageTeam}?'':'hidden'">
             팀원 편집
         </button>
-        <button id="saveButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden"
-                th:onclick="toggleModal('inviteModal',true)">
+        <button id="saveButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden">
             저장
         </button>
         <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden">
@@ -61,25 +73,56 @@
             </tr>
             </thead>
             <tbody th:if="${teamMembers != null and not #lists.isEmpty(teamMembers.content)}">
+            <!--transition cursor-pointer-->
             <tr th:each="teamMem : ${teamMembers.content}"
-                class="hover:bg-gray-100 transition cursor-pointer"
-                th:attr="data-teamMem-id=${teamMem.teamMemId}">
-                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.teamRole.roleName}"
-                    th:classappend="${teamMem.memberId == null}?'text-red-500':''"></td>
-                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.playerNum}"></td>
-                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.name}"></td>
-                <td class="px-6 py-4 border-b border-gray-300 text-center"
-                    th:text="${teamMem.position.positionDetail}"></td>
+                th:attr="data-teamMem-id=${teamMem.teamMemId}, data-origin-teamRole=${teamMem.teamRole.name()},
+                data-origin-name=${teamMem.name}, data-origin-playerNum=${teamMem.playerNum}, data-origin-position=${teamMem.position.name()}">
+
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <div class="flex-container">
+                        <p th:text="${teamMem.teamRole.roleName}" class="view-mode"></p>
+                        <select class="edit-mode hidden teamRoleInput">
+                            <option th:each="role : ${teamRoles}" th:value="${role.name()}"
+                                    th:text="${role.getRoleName}"
+                                    th:selected="${teamMem.teamRole.name() == role.name()}"
+                            ></option>
+                        </select>
+                    </div>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <div class="flex-container">
+                        <p th:text="${teamMem.playerNum}" class="view-mode"></p>
+                        <input type="number" class="edit-mode hidden playerNumInput" th:value="${teamMem.playerNum}"/>
+                    </div>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <div class="flex-container">
+                        <p th:text="${teamMem.name}" th:classappend="${teamMem.memberId == null}?'view-mode':''"></p>
+                        <input type="text" class="hidden nameInput" th:value="${teamMem.name}"
+                               th:classappend="${teamMem.memberId == null}?'edit-mode':''"/>
+                    </div>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <div class="flex-container">
+                        <p th:text="${teamMem.position.positionDetail}" class="view-mode"></p>
+                        <select class="edit-mode hidden positionInput">
+                            <option th:each="pos : ${positions}" th:value="${pos.name()}"
+                                    th:text="${pos.getPositionDetail}"
+                                    th:selected="${teamMem.position.name() == pos.name()}">
+                            </option>
+                        </select>
+                    </div>
+                </td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.goals}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.assist}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.attendance}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center">
                     <a th:href="@{/team-members/{teamMemId}(teamMemId=${teamMem.teamMemId}, teamId=${teamId})}"
-                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2">
+                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2 text-sm">
                         선수 상세 정보
                     </a>
                     <button type="button" id="deleteModalButton"
-                            class="bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 hidden"
+                            class="bg-red-500 text-white px-2 py-2  text-sm rounded hover:bg-red-600 hidden"
                             th:attr="data-teamMem-id=${teamMem.teamMemId}, data-teamMem-name=${teamMem.name},
                              data-team-id=${teamId}"
                             th:onclick="openTeamMemDeleteModal(this, 'deleteModal')">

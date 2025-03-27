@@ -56,6 +56,6 @@ public class TeamMemberApiController {
     @PatchMapping("/team-members")
     public ResponseEntity updateTeamMems(@RequestBody List<TeamMemberUpdateDto> teamMemberUpdateDtos) {
         teamMemFacade.updateTeamMems(teamMemberUpdateDtos);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Collections.emptyMap());
     }
 }

@@ -2,6 +2,7 @@ package com.kimsehw.myteam.controller;
 
 import com.kimsehw.myteam.application.TeamMemFacade;
 import com.kimsehw.myteam.constant.Position;
+import com.kimsehw.myteam.constant.TeamRole;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import java.security.Principal;
@@ -35,6 +36,7 @@ public class TeamMemberController {
         model.addAttribute("teamId", teamId);
         model.addAttribute("manageTeam", manageTeam);
         model.addAttribute("positions", Position.values());
+        model.addAttribute("teamRoles", TeamRole.values());
         model.addAttribute("teamMembers", teamMemberDtos);
         model.addAttribute("maxPage", MAX_TEAM_MEM_SHOW);
         model.addAttribute("page", pageable.getPageNumber());
