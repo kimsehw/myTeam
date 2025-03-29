@@ -1,18 +1,21 @@
 package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import com.kimsehw.myteam.entity.Alarm;
 import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.service.AlarmService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,9 @@ import org.springframework.util.StringUtils;
 @Log
 public class TeamMemFacade {
 
+    public static final String SELF_EMAIL_INPUT_ERROR = "올바르지 않은 이메일 입니다. 자기 자신은 초대할 수 없습니다. 이메일을 확인해주세요.";
+    public static final String NO_EMAIL_ERROR = "초대 회원의 이메일을 입력해주세요.";
+    public static final String WRONG_EMAIL_ERROR = "존재하지 않는 회원입니다. 초대 회원의 이메일을 확인해주세요.";
     private final TeamMemberService teamMemberService;
     private final TeamService teamService;
     private final MemberService memberService;
@@ -35,48 +41,74 @@ public class TeamMemFacade {
 
     public void validateInviteInfo(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors,
                                    String email) {
-        teamMemberService.validatePlayerNum(teamId, teamMemInviteFormDto, errors);
+
+        try {
+            teamMemberService.validatePlayerNum(teamId, teamMemInviteFormDto.getPlayerNum());
+        } catch (FieldErrorException e) {
+            addFieldError(errors, e);
+        }
 
         if (teamMemInviteFormDto.isNotUser()) {
-            validateNotUserInfo(teamMemInviteFormDto, errors);
+            List<FieldError> notUserErrors = validateNotUserInfo(teamMemInviteFormDto);
+            for (FieldError notUserError : notUserErrors) {
+                errors.put(notUserError.getField(), notUserError.getErrorMessage());
+            }
             return;
         }
-        Long inviteeId = validateOfInviteeEmail(teamMemInviteFormDto, errors, email);
-        if (inviteeId != -1) {
+
+        try {
+            Long inviteeId = validateOfInviteeEmail(teamMemInviteFormDto, email);
             Member member = memberService.findMemberByEmail(email);
             alarmService.validateDuplicateInviteAlarm(teamId, member.getId(), inviteeId, errors);
+        } catch (FieldErrorException e) {
+            addFieldError(errors, e);
         }
-
     }
 
-    private static void validateNotUserInfo(TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors) {
+    private static void addFieldError(Map<String, String> errors, FieldErrorException e) {
+        FieldError fieldError = e.getFieldError();
+        errors.put(fieldError.getField(), fieldError.getErrorMessage());
+    }
+
+    /**
+     * 비회원에 대한 초대 정보 유효성 검사를 실시합니다.
+     *
+     * @param teamMemInviteFormDto
+     * @return List<FieldError> or 검사 통과할 경우 null
+     */
+    private static List<FieldError> validateNotUserInfo(TeamMemInviteFormDto teamMemInviteFormDto) {
+        List<FieldError> notUserErrors = new ArrayList<>();
         if (!StringUtils.hasText(teamMemInviteFormDto.getName())) {
-            errors.put("name", "이름을 입력해주세요");
+            notUserErrors.add(FieldError.of("name", "이름을 입력해주세요"));
         }
         if (teamMemInviteFormDto.getPosition() == null) {
-            errors.put("position", "포지션을 선택해주세요");
+            notUserErrors.add(FieldError.of("position", "포지션을 선택해주세요"));
         }
+        return notUserErrors;
     }
 
-    private Long validateOfInviteeEmail(TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors,
-                                        String email) {
+    /**
+     * 초대 회원의 이메일의 유효성을 검사합니다. 입력 여부 & 자기자신 입력 & 없는 회원
+     *
+     * @param teamMemInviteFormDto
+     * @param email
+     * @return 검사 통과할 경우 초대 회원의 memberId
+     */
+    private Long validateOfInviteeEmail(TeamMemInviteFormDto teamMemInviteFormDto, String email) {
         String emailOfInvitee = teamMemInviteFormDto.getEmail();
 //        log.info("emailOfInvitee: " + emailOfInvitee);
 
         if (!StringUtils.hasText(emailOfInvitee)) {
-            errors.put("email", "초대 회원의 이메일을 입력해주세요.");
-            return -1L;
+            throw new FieldErrorException(FieldError.of("email", NO_EMAIL_ERROR));
         }
         if (emailOfInvitee.equals(email)) {
-            errors.put("email", "올바르지 않은 이메일 입니다. 자기 자신은 초대할 수 없습니다. 이메일을 확인해주세요.");
-            return -1L;
+            throw new FieldErrorException(FieldError.of("email", SELF_EMAIL_INPUT_ERROR));
         }
         Member invitee;
         try {
             invitee = memberService.findMemberByEmail(emailOfInvitee);
         } catch (EntityNotFoundException e) {
-            errors.put("email", "존재하지 않는 회원입니다. 초대 회원의 이메일을 확인해주세요.");
-            return -1L;
+            throw new FieldErrorException(FieldError.of("email", WRONG_EMAIL_ERROR));
         }
         return invitee.getId();
     }

@@ -2,14 +2,15 @@ package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.dto.team.TeamsDto;
-import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.entity.TeamMember;
 import com.kimsehw.myteam.entity.team.Team;
+import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Log
 public class TeamMemberService {
 
+    public static final String NO_NUM_INPUT_ERROR = "등 번호를 입력해주세요.";
+    public static final String DUPLICATE_NUM_ERROR = "중복된 등 번호 선수가 존재합니다.";
     private final TeamMemberRepository teamMemberRepository;
 
     public Page<TeamsDto> getTeamsDtoPage(Long memberId, Pageable pageable) {
@@ -82,17 +85,21 @@ public class TeamMemberService {
         return teamMemberRepository.findAllTeamMemberDtoByTeamId(teamId, pageable);
     }
 
-    public void validatePlayerNum(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors) {
-        Integer playerNum = teamMemInviteFormDto.getPlayerNum();
+    /**
+     * 등번호의 유효성을 검사합니다(입력 여부 & 팀 내 중복 번호 유무)
+     *
+     * @param teamId
+     * @param playerNum
+     */
+    public void validatePlayerNum(Long teamId, Integer playerNum) {
         if (playerNum == null) {
-            errors.put("playerNum", "등 번호를 입력해주세요.");
-            return;
+            throw new FieldErrorException(FieldError.of("playerNum", NO_NUM_INPUT_ERROR));
         }
 
         TeamMember byPlayerNumAndTeamId = teamMemberRepository.findByPlayerNumAndTeamId(
                 playerNum, teamId);
         if (byPlayerNumAndTeamId != null) {
-            errors.put("playerNum", "중복된 등 번호 선수가 존재합니다.");
+            throw new FieldErrorException(FieldError.of("playerNum", DUPLICATE_NUM_ERROR));
         }
     }
 
