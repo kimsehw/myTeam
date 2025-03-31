@@ -63,7 +63,7 @@ class TeamMemFacadeTest {
         Map<String, String> errors = new HashMap<>();
 
         // when
-        teamMemFacade.validateInviteInfo(teamId, teamMemInviteFormDto, errors);
+        teamMemFacade.validateInviteInfo(teamId, teamMemInviteFormDto, errors, email);
 
         //then
         assertThat(!errors.isEmpty()).isTrue();
@@ -74,8 +74,8 @@ class TeamMemFacadeTest {
     }
 
     private static Stream<Arguments> generateValidateCase() {
-        String noEmail = "초대 회원의 이메일을 입력해주세요";
-        String noMember = "존재하지 않는 회원입니다. 초대 회원의 이메일을 확인해주세요";
+        String noEmail = "초대 회원의 이메일을 입력해주세요.";
+        String noMember = "존재하지 않는 회원입니다. 초대 회원의 이메일을 확인해주세요.";
         String noNum = "등 번호를 입력해주세요.";
         String duplicateNum = "중복된 등 번호 선수가 존재합니다.";
         return Stream.of(
