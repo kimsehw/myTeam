@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글</title>
+</head>
+
+<div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">글 목록</h2>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
+            <thead class="bg-gray-200">
+            <tr class="text-gray-700 text-left">
+                <th class="px-6 py-3 border-b-2 border-gray-300">유형</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">등록일</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">제목</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300">작성자</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-center">세부 내용</th>
+            </tr>
+            </thead>
+            <tbody th:if="${posts != null and not #lists.isEmpty(posts.content)}">
+            <tr th:each="post : ${posts.content}"
+                class="hover:bg-gray-100 transition cursor-pointer"
+                th:attr="data-post-id=${post.id}">
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${post.postType.typeName}"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${post.regTime}"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${post.title}"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${post.createdBy}"></td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <a th:href="@{/posts/{postId}(postId=${post.id})}"
+                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        세부 내용
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+            <tbody th:if="${posts == null or #lists.isEmpty(posts.content)}">
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                    등록된 글이 없습니다.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="mt-6 flex justify-center"
+         th:with="start=${(posts.number/maxPage)*maxPage + 1},
+              end=(${(posts.totalPages == 0) ? 1 : (start + (maxPage - 1) < posts.totalPages ? start + (maxPage - 1) : posts.totalPages)})">
+        <ul class="flex space-x-2">
+
+            <li th:classappend="${posts.first}?'opacity-50 pointer-events-none'"
+                class="bg-gray-300 px-3 py-2 rounded">
+                <a th:onclick="'javascript:page(' + ${posts.number - 1} + ')'" class="cursor-pointer">« 이전</a>
+            </li>
+
+            <li th:each="page: ${#numbers.sequence(start, end)}"
+                th:classappend="${posts.number eq page-1}?'bg-blue-500 text-white'"
+                class="px-3 py-2 rounded cursor-pointer hover:bg-gray-200">
+                <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text">[[${page}]]</a>
+            </li>
+
+            <li th:classappend="${posts.last}?'opacity-50 pointer-events-none'"
+                class="bg-gray-300 px-3 py-2 rounded">
+                <a th:onclick="'javascript:page(' + ${posts.number + 1} + ')'" class="cursor-pointer">다음 »</a>
+            </li>
+
+        </ul>
+    </div>
+
+    <script>
+        function page(pageNumber) {
+            window.location.href = '/posts?page=' + pageNumber;
+        }
+    </script>
+</div>
+</html>
