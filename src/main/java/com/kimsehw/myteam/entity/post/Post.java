@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.entity.post;
 
 import com.kimsehw.myteam.constant.PostType;
+import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.entity.baseentity.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -35,4 +36,14 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chat> chats;
+
+    private Post(PostFormDto postFormDto) {
+        title = postFormDto.getTitle();
+        detail = postFormDto.getDetail();
+        postType = postFormDto.getPostType();
+    }
+
+    public static Post newPost(PostFormDto postFormDto) {
+        return new Post(postFormDto);
+    }
 }
