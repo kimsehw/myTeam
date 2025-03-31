@@ -2,11 +2,10 @@ package com.kimsehw.myteam.controller;
 
 import com.kimsehw.myteam.application.TeamMemFacade;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
-import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateRequest;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -54,8 +53,17 @@ public class TeamMemberApiController {
     }
 
     @PatchMapping("/team-members")
-    public ResponseEntity updateTeamMems(@RequestBody List<TeamMemberUpdateDto> teamMemberUpdateDtos) {
-        teamMemFacade.updateTeamMems(teamMemberUpdateDtos);
+    public ResponseEntity updateTeamMems(@RequestBody TeamMemberUpdateRequest TeamMemberUpdateRequest) {
+        Map<Long, Map<String, String>> errors = new HashMap<>();
+
+        teamMemFacade.validateUpdateInfo(TeamMemberUpdateRequest.getTeamMemberUpdateDtos(),
+                TeamMemberUpdateRequest.getTeamId(), errors);
+        if (!errors.isEmpty()) {
+            log.info(errors.entrySet().toString());
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        teamMemFacade.updateTeamMems(TeamMemberUpdateRequest.getTeamMemberUpdateDtos());
         return ResponseEntity.ok(Collections.emptyMap());
     }
 }

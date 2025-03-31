@@ -16,6 +16,7 @@ import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ public class TeamMemFacade {
     public static final String SELF_EMAIL_INPUT_ERROR = "올바르지 않은 이메일 입니다. 자기 자신은 초대할 수 없습니다. 이메일을 확인해주세요.";
     public static final String NO_EMAIL_ERROR = "초대 회원의 이메일을 입력해주세요.";
     public static final String WRONG_EMAIL_ERROR = "존재하지 않는 회원입니다. 초대 회원의 이메일을 확인해주세요.";
+    public static final String NO_NAME_INPUT_ERROR = "이름은 필수 입력값입니다.";
+    public static final String DUPLICATE_LEADER_ERROR = "회장이 이미 존재합니다. 회장은 한명만 가능합니다.";
     private final TeamMemberService teamMemberService;
     private final TeamService teamService;
     private final MemberService memberService;
@@ -98,7 +101,7 @@ public class TeamMemFacade {
         String emailOfInvitee = teamMemInviteFormDto.getEmail();
 //        log.info("emailOfInvitee: " + emailOfInvitee);
 
-        if (!StringUtils.hasText(emailOfInvitee)) {
+        if (!StringUtils.hasText(email)) {
             throw new FieldErrorException(FieldError.of("email", NO_EMAIL_ERROR));
         }
         if (emailOfInvitee.equals(email)) {
@@ -144,5 +147,47 @@ public class TeamMemFacade {
 
     public void updateTeamMems(List<TeamMemberUpdateDto> teamMemberUpdateDtos) {
         teamMemberService.updateTeamMems(teamMemberUpdateDtos);
+    }
+
+    public void validateUpdateInfo(List<TeamMemberUpdateDto> teamMemberUpdateDtos, Long teamId,
+                                   Map<Long, Map<String, String>> errors) {
+        teamMemberUpdateDtos.forEach(dto -> {
+            HashMap<String, String> error = new HashMap<>();
+            noNameInputError(dto, error);
+            validatePlayerNumError(teamId, dto, error);
+            duplicateLeaderError(dto, error);
+
+            if (!error.isEmpty()) {
+                errors.put(dto.getTeamMemId(), error);
+            }
+        });
+    }
+
+    private void duplicateLeaderError(TeamMemberUpdateDto dto, HashMap<String, String> error) {
+        try {
+            if (dto.getTeamRole() == TeamRole.LEADER && !teamMemberService.isTeamLeader(dto.getTeamMemId())) {
+                throw new FieldErrorException(FieldError.of("teamRole", DUPLICATE_LEADER_ERROR));
+            }
+        } catch (FieldErrorException e) {
+            addFieldError(error, e);
+        }
+    }
+
+    private void validatePlayerNumError(Long teamId, TeamMemberUpdateDto dto, HashMap<String, String> error) {
+        try {
+            teamMemberService.validatePlayerNum(teamId, dto.getPlayerNum(), dto.getTeamMemId());
+        } catch (FieldErrorException e) {
+            addFieldError(error, e);
+        }
+    }
+
+    private static void noNameInputError(TeamMemberUpdateDto dto, HashMap<String, String> error) {
+        try {
+            if (!StringUtils.hasText(dto.getName())) {
+                throw new FieldErrorException(FieldError.of("name", NO_NAME_INPUT_ERROR));
+            }
+        } catch (FieldErrorException e) {
+            addFieldError(error, e);
+        }
     }
 }

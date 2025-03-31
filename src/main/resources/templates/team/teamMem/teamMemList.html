@@ -46,7 +46,8 @@
                 th:classappend="${manageTeam}?'':'hidden'">
             팀원 편집
         </button>
-        <button id="saveButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden">
+        <button id="saveButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden"
+                th:attr="data-team-id=${teamId}">
             저장
         </button>
         <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden">
@@ -79,7 +80,7 @@
                 data-origin-name=${teamMem.name}, data-origin-playerNum=${teamMem.playerNum}, data-origin-position=${teamMem.position.name()}">
 
                 <td class="px-6 py-4 border-b border-gray-300 text-center">
-                    <div class="flex-container">
+                    <div class="flex-container flex-col">
                         <p th:text="${teamMem.teamRole.roleName}" class="view-mode"></p>
                         <select class="edit-mode hidden teamRoleInput">
                             <option th:each="role : ${teamRoles}" th:value="${role.name()}"
@@ -87,19 +88,22 @@
                                     th:selected="${teamMem.teamRole.name() == role.name()}"
                             ></option>
                         </select>
+                        <p class="text-sm fieldError hidden teamRoleError"></p>
                     </div>
                 </td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center">
-                    <div class="flex-container">
+                    <div class="flex-container flex-col">
                         <p th:text="${teamMem.playerNum}" class="view-mode"></p>
                         <input type="number" class="edit-mode hidden playerNumInput" th:value="${teamMem.playerNum}"/>
+                        <p class="text-sm fieldError hidden playerNumError"></p>
                     </div>
                 </td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center">
-                    <div class="flex-container">
+                    <div class="flex-container flex-col">
                         <p th:text="${teamMem.name}" th:classappend="${teamMem.memberId == null}?'view-mode':''"></p>
                         <input type="text" class="hidden nameInput" th:value="${teamMem.name}"
                                th:classappend="${teamMem.memberId == null}?'edit-mode':''"/>
+                        <p class="text-sm fieldError hidden nameError"></p>
                     </div>
                 </td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center">

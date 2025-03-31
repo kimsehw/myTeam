@@ -26,11 +26,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         saveButton.classList.add("hidden");
         cancelButton.classList.add("hidden");
+
+        document.querySelectorAll(".fieldError").forEach(el => {
+            el.classList.add("hidden");
+            el.textContent = "";
+        });
     });
 
 //  수정 요청 -> PATCH 요청
     saveButton.addEventListener("click", function() {
         let teamMemberUpdateDtos = [];
+        let teamId = saveButton.getAttribute("data-team-id");
 
         document.querySelectorAll("tr[data-teamMem-id]").forEach(row => {
             let teamMemId = row.getAttribute("data-teamMem-id");
@@ -60,21 +66,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 teamMemberUpdateDtos.push(teamMemberUpdateDto);};
         });
 
-        var url = "/team-members"
-        console.log("teamMemberUpdateDtos",teamMemberUpdateDtos.length);
+        let requestBody = {
+            teamId: teamId,
+            teamMemberUpdateDtos: teamMemberUpdateDtos
+        };
 
-        fetch(url,{
+        fetch("/team-members",{
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 [csrfHeader]: csrfToken
             },
-            body: JSON.stringify(teamMemberUpdateDtos)
+            body: JSON.stringify(requestBody)
         })
-        .then(response => response.json())
-        .then(success => {
-            alert("수정 완료되었습니다.")
-            window.location.reload();
+        .then(response => {
+            if(response.ok) {
+                alert("수정 완료되었습니다.")
+                window.location.reload();
+            } else {
+                return response.json()
+            }
+        })
+        .then(errors => {
+            if (errors) {
+                displayErrors(errors)
+            }
         })
         .catch(error => {
             console.error("Error:", error)
@@ -82,3 +98,27 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+function displayErrors(errors) {
+    // 기존 오류 메시지 제거
+    document.querySelectorAll(".fieldError").forEach(errorElem => {
+        errorElem.classList.add("hidden");
+        errorElem.textContent = "";
+    });
+
+    Object.entries(errors).forEach(([teamMemId, fieldErrors]) => {
+        const row = document.querySelector(`tr[data-teamMem-id='${teamMemId}']`);
+
+        if (!row) return;
+
+        Object.entries(fieldErrors).forEach(([field, message]) => {
+            console.log("field",field)
+            console.log("message",message)
+            const errorElem = row.querySelector(`.${field}Error`);
+            if (errorElem) {
+                errorElem.textContent = message;
+                errorElem.classList.remove("hidden");
+            }
+        });
+    });
+}

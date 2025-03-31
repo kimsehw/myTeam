@@ -12,6 +12,7 @@ public class FieldErrorException extends IllegalArgumentException {
 
     public FieldErrorException(FieldError fieldError) {
         super();
+        this.fieldError = fieldError;
     }
 
     public FieldError getFieldError() {

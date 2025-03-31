@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
@@ -86,7 +87,7 @@ public class TeamMemberService {
     }
 
     /**
-     * 등번호의 유효성을 검사합니다(입력 여부 & 팀 내 중복 번호 유무)
+     * 초대 시 등번호의 유효성을 검사합니다(입력 여부 & 팀 내 중복 번호 유무)
      *
      * @param teamId
      * @param playerNum
@@ -99,6 +100,24 @@ public class TeamMemberService {
         TeamMember byPlayerNumAndTeamId = teamMemberRepository.findByPlayerNumAndTeamId(
                 playerNum, teamId);
         if (byPlayerNumAndTeamId != null) {
+            throw new FieldErrorException(FieldError.of("playerNum", DUPLICATE_NUM_ERROR));
+        }
+    }
+
+    /**
+     * 정보 업데이트 시 등번호의 유효성을 검사합니다(입력 여부 & 자기자신 외 팀 내 중복 번호 유무)
+     *
+     * @param teamId
+     * @param playerNum
+     */
+    public void validatePlayerNum(Long teamId, Integer playerNum, Long ownTeamMemId) {
+        if (playerNum == null) {
+            throw new FieldErrorException(FieldError.of("playerNum", NO_NUM_INPUT_ERROR));
+        }
+
+        TeamMember teamMember = teamMemberRepository.findByPlayerNumAndTeamId(
+                playerNum, teamId);
+        if (teamMember != null && !Objects.equals(teamMember.getId(), ownTeamMemId)) {
             throw new FieldErrorException(FieldError.of("playerNum", DUPLICATE_NUM_ERROR));
         }
     }
@@ -164,5 +183,10 @@ public class TeamMemberService {
                     .orElseThrow(EntityNotFoundException::new);
             teamMember.updateBy(teamMemberUpdateDto);
         }
+    }
+
+    public boolean isTeamLeader(Long teamMemId) {
+        TeamMember teamMember = teamMemberRepository.findById(teamMemId).orElseThrow(EntityNotFoundException::new);
+        return teamMember.getTeamRole() == TeamRole.LEADER;
     }
 }

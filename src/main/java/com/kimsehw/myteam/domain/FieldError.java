@@ -1,8 +1,10 @@
 package com.kimsehw.myteam.domain;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class FieldError {
 
     private String field;
