@@ -40,7 +40,7 @@ public class PostController {
 
         postService.savePost(postFormDto);
 
-        return "post/postForm";
+        return "redirect:/posts";
     }
 
     @GetMapping("/posts")

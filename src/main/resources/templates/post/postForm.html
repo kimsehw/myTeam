@@ -89,7 +89,7 @@
                       placeholder="내용을 입력해주세요.">
             </textarea>
             <p th:name="extraText" th:text="'글 유형을 먼저 선택해주세요.'" class="text-xs text-red-500 mt-1"></p>
-            <p th:if="${#fields.hasErrors(detail)}" th:errors="*{__${detail}__}" class="fieldError"></p>
+            <p th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}" class="fieldError"></p>
         </div>
 
         <div class="flex justify-end">
