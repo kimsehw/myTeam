@@ -10,6 +10,7 @@ import lombok.Data;
 public class TeamMemberDto {
 
     private Long teamMemId;
+    private Long memberId;
     private TeamRole teamRole;
     private int playerNum;
     private String name;
@@ -18,9 +19,10 @@ public class TeamMemberDto {
     private int assist;
     private int attendance;
 
-    public TeamMemberDto(Long teamMemId, TeamRole teamRole, int playerNum, String name,
+    public TeamMemberDto(Long teamMemId, Long memberId, TeamRole teamRole, int playerNum, String name,
                          PersonalRecord record, int attendance) {
         this.teamMemId = teamMemId;
+        this.memberId = memberId;
         this.teamRole = teamRole;
         this.playerNum = playerNum;
         this.name = name;
@@ -31,7 +33,8 @@ public class TeamMemberDto {
     }
 
     public static TeamMemberDto of(TeamMember teamMember) {
-        return new TeamMemberDto(teamMember.getId(), teamMember.getTeamRole(), teamMember.getPlayerNum(),
+        return new TeamMemberDto(teamMember.getId(), teamMember.getMember().getId(), teamMember.getTeamRole(),
+                teamMember.getPlayerNum(),
                 teamMember.getName(), teamMember.getTeamMemberRecord(), teamMember.getAttendance());
     }
 }

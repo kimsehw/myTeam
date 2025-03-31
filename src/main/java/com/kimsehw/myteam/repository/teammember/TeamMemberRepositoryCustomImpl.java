@@ -47,6 +47,11 @@ public class TeamMemberRepositoryCustomImpl implements TeamMemberRepositoryCusto
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(teamsDtos, pageable, teamsDtos.size());
+        Long total = queryFactory.select(teamMember.count())
+                .from(teamMember)
+                .where(teamMember.member.id.eq(memberId))
+                .fetchOne();
+
+        return new PageImpl<>(teamsDtos, pageable, total);
     }
 }

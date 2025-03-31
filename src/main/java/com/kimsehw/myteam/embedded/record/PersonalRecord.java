@@ -24,4 +24,8 @@ public class PersonalRecord extends BaseRecord {
         this.winRate = this.calcWinRate(getWins(), getLoses(), getDraws());
         this.position = position;
     }
+
+    public void changePosition(Position position) {
+        this.position = position;
+    }
 }

@@ -13,7 +13,6 @@ import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.repository.MemberRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -89,7 +88,7 @@ class TeamMemberServiceTest {
         Long teamC = createTeam(member2.getEmail(), "teamB");
         Long teamD = createTeam(member2.getEmail(), "teamD");
         Pageable pageable = PageRequest.of(0, 5);
-        List<TeamMemberDto> allTeamMemberDtoByTeamId = teamMemberRepository.findAllTeamMemberDtoByTeamId(teamA,
+        Page<TeamMemberDto> allTeamMemberDtoByTeamId = teamMemberRepository.findAllTeamMemberDtoByTeamId(teamA,
                 pageable);
         for (TeamMemberDto teamMemberDto : allTeamMemberDtoByTeamId) {
             assertThat(teamMemberDto.getName()).isEqualTo(member.getName());

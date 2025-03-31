@@ -15,20 +15,46 @@
         .fieldError {
             color: #bd2130
         }
+        .flex-container {
+            display: flex;
+            align-items: center;
+            gap: 2px; /* 요소 간 간격 최소화 */
+        }
+
+        .flex-container select,
+        .flex-container input {
+            width: 60px;
+            height: 24px;
+            font-size: 14px;
+            padding: 2px 2px;
+        }
     </style>
 </th:block>
 
 <th:block layout:fragment="script">
     <script th:inline="javascript" src="/js/modal.js"></script>
-    <script th:inline="javascript" src="/js/teamMemInvite.js"></script>
+    <script th:inline="javascript" src="/js/teamMem/teamMemInvite.js"></script>
+    <script th:inline="javascript" src="/js/teamMem/teamMemsEdit.js"></script>
+    <script th:inline="javascript" src="/js/teamMem/teamMemDelete.js"></script>
 </th:block>
 
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
 
     <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">팀원 목록</h2>
     <div class="flex justify-end space-x-4 mb-3">
+        <button id="editButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                th:classappend="${manageTeam}?'':'hidden'">
+            팀원 편집
+        </button>
+        <button id="saveButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden"
+                th:attr="data-team-id=${teamId}">
+            저장
+        </button>
+        <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden">
+            취소
+        </button>
         <button class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                th:onclick="toggleModal('inviteModal',true)">
+                th:classappend="${manageTeam}?'':'hidden'" th:onclick="toggleModal('inviteModal',true)">
             팀 초대 보내기
         </button>
     </div>
@@ -48,22 +74,64 @@
             </tr>
             </thead>
             <tbody th:if="${teamMembers != null and not #lists.isEmpty(teamMembers.content)}">
+            <!--transition cursor-pointer-->
             <tr th:each="teamMem : ${teamMembers.content}"
-                class="hover:bg-gray-100 transition cursor-pointer"
-                th:attr="data-teamMem-id=${teamMem.teamMemId}">
-                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.teamRole.roleName}"></td>
-                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.playerNum}"></td>
-                <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.name}"></td>
-                <td class="px-6 py-4 border-b border-gray-300 text-center"
-                    th:text="${teamMem.position.positionDetail}"></td>
+                th:attr="data-teamMem-id=${teamMem.teamMemId}, data-origin-teamRole=${teamMem.teamRole.name()},
+                data-origin-name=${teamMem.name}, data-origin-playerNum=${teamMem.playerNum}, data-origin-position=${teamMem.position.name()}">
+
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <div class="flex-container flex-col">
+                        <p th:text="${teamMem.teamRole.roleName}" class="view-mode"></p>
+                        <select class="edit-mode hidden teamRoleInput">
+                            <option th:each="role : ${teamRoles}" th:value="${role.name()}"
+                                    th:text="${role.getRoleName}"
+                                    th:selected="${teamMem.teamRole.name() == role.name()}"
+                            ></option>
+                        </select>
+                        <p class="text-sm fieldError hidden teamRoleError"></p>
+                    </div>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <div class="flex-container flex-col">
+                        <p th:text="${teamMem.playerNum}" class="view-mode"></p>
+                        <input type="number" class="edit-mode hidden playerNumInput" th:value="${teamMem.playerNum}"/>
+                        <p class="text-sm fieldError hidden playerNumError"></p>
+                    </div>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <div class="flex-container flex-col">
+                        <p th:text="${teamMem.name}" th:classappend="${teamMem.memberId == null}?'view-mode':''"></p>
+                        <input type="text" class="hidden nameInput" th:value="${teamMem.name}"
+                               th:classappend="${teamMem.memberId == null}?'edit-mode':''"/>
+                        <p class="text-sm fieldError hidden nameError"></p>
+                    </div>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-300 text-center">
+                    <div class="flex-container">
+                        <p th:text="${teamMem.position.positionDetail}" class="view-mode"></p>
+                        <select class="edit-mode hidden positionInput">
+                            <option th:each="pos : ${positions}" th:value="${pos.name()}"
+                                    th:text="${pos.getPositionDetail}"
+                                    th:selected="${teamMem.position.name() == pos.name()}">
+                            </option>
+                        </select>
+                    </div>
+                </td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.goals}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.assist}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center" th:text="${teamMem.attendance}"></td>
                 <td class="px-6 py-4 border-b border-gray-300 text-center">
-                    <a th:href="@{/teamMembers/{teamMemId}/?=(teamMemId=${teamMem.teamMemId})}"
-                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        선수 정보
+                    <a th:href="@{/team-members/{teamMemId}(teamMemId=${teamMem.teamMemId}, teamId=${teamId})}"
+                       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2 text-sm">
+                        선수 상세 정보
                     </a>
+                    <button type="button" id="deleteModalButton"
+                            class="bg-red-500 text-white px-2 py-2  text-sm rounded hover:bg-red-600 hidden"
+                            th:attr="data-teamMem-id=${teamMem.teamMemId}, data-teamMem-name=${teamMem.name},
+                             data-team-id=${teamId}"
+                            th:onclick="openTeamMemDeleteModal(this, 'deleteModal')">
+                        선수 방출
+                    </button>
                 </td>
             </tr>
             </tbody>
@@ -105,25 +173,10 @@
     <!-- JavaScript 페이지 이동 함수 -->
     <script>
         function page(pageNumber) {
-            window.location.href = '/teamMembers?page=' + pageNumber;
+            window.location.href = '/teams/[[${teamId}]]/team-members?page=' + pageNumber;
         }
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 모든 <tr> 요소 가져오기
-            let rows = document.querySelectorAll("tbody tr");
-
-            rows.forEach(row => {
-                row.addEventListener("click", function() {
-                    let teamMemId = this.getAttribute("data-teamMem-id"); // data-team-id 속성에서 값 가져오기
-                    if (teamMemId) {
-                        window.location.href = "/teamMembers/" + teamMemId;
-                    }
-                });
-            });
-        });
-    </script>
-    <div th:insert="team/teamMem/fragments/inviteModal"></div>
-
+    <div th:insert="~{team/teamMem/fragments/inviteModal}"></div>
+    <div th:insert="~{team/teamMem/fragments/deleteModal}"></div>
 </div>
 </html>
