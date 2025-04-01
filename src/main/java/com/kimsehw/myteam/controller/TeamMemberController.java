@@ -2,7 +2,7 @@ package com.kimsehw.myteam.controller;
 
 import com.kimsehw.myteam.application.TeamMemFacade;
 import com.kimsehw.myteam.constant.Position;
-import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import java.security.Principal;

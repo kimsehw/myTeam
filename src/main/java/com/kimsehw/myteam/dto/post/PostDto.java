@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.dto.post;
 
-import com.kimsehw.myteam.constant.PostType;
+import com.kimsehw.myteam.constant.post.PostType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Data;

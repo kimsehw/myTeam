@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.constant;
+package com.kimsehw.myteam.constant.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

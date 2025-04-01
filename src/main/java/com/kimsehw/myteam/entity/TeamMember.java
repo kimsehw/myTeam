@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.entity;
 
 import com.kimsehw.myteam.constant.Position;
-import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import com.kimsehw.myteam.embedded.record.PersonalRecord;
 import com.kimsehw.myteam.entity.baseentity.BaseEntity;

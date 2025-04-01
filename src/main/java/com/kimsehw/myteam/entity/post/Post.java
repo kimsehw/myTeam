@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.entity.post;
 
-import com.kimsehw.myteam.constant.PostType;
+import com.kimsehw.myteam.constant.post.PostType;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.entity.baseentity.BaseEntity;
 import jakarta.persistence.CascadeType;

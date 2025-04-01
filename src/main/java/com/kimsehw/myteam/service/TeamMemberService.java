@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.constant.Position;
-import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;

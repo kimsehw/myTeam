@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.controller;
 
-import com.kimsehw.myteam.constant.PostType;
+import com.kimsehw.myteam.constant.post.PostType;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.service.PostService;

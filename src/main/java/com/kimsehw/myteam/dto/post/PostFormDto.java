@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.dto.post;
 
-import com.kimsehw.myteam.constant.PostType;
+import com.kimsehw.myteam.constant.post.PostType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.entity;
 
-import com.kimsehw.myteam.constant.AlarmType;
+import com.kimsehw.myteam.constant.alarm.AlarmType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

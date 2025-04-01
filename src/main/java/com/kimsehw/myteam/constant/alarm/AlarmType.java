@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.constant;
+package com.kimsehw.myteam.constant.alarm;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
