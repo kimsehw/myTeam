@@ -9,7 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("select new com.kimsehw.myteam.dto.post.PostDto(p.id, p.regTime, p.title, p.postType, p.createdBy)"
-            + " from Post p")
+    @Query("select new com.kimsehw.myteam.dto.post.PostDto(p.id, p.regTime, p.title, p.postType, p.createdBy, t.teamName)"
+            + " from Post p"
+            + " join p.team t")
     Page<PostDto> findAllPostDto(Pageable pageable);
 }

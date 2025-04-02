@@ -13,12 +13,14 @@ public class PostDto {
     private String title;
     private PostType postType;
     private String createdBy;
+    private String teamName;
 
-    public PostDto(Long id, LocalDateTime regTime, String title, PostType postType, String createdBy) {
+    public PostDto(Long id, LocalDateTime regTime, String title, PostType postType, String createdBy, String teamName) {
         this.id = id;
         this.regTime = regTime.format(DateTimeFormatter.ofPattern("yyyy-M-dd"));
         this.title = title;
         this.postType = postType;
         this.createdBy = createdBy;
+        this.teamName = teamName;
     }
 }
