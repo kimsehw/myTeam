@@ -11,6 +11,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select new com.kimsehw.myteam.dto.post.PostDto(p.id, p.regTime, p.title, p.postType, p.createdBy, t.teamName)"
             + " from Post p"
-            + " join p.team t")
+            + " join p.team t"
+            + " order by p.regTime desc")
     Page<PostDto> findAllPostDto(Pageable pageable);
 }

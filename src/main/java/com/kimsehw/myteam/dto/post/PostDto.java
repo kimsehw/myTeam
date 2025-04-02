@@ -17,7 +17,7 @@ public class PostDto {
 
     public PostDto(Long id, LocalDateTime regTime, String title, PostType postType, String createdBy, String teamName) {
         this.id = id;
-        this.regTime = regTime.format(DateTimeFormatter.ofPattern("yyyy-M-dd"));
+        this.regTime = regTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.title = title;
         this.postType = postType;
         this.createdBy = createdBy;
