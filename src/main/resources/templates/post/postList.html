@@ -9,6 +9,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글</title>
 </head>
+<th:block layout:fragment="script">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchDateType = document.getElementById("searchDateType");
+            const fromDate = document.getElementById("fromDate");
+            const toDate = document.getElementById("toDate");
+
+            function handleDateChange() {
+                if (fromDate.value || toDate.value) {
+                    searchDateType.value = ""; // 기간 선택 초기화
+                    searchDateType.setAttribute("disabled", "true"); // 비활성화
+                } else {
+                    searchDateType.removeAttribute("disabled"); // 활성화
+                }
+            }
+
+            function handlePeriodChange() {
+                if (searchDateType.value) {
+                    fromDate.value = "";
+                    toDate.value = "";
+                    fromDate.setAttribute("disabled", "true"); // 비활성화
+                    toDate.setAttribute("disabled", "true"); // 비활성화
+                } else {
+                    fromDate.removeAttribute("disabled"); // 활성화
+                    toDate.removeAttribute("disabled"); // 활성화
+                }
+            }
+
+            fromDate.addEventListener("change", handleDateChange);
+            toDate.addEventListener("change", handleDateChange);
+            searchDateType.addEventListener("change", handlePeriodChange);
+        });
+    </script>
+</th:block>
+
 
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
     <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">글 목록</h2>
@@ -77,27 +112,35 @@
         </ul>
     </div>
 
-    <!--<div class="form-inline justify-content-center" th:object="${postSearchDto}">
-        <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
-            <option value="all">전체기간</option>
-            <option value="1d">1일</option>
-            <option value="1w">1주</option>
-            <option value="1m">1개월</option>
-            <option value="6m">6개월</option>
+    <form id="searchForm" th:object="${postSearch}" method="get" th:action="@{/posts}"
+          class="flex items-center gap-4 bg-gray-100 p-4 rounded-lg shadow-md">
+        <select th:field="*{postType}" class="px-4 py-2 border rounded-lg">
+            <option value="">-- 글 유형 --</option>
+            <option th:each="type : ${postTypes}"
+                    th:value="${type.name()}"
+                    th:text="${type.typeName}">
+            </option>
         </select>
-        <select th:field="*{searchSellStatus}" class="form-control" style="width:auto;">
-            <option value="">판매상태(전체)</option>
-            <option value="SELL">판매</option>
-            <option value="SOLD_OUT">품절</option>
+        <input id="fromDate" th:field="*{fromDate}" type="date" class="px-4 py-2 border rounded-lg">
+        <span>~</span>
+        <input id="toDate" th:field="*{toDate}" type="date" class="px-4 py-2 border rounded-lg">
+        <select th:field="*{searchDateType}" class="px-4 py-2 border rounded-lg">
+            <option value="">-- 기간 선택 --</option>
+            <option th:each="type : ${searchDateTypes}"
+                    th:value="${type.name()}"
+                    th:text="${type.text}">
+            </option>
         </select>
-        <select th:field="*{searchBy}" class="form-control" style="width:auto;">
-            <option value="itemName">상품명</option>
-            <option value="createdBy">등록자</option>
+        <select th:field="*{searchType}" class="px-4 py-2 border rounded-lg">
+            <option th:each="type : ${searchTypes}"
+                    th:value="${type.name()}"
+                    th:text="${type.text}">
+            </option>
         </select>
-        <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색어를 입력해주세요">
-        <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
-    </div>-->
-
+        <input th:field="*{searchQuery}" type="text" class="px-4 py-2 border rounded-lg w-60" placeholder="검색어를 입력해주세요">
+        <button id="searchBtn" type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">검색
+        </button>
+    </form>
 
     <script>
         function page(pageNumber) {

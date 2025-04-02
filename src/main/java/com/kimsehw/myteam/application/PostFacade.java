@@ -3,6 +3,7 @@ package com.kimsehw.myteam.application;
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
+import com.kimsehw.myteam.dto.post.PostSearchDto;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.PostService;
@@ -27,11 +28,16 @@ public class PostFacade {
     }
 
     public void savePost(PostFormDto postFormDto) {
-        Team team = teamService.findById(postFormDto.getTeamId());
+        Team team = null;
+        Long teamId = postFormDto.getTeamId();
+        if (teamId != null) {
+            team = teamService.findById(postFormDto.getTeamId());
+        }
+
         postService.savePost(postFormDto, team);
     }
 
-    public Page<PostDto> getPosts(Pageable pageable) {
-        return postService.getPosts(pageable);
+    public Page<PostDto> getPosts(PostSearchDto postSearchDto, Pageable pageable) {
+        return postService.getPosts(postSearchDto, pageable);
     }
 }

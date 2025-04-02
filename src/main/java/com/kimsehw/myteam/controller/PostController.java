@@ -2,9 +2,12 @@ package com.kimsehw.myteam.controller;
 
 import com.kimsehw.myteam.application.PostFacade;
 import com.kimsehw.myteam.constant.post.PostType;
+import com.kimsehw.myteam.constant.serch.SearchDateType;
+import com.kimsehw.myteam.constant.serch.SearchType;
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
+import com.kimsehw.myteam.dto.post.PostSearchDto;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -53,10 +57,14 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public String postView(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+    public String postView(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+                           @ModelAttribute("postSearch") PostSearchDto postSearchDto) {
         Pageable pageable = PageRequest.of(page, MAX_POST_SHOW);
-        Page<PostDto> posts = postFacade.getPosts(pageable);
+        Page<PostDto> posts = postFacade.getPosts(postSearchDto, pageable);
         model.addAttribute("posts", posts);
+        model.addAttribute("searchTypes", SearchType.values());
+        model.addAttribute("postTypes", PostType.values());
+        model.addAttribute("searchDateTypes", SearchDateType.values());
         model.addAttribute("maxPage", MAX_POST_SHOW);
         model.addAttribute("page", pageable.getPageNumber());
         return "post/postList";

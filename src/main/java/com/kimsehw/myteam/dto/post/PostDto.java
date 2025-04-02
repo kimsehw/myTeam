@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.dto.post;
 
 import com.kimsehw.myteam.constant.post.PostType;
+import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class PostDto {
     private String createdBy;
     private String teamName;
 
+    @QueryProjection
     public PostDto(Long id, LocalDateTime regTime, String title, PostType postType, String createdBy, String teamName) {
         this.id = id;
         this.regTime = regTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
