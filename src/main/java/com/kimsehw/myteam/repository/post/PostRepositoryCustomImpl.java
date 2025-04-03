@@ -168,13 +168,13 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         return queryFactory
                 .select(Projections.constructor(
                         PostDetailDto.class,
-                        post.id, post.title, post.detail, post.createdBy,
+                        post.id, post.title, post.detail, post.createdBy, post.regTime,
                         team.id.as("teamId"), teamLogo.imgUrl.as("logoUrl"),
                         team.teamName, team.region, team.ageRange)
                 )
                 .from(post)
-                .join(post.team, team).fetchJoin()
-                .join(team.teamLogo, teamLogo).fetchJoin()
+                .leftJoin(post.team, team)
+                .leftJoin(team.teamLogo, teamLogo)
                 .where(post.id.eq(postId))
                 .fetchOne();
     }

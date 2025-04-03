@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세</title>
+</head>
+
+<div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
+
+    <h2 class="text-3xl font-bold text-gray-900 mb-4" th:text="${postDetail.title}"></h2>
+
+    <div class="text-gray-600 mb-6 flex flex-col text-sm">
+        <span th:text="'작성자 : ' + ${postDetail.createdBy}"></span>
+        <span th:text="${postDetail.regTime}"></span>
+    </div>
+
+    <!-- 게시글 내용 -->
+    <div class="border-t border-gray-300 pt-10 text-lg leading-relaxed min-h-[400px] flex">
+        <p class="flex-grow" th:utext="${postDetail.detail}"></p>
+    </div>
+
+    <!-- 팀 정보 -->
+    <div th:if="${postDetail.teamId != null}" class="mt-12 bg-gray-100 p-6 rounded-lg flex items-center">
+        <img th:src="${postDetail.logoUrl}" alt="팀 로고" class="w-16 h-16 rounded-full mr-4">
+        <div class="ml-3">
+            <h4 class="text-xl font-semibold" th:text="${postDetail.teamName}"></h4>
+            <div class="flex items-center">
+                <p class="text-gray-600 text-sm" th:text="'나이 : ' + ${postDetail.ageRange.range}"></p>
+                <p class="text-gray-600 text-sm ml-2" th:text="'지역 : ' + ${postDetail.region.regionName}"></p>
+            </div>
+        </div>
+    </div>
+
+    <!--&lt;!&ndash; 댓글 섹션 &ndash;&gt;
+    <div class="mt-12">
+        <h3 class="text-2xl font-semibold mb-4">댓글</h3>
+        <div class="border-t border-gray-300 pt-4 space-y-4">
+            <div th:each="comment : ${postDetail.comments}" class="border-b pb-4">
+                <p class="text-gray-900 font-medium" th:text="${comment.author}"></p>
+                <p class="text-gray-700" th:text="${comment.content}"></p>
+                <p class="text-sm text-gray-400"
+                   th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></p>
+            </div>
+        </div>
+
+        &lt;!&ndash; 댓글 입력 &ndash;&gt;
+        <form th:action="@{/posts/{postId}/comments(postId=${post.id})}" method="post" class="mt-6">
+            <textarea name="content" class="w-full border border-gray-300 rounded-lg p-3" rows="3"
+                      placeholder="댓글을 입력하세요"></textarea>
+            <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">댓글 작성</button>
+        </form>
+    </div>-->
+
+</div>
+</html>
