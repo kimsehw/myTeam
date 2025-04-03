@@ -63,4 +63,8 @@ public class Post extends BaseEntity {
                 .sorted(Comparator.comparing(Chat::getRegTime).reversed())
                 .toList();
     }
+
+    public void addChat(Chat chat) {
+        chats.add(chat);
+    }
 }

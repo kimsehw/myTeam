@@ -7,6 +7,8 @@ import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
 import com.kimsehw.myteam.dto.post.QPostDto;
+import com.kimsehw.myteam.entity.post.Post;
+import com.kimsehw.myteam.entity.post.QChat;
 import com.kimsehw.myteam.entity.post.QPost;
 import com.kimsehw.myteam.entity.team.QTeam;
 import com.kimsehw.myteam.entity.team.QTeamLogo;
@@ -175,6 +177,20 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
                 .from(post)
                 .leftJoin(post.team, team)
                 .leftJoin(team.teamLogo, teamLogo)
+                .where(post.id.eq(postId))
+                .fetchOne();
+    }
+
+    @Override
+    public Post findAllWithChatAndChildChatsByIdUseFetch(Long postId) {
+        QPost post = QPost.post;
+        QChat chat = QChat.chat;
+        QChat childChat = new QChat("childChat");
+        return queryFactory
+                .selectFrom(post)
+                .distinct()
+                .leftJoin(post.chats, chat).fetchJoin()
+                .leftJoin(chat.childChats, childChat)
                 .where(post.id.eq(postId))
                 .fetchOne();
     }

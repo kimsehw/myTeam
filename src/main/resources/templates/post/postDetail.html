@@ -10,6 +10,10 @@
     <title>게시글 상세</title>
 </head>
 
+<th:block layout:fragment="script">
+    <script src="/js/post/AddChat.js"></script>
+</th:block>
+
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
 
     <h2 class="text-3xl font-bold text-gray-900 mb-4" th:text="${postDetail.title}"></h2>
@@ -41,12 +45,23 @@
         <h3 class="text-2xl font-semibold mb-4">댓글</h3>
         <div class="border-t border-gray-300 pt-4 space-y-4">
             <div th:each="chat : ${chats}" class="border-b pb-4">
-                <p class="text-gray-900 font-medium" th:text="${chat.createdBy}"></p>
+                <p class="text-gray-900 font-medium text-sm" th:text="${chat.createdBy}"></p>
                 <p class="text-gray-700" th:text="${chat.detail}"></p>
                 <p class="text-sm text-gray-400"
                    th:text="${chat.regTime}"></p>
-                <div th:each="childChat : ${chat.childChats}" class="border-b pb-4">
-                    <p class="text-gray-900 font-medium" th:text="${childChat.createdBy}"></p>
+                <!-- 답글 달기 버튼 -->
+                <button class="text-blue-500 text-sm" th:onclick="|showReplyForm('${chat.id}')|">답글</button>
+
+                <!-- 대댓글 입력 폼 (초기에는 숨김) -->
+                <div th:id="'replyForm-' + ${chat.id}" class="hidden mt-2">
+                    <textarea class="w-full border border-gray-300 rounded-lg p-2 reply-content"
+                              placeholder="답글을 입력하세요"></textarea>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded mb-1"
+                            th:onclick="addChat('[[${postDetail.id}]]', '[[${chat.id}]]')">답글 작성
+                    </button>
+                </div>
+                <div th:each="childChat : ${chat.childChats}" class="border-b pb-4 ml-4">
+                    <p class="text-gray-900 font-medium text-sm" th:text="${childChat.createdBy}"></p>
                     <p class="text-gray-700" th:text="${childChat.detail}"></p>
                     <p class="text-sm text-gray-400"
                        th:text="${childChat.regTime}"></p>
@@ -55,10 +70,12 @@
         </div>
 
         <!--댓글 입력-->
-        <form th:action="@{/posts/{postId}/addChat}" method="post" class="mt-6">
-            <textarea name="content" class="w-full border border-gray-300 rounded-lg p-3" rows="3"
+        <form class="mt-6">
+            <textarea id="content" class="w-full border border-gray-300 rounded-lg p-3" rows="3"
                       placeholder="댓글을 입력하세요"></textarea>
-            <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">댓글 작성</button>
+            <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    th:onClick="addChat('[[${postDetail.id}]]', '')">댓글 작성
+            </button>
         </form>
     </div>
 

@@ -17,6 +17,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Getter
@@ -39,11 +40,36 @@ public class Chat extends BaseEntity {
     private Chat parentChat;
 
     @OneToMany(mappedBy = "parentChat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 25)
     private List<Chat> childChats = new ArrayList<>();
 
     public List<Chat> getSortingChildChats() {
         return childChats.stream()
                 .sorted(Comparator.comparing(Chat::getRegTime).reversed())
                 .toList();
+    }
+
+    private Chat(String detail, Post post) {
+        this.detail = detail;
+        this.post = post;
+        post.addChat(this);
+    }
+
+    public static Chat addChatIn(Post post, String content) {
+        return new Chat(content, post);
+    }
+
+    public Chat(String detail, Chat parentChat) {
+        this.detail = detail;
+        this.parentChat = parentChat;
+        parentChat.addChildChat(this);
+    }
+
+    private void addChildChat(Chat childChat) {
+        childChats.add(childChat);
+    }
+
+    public static Chat createChildChat(Chat parentChat, String content) {
+        return new Chat(content, parentChat);
     }
 }
