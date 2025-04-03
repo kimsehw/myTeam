@@ -5,6 +5,7 @@ import com.kimsehw.myteam.constant.post.PostType;
 import com.kimsehw.myteam.constant.serch.SearchDateType;
 import com.kimsehw.myteam.constant.serch.SearchType;
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
+import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
@@ -21,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -68,5 +70,12 @@ public class PostController {
         model.addAttribute("maxPage", MAX_POST_SHOW);
         model.addAttribute("page", pageable.getPageNumber());
         return "post/postList";
+    }
+
+    @GetMapping("/posts/{postId}")
+    public String postDetail(Model model, @PathVariable("postId") Long postId) {
+        PostDetailDto postDetail = postFacade.getPostDetail(postId);
+        model.addAttribute("postDetail", postDetail);
+        return "post/postDetail";
     }
 }

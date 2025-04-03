@@ -3,11 +3,14 @@ package com.kimsehw.myteam.repository.post;
 import com.kimsehw.myteam.constant.post.PostType;
 import com.kimsehw.myteam.constant.serch.SearchDateType;
 import com.kimsehw.myteam.constant.serch.SearchType;
+import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
 import com.kimsehw.myteam.dto.post.QPostDto;
 import com.kimsehw.myteam.entity.post.QPost;
 import com.kimsehw.myteam.entity.team.QTeam;
+import com.kimsehw.myteam.entity.team.QTeamLogo;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -154,5 +157,25 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         }
 
         return QPost.post.regTime.goe(now);
+    }
+
+    @Override
+    public PostDetailDto findPostDetailDtoById(Long postId) {
+        QPost post = QPost.post;
+        QTeam team = QTeam.team;
+        QTeamLogo teamLogo = QTeamLogo.teamLogo;
+
+        return queryFactory
+                .select(Projections.constructor(
+                        PostDetailDto.class,
+                        post.id, post.title, post.detail, post.createdBy,
+                        team.id.as("teamId"), teamLogo.imgUrl.as("logoUrl"),
+                        team.teamName, team.region, team.ageRange)
+                )
+                .from(post)
+                .join(post.team, team).fetchJoin()
+                .join(team.teamLogo, teamLogo).fetchJoin()
+                .where(post.id.eq(postId))
+                .fetchOne();
     }
 }

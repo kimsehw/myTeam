@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
+import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
@@ -39,5 +40,9 @@ public class PostFacade {
 
     public Page<PostDto> getPosts(PostSearchDto postSearchDto, Pageable pageable) {
         return postService.getPosts(postSearchDto, pageable);
+    }
+
+    public PostDetailDto getPostDetail(Long postId) {
+        return postService.getPostDetail(postId);
     }
 }

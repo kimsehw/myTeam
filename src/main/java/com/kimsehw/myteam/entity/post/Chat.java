@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,5 +38,5 @@ public class Chat extends BaseEntity {
     private Chat parentChat;
 
     @OneToMany(mappedBy = "parentChat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Chat> childChats;
+    private List<Chat> childChats = new ArrayList<>();
 }

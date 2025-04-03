@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.service;
 
+import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
@@ -27,5 +28,9 @@ public class PostService {
 
     public Page<PostDto> getPosts(PostSearchDto postSearchDto, Pageable pageable) {
         return postRepository.findAllPostDto(postSearchDto, pageable);
+    }
+
+    public PostDetailDto getPostDetail(Long postId) {
+        return postRepository.findPostDetailDtoById(postId);
     }
 }
