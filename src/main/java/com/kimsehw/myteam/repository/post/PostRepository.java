@@ -14,4 +14,9 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
             + " left join p.team t"
             + " order by p.regTime desc")
     Page<PostDto> findAllPostDto(Pageable pageable);
+
+    @Query("select p from Post p"
+            + " join fetch p.chats c"
+            + " where p.id = :postId")
+    Post findAllWithChatByIdUseFetch(Long postId);
 }

@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -55,5 +56,11 @@ public class Post extends BaseEntity {
 
     public static Post newPost(PostFormDto postFormDto, Team team) {
         return new Post(postFormDto, team);
+    }
+
+    public List<Chat> getSoringChats() {
+        return chats.stream()
+                .sorted(Comparator.comparing(Chat::getRegTime).reversed())
+                .toList();
     }
 }

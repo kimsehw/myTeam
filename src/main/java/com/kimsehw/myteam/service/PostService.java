@@ -4,9 +4,11 @@ import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
+import com.kimsehw.myteam.entity.post.Chat;
 import com.kimsehw.myteam.entity.post.Post;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.repository.post.PostRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,5 +34,10 @@ public class PostService {
 
     public PostDetailDto getPostDetail(Long postId) {
         return postRepository.findPostDetailDtoById(postId);
+    }
+
+    public List<Chat> getChats(Long postId) {
+        Post post = postRepository.findAllWithChatByIdUseFetch(postId);
+        return post.getSoringChats();
     }
 }

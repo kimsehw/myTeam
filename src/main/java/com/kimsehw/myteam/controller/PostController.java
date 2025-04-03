@@ -5,6 +5,7 @@ import com.kimsehw.myteam.constant.post.PostType;
 import com.kimsehw.myteam.constant.serch.SearchDateType;
 import com.kimsehw.myteam.constant.serch.SearchType;
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
+import com.kimsehw.myteam.dto.post.ChatDto;
 import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
@@ -75,7 +76,9 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public String postDetail(Model model, @PathVariable("postId") Long postId) {
         PostDetailDto postDetail = postFacade.getPostDetail(postId);
+        List<ChatDto> chats = postFacade.getChats(postId);
         model.addAttribute("postDetail", postDetail);
+        model.addAttribute("chats", chats);
         return "post/postDetail";
     }
 }
