@@ -41,7 +41,7 @@ public class Chat extends BaseEntity {
     @OneToMany(mappedBy = "parentChat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chat> childChats = new ArrayList<>();
 
-    public List<Chat> getSoringChildChats() {
+    public List<Chat> getSortingChildChats() {
         return childChats.stream()
                 .sorted(Comparator.comparing(Chat::getRegTime).reversed())
                 .toList();

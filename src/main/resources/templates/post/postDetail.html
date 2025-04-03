@@ -36,25 +36,31 @@
         </div>
     </div>
 
-    <!--&lt;!&ndash; 댓글 섹션 &ndash;&gt;
+    <!--댓글-->
     <div class="mt-12">
         <h3 class="text-2xl font-semibold mb-4">댓글</h3>
         <div class="border-t border-gray-300 pt-4 space-y-4">
-            <div th:each="comment : ${postDetail.comments}" class="border-b pb-4">
-                <p class="text-gray-900 font-medium" th:text="${comment.author}"></p>
-                <p class="text-gray-700" th:text="${comment.content}"></p>
+            <div th:each="chat : ${chats}" class="border-b pb-4">
+                <p class="text-gray-900 font-medium" th:text="${chat.createdBy}"></p>
+                <p class="text-gray-700" th:text="${chat.detail}"></p>
                 <p class="text-sm text-gray-400"
-                   th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></p>
+                   th:text="${chat.regTime}"></p>
+                <div th:each="childChat : ${chat.childChats}" class="border-b pb-4">
+                    <p class="text-gray-900 font-medium" th:text="${childChat.createdBy}"></p>
+                    <p class="text-gray-700" th:text="${childChat.detail}"></p>
+                    <p class="text-sm text-gray-400"
+                       th:text="${childChat.regTime}"></p>
+                </div>
             </div>
         </div>
 
-        &lt;!&ndash; 댓글 입력 &ndash;&gt;
-        <form th:action="@{/posts/{postId}/comments(postId=${post.id})}" method="post" class="mt-6">
+        <!--댓글 입력-->
+        <form th:action="@{/posts/{postId}/addChat}" method="post" class="mt-6">
             <textarea name="content" class="w-full border border-gray-300 rounded-lg p-3" rows="3"
                       placeholder="댓글을 입력하세요"></textarea>
             <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">댓글 작성</button>
         </form>
-    </div>-->
+    </div>
 
 </div>
 </html>

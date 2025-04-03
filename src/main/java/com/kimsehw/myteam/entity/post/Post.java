@@ -58,7 +58,7 @@ public class Post extends BaseEntity {
         return new Post(postFormDto, team);
     }
 
-    public List<Chat> getSoringChats() {
+    public List<Chat> getSortingChats() {
         return chats.stream()
                 .sorted(Comparator.comparing(Chat::getRegTime).reversed())
                 .toList();

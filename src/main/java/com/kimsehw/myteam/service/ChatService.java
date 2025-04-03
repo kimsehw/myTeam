@@ -16,7 +16,7 @@ public class ChatService {
 
     public List<Chat> getChildChatsOf(Long parentId) {
         Chat chat = chatRepository.findAllWithChildChatByIdUseFetch(parentId);
-        List<Chat> childChats = chat.getSoringChildChats();
+        List<Chat> childChats = chat.getSortingChildChats();
         return childChats;
     }
 }

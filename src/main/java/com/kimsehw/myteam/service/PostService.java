@@ -38,6 +38,6 @@ public class PostService {
 
     public List<Chat> getChats(Long postId) {
         Post post = postRepository.findAllWithChatByIdUseFetch(postId);
-        return post.getSoringChats();
+        return post.getSortingChats();
     }
 }
