@@ -113,32 +113,37 @@
     </div>
 
     <form id="searchForm" th:object="${postSearch}" method="get" th:action="@{/posts}"
-          class="flex items-center gap-4 bg-gray-100 p-4 rounded-lg shadow-md">
-        <select th:field="*{postType}" class="px-4 py-2 border rounded-lg">
+          class="flex flex-wrap items-center gap-2 bg-gray-100 p-4 rounded-lg shadow-md mt-3 w-full max-w-4xl mx-auto">
+        <select th:field="*{postType}" class="px-3 py-1 border rounded-lg text-sm">
             <option value="">-- 글 유형 --</option>
             <option th:each="type : ${postTypes}"
                     th:value="${type.name()}"
                     th:text="${type.typeName}">
             </option>
         </select>
-        <input id="fromDate" th:field="*{fromDate}" type="date" class="px-4 py-2 border rounded-lg">
-        <span>~</span>
-        <input id="toDate" th:field="*{toDate}" type="date" class="px-4 py-2 border rounded-lg">
-        <select th:field="*{searchDateType}" class="px-4 py-2 border rounded-lg">
+        <div class="flex items-center gap-1">
+            <input id="fromDate" th:field="*{fromDate}" type="date"
+                   class="px-3 py-1 border rounded-md text-sm w-[120px]">
+            <span>~</span>
+            <input id="toDate" th:field="*{toDate}" type="date" class="px-3 py-1 border rounded-md text-sm w-[120px]">
+        </div>
+        <select th:field="*{searchDateType}" class="px-3 py-1 border rounded-lg text-sm">
             <option value="">-- 기간 선택 --</option>
             <option th:each="type : ${searchDateTypes}"
                     th:value="${type.name()}"
                     th:text="${type.text}">
             </option>
         </select>
-        <select th:field="*{searchType}" class="px-4 py-2 border rounded-lg">
+        <select th:field="*{searchType}" class="px-3 py-1 border rounded-lg text-sm">
             <option th:each="type : ${searchTypes}"
                     th:value="${type.name()}"
                     th:text="${type.text}">
             </option>
         </select>
-        <input th:field="*{searchQuery}" type="text" class="px-4 py-2 border rounded-lg w-60" placeholder="검색어를 입력해주세요">
-        <button id="searchBtn" type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">검색
+        <input th:field="*{searchQuery}" type="text" class="px-3 py-1 border rounded-md text-sm w-[180px]"
+               placeholder="검색어를 입력해주세요">
+        <button id="searchBtn" type="submit"
+                class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm">검색
         </button>
     </form>
 
