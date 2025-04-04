@@ -91,4 +91,8 @@ public class PostFacade {
         Post post = postService.findById(postId);
         return post.getCreatedBy().equals(email);
     }
+
+    public void deletePost(Long postId) {
+        postService.delete(postId);
+    }
 }

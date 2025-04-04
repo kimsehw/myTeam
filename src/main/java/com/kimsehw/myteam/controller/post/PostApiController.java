@@ -8,6 +8,7 @@ import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,17 @@ public class PostApiController {
         } catch (FieldErrorException e) {
             FieldError fieldError = e.getFieldError();
             return ResponseEntity.badRequest().body(fieldError.getErrorMessage());
+        }
+        return ResponseEntity.ok(Collections.emptyMap());
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    private ResponseEntity delete(@PathVariable("postId") Long postId) {
+        try {
+            postFacade.deletePost(postId);
+        } catch (RuntimeException e) {
+            log.info(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.ok(Collections.emptyMap());
     }

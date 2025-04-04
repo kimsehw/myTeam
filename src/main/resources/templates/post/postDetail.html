@@ -12,6 +12,8 @@
 
 <th:block layout:fragment="script">
     <script src="/js/post/AddChat.js"></script>
+    <script src="/js/post/PostEdit.js"></script>
+    <script src="/js/modal.js"></script>
 </th:block>
 
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
@@ -26,7 +28,10 @@
     <div th:if="${isWriter}" class="mb-6 flex justify-end">
         <button class="text-sm text-gray-500 mr-1">수정</button>
         <span class="text-sm mr-1"> | </span>
-        <button class="text-sm text-gray-500">삭제</button>
+        <button id="deleteModalButton" class="text-sm text-gray-500"
+                th:attr="data-post-id=${postDetail.id}"
+                th:onclick="openPostDeleteModal(this, 'deleteModal')">삭제
+        </button>
     </div>
 
     <!-- 게시글 내용 -->
@@ -56,7 +61,7 @@
                 <p class="text-sm text-gray-400"
                    th:text="${chat.regTime}"></p>
                 <!-- 답글 달기 버튼 -->
-                <button class="text-blue-500 text-sm" th:onclick="|showReplyForm('${chat.id}')|">답글</button>
+                <button class="text-blue-500 text-sm" th:onclick="showReplyForm('[[${chat.id}]]')">답글</button>
 
                 <!-- 대댓글 입력 폼 (초기에는 숨김) -->
                 <div th:id="'replyForm-' + ${chat.id}" class="hidden mt-2">
@@ -84,6 +89,8 @@
             </button>
         </form>
     </div>
+
+    <div th:insert="~{post/fragments/deleteModal}"></div>
 
 </div>
 </html>
