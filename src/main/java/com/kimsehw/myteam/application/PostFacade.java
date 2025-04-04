@@ -9,12 +9,14 @@ import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
 import com.kimsehw.myteam.entity.post.Chat;
+import com.kimsehw.myteam.entity.post.Post;
 import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.service.ChatService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.PostService;
 import com.kimsehw.myteam.service.TeamService;
+import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -79,5 +81,14 @@ public class PostFacade {
             return postService.addChat(postId, chatFormDto.getContent());
         }
         return chatService.addChildChat(chatFormDto);
+    }
+
+    public boolean isWriter(Long postId, Principal principal) {
+        if (principal == null) {
+            return false;
+        }
+        String email = principal.getName();
+        Post post = postService.findById(postId);
+        return post.getCreatedBy().equals(email);
     }
 }

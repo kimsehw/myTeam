@@ -74,11 +74,13 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public String postDetail(Model model, @PathVariable("postId") Long postId) {
+    public String postDetail(Model model, @PathVariable("postId") Long postId, Principal principal) {
+        boolean isWriter = postFacade.isWriter(postId, principal);
         PostDetailDto postDetail = postFacade.getPostDetail(postId);
         List<ChatDto> chats = postFacade.getChats(postId);
         model.addAttribute("postDetail", postDetail);
         model.addAttribute("chats", chats);
+        model.addAttribute("isWriter", isWriter);
         return "post/postDetail";
     }
 }

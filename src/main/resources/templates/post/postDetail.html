@@ -18,9 +18,15 @@
 
     <h2 class="text-3xl font-bold text-gray-900 mb-4" th:text="${postDetail.title}"></h2>
 
-    <div class="text-gray-600 mb-6 flex flex-col text-sm">
+    <div class="text-gray-600 flex flex-col text-sm">
         <span th:text="'작성자 : ' + ${postDetail.createdBy}"></span>
         <span th:text="${postDetail.regTime}"></span>
+    </div>
+    <!--수정 & 삭제-->
+    <div th:if="${isWriter}" class="mb-6 flex justify-end">
+        <button class="text-sm text-gray-500 mr-1">수정</button>
+        <span class="text-sm mr-1"> | </span>
+        <button class="text-sm text-gray-500">삭제</button>
     </div>
 
     <!-- 게시글 내용 -->
@@ -41,7 +47,7 @@
     </div>
 
     <!--댓글-->
-    <div class="mt-12">
+    <div class="mt-10">
         <h3 class="text-2xl font-semibold mb-4">댓글</h3>
         <div class="border-t border-gray-300 pt-4 space-y-4">
             <div th:each="chat : ${chats}" class="border-b pb-4">
