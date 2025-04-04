@@ -61,4 +61,15 @@ public class PostService {
     public void delete(Long postId) {
         postRepository.deleteById(postId);
     }
+
+    public PostFormDto getPostFormOf(Long postId) {
+        Post post = findById(postId);
+        return PostFormDto.of(post);
+    }
+
+    @Transactional
+    public void update(Long postId, PostFormDto postFormDto, Team team) {
+        Post post = findById(postId);
+        post.update(postFormDto, team);
+    }
 }

@@ -41,13 +41,18 @@ public class PostFacade {
     }
 
     public void savePost(PostFormDto postFormDto) {
+        Team team = getTeam(postFormDto);
+
+        postService.savePost(postFormDto, team);
+    }
+
+    private Team getTeam(PostFormDto postFormDto) {
         Team team = null;
         Long teamId = postFormDto.getTeamId();
         if (teamId != null) {
             team = teamService.findById(postFormDto.getTeamId());
         }
-
-        postService.savePost(postFormDto, team);
+        return team;
     }
 
     public Page<PostDto> getPosts(PostSearchDto postSearchDto, Pageable pageable) {
@@ -94,5 +99,14 @@ public class PostFacade {
 
     public void deletePost(Long postId) {
         postService.delete(postId);
+    }
+
+    public PostFormDto getPostFormOf(Long postId) {
+        return postService.getPostFormOf(postId);
+    }
+
+    public void updatePost(Long postId, PostFormDto postFormDto) {
+        Team team = getTeam(postFormDto);
+        postService.update(postId, postFormDto, team);
     }
 }

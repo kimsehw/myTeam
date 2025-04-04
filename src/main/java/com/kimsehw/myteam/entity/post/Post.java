@@ -67,4 +67,11 @@ public class Post extends BaseEntity {
     public void addChat(Chat chat) {
         chats.add(chat);
     }
+
+    public void update(PostFormDto postFormDto, Team team) {
+        detail = postFormDto.getDetail();
+        title = postFormDto.getTitle();
+        postType = postFormDto.getPostType();
+        this.team = team;
+    }
 }

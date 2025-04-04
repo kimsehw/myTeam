@@ -26,7 +26,7 @@
     </div>
     <!--수정 & 삭제-->
     <div th:if="${isWriter}" class="mb-6 flex justify-end">
-        <button class="text-sm text-gray-500 mr-1">수정</button>
+        <a th:href="@{/posts/new/{postId}(postId=${postDetail.id})}" class="text-sm text-gray-500 mr-1">수정</a>
         <span class="text-sm mr-1"> | </span>
         <button id="deleteModalButton" class="text-sm text-gray-500"
                 th:attr="data-post-id=${postDetail.id}"

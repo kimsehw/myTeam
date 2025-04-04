@@ -40,9 +40,7 @@ public class PostController {
     public String postForm(Model model, Principal principal) {
         String email = principal.getName();
         List<MyTeamsInfoDto> myTeams = postFacade.findMyTeamsInfoByEmail(email);
-        model.addAttribute("postForm", new PostFormDto());
-        model.addAttribute("myTeams", myTeams);
-        model.addAttribute("postTypes", PostType.values());
+        addForNewPost(model, new PostFormDto(), myTeams);
         return "post/postForm";
     }
 
@@ -57,6 +55,22 @@ public class PostController {
         postFacade.savePost(postFormDto);
 
         return "redirect:/posts";
+    }
+
+    @GetMapping("/posts/new/{postId}")
+    public String update(@PathVariable("postId") Long postId, Model model, Principal principal) {
+        String email = principal.getName();
+        List<MyTeamsInfoDto> myTeams = postFacade.findMyTeamsInfoByEmail(email);
+        PostFormDto postFormDto = postFacade.getPostFormOf(postId);
+        addForNewPost(model, postFormDto, myTeams);
+        model.addAttribute("postId", postId);
+        return "post/postUpdate";
+    }
+
+    private static void addForNewPost(Model model, PostFormDto postFormDto, List<MyTeamsInfoDto> myTeams) {
+        model.addAttribute("postForm", postFormDto);
+        model.addAttribute("myTeams", myTeams);
+        model.addAttribute("postTypes", PostType.values());
     }
 
     @GetMapping("/posts")
