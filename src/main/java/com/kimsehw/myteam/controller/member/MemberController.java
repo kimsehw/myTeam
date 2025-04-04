@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.controller;
+package com.kimsehw.myteam.controller.member;
 
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.dto.member.MemberFormDto;

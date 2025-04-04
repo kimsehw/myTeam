@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.controller;
+package com.kimsehw.myteam.controller.post;
 
 import com.kimsehw.myteam.application.PostFacade;
 import com.kimsehw.myteam.constant.post.PostType;

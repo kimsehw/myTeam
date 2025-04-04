@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.controller;
+package com.kimsehw.myteam.controller.team;
 
 import com.kimsehw.myteam.application.TeamFacade;
 import com.kimsehw.myteam.constant.team.AgeRange;
