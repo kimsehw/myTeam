@@ -1,10 +1,11 @@
 package com.kimsehw.myteam.entity;
 
-import com.kimsehw.myteam.constant.AlarmType;
+import com.kimsehw.myteam.constant.alarm.AlarmType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,11 +35,11 @@ public class Alarm {
     @Enumerated(EnumType.STRING)
     private AlarmType alarmType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_mem_id")
     private Member fromMember;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_mem_id")
     private Member toMember;
 

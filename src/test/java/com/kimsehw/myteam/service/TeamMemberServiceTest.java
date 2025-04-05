@@ -3,8 +3,8 @@ package com.kimsehw.myteam.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.kimsehw.myteam.application.TeamFacade;
-import com.kimsehw.myteam.constant.AgeRange;
-import com.kimsehw.myteam.constant.Region;
+import com.kimsehw.myteam.constant.team.AgeRange;
+import com.kimsehw.myteam.constant.team.Region;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;

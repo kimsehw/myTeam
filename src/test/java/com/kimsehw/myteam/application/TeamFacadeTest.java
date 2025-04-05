@@ -3,9 +3,9 @@ package com.kimsehw.myteam.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.kimsehw.myteam.constant.AgeRange;
-import com.kimsehw.myteam.constant.Region;
-import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.constant.team.AgeRange;
+import com.kimsehw.myteam.constant.team.Region;
+import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;

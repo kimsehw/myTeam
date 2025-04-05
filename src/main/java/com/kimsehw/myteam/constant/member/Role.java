@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.constant;
+package com.kimsehw.myteam.constant.member;
 
 public enum Role {
     ADMIN, LEADER, MEMBER

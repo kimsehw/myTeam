@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.dto.team;
 
-import com.kimsehw.myteam.constant.Region;
-import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.constant.team.Region;
+import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import lombok.Data;

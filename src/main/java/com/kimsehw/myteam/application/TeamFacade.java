@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.application;
 
-import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;

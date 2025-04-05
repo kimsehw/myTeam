@@ -53,9 +53,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if ( updatedTeamRole !== originalTeamRole || updatedPlayerNum !== originalPlayerNum ||
                                 updatedName !== originalName || updatedPosition !== originalPosition) {
-                console.log(updatedName)
+                /*console.log(updatedName)
                 console.log(updatedPosition)
-                console.log(originalPosition)
+                console.log(originalPosition)*/
                 let teamMemberUpdateDto = {
                     teamMemId: teamMemId,
                     teamRole: updatedTeamRole,

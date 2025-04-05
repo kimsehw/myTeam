@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.dto.teammember;
 
 import com.kimsehw.myteam.constant.Position;
-import com.kimsehw.myteam.constant.TeamRole;
+import com.kimsehw.myteam.constant.teammember.TeamRole;
 import lombok.Data;
 
 @Data

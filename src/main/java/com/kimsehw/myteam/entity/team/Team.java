@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.entity.team;
 
-import com.kimsehw.myteam.constant.AgeRange;
-import com.kimsehw.myteam.constant.Region;
+import com.kimsehw.myteam.constant.team.AgeRange;
+import com.kimsehw.myteam.constant.team.Region;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.embedded.record.TeamRecord;

@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.entity;
 
-import com.kimsehw.myteam.constant.Role;
+import com.kimsehw.myteam.constant.member.Role;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.embedded.record.PersonalRecord;
 import com.kimsehw.myteam.entity.baseentity.BaseTimeEntity;

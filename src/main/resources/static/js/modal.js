@@ -24,3 +24,10 @@ function openTeamMemDeleteModal(button, modalName) {
     // 모달을 표시
     toggleModal(modalName, true);
 }
+
+function openPostDeleteModal(button, modalName) {
+    let postId = button.getAttribute("data-post-id");
+
+    document.getElementById("deleteBtn").setAttribute("onclick", `deletePost(${postId})`);
+    toggleModal(modalName, true);
+}

@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.controller;
+package com.kimsehw.myteam.controller.teammember;
 
 import com.kimsehw.myteam.application.TeamMemFacade;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
