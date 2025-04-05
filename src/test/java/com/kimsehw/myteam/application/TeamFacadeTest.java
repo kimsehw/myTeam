@@ -6,12 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import com.kimsehw.myteam.constant.team.AgeRange;
 import com.kimsehw.myteam.constant.team.Region;
 import com.kimsehw.myteam.constant.teammember.TeamRole;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
-import com.kimsehw.myteam.domain.entity.Member;
-import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.repository.TeamRepository;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
@@ -72,7 +72,7 @@ class TeamFacadeTest {
         Team team = teamRepository.findById(teamId).orElseThrow();
         Member member1 = memberService.findMemberByEmail(email);
 
-        assertThat(team.getMember()).isEqualTo(member1);
+        assertThat(team.getLeader().getMember()).isEqualTo(member1);
     }
 
     @Test

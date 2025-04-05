@@ -3,13 +3,13 @@ package com.kimsehw.myteam.service;
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
-import com.kimsehw.myteam.domain.entity.Member;
-import com.kimsehw.myteam.domain.entity.TeamMember;
-import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,20 +36,6 @@ public class TeamMemberService {
 
     public Page<TeamsDto> getTeamsDtoPage(Long memberId, Pageable pageable) {
         return teamMemberRepository.getTeamsDtoPage(memberId, pageable);
-    }
-
-    /**
-     * 팀 생성 시 팀 초기 멤버(리더)를 등록
-     *
-     * @param team     소속 팀
-     * @param member   팀원이 될 회원
-     * @param teamRole 팀내 직책
-     * @return teamMemberId
-     */
-    @Transactional
-    public Long addInitialTeamMember(Team team, Member member, TeamRole teamRole) {
-        TeamMember teamMember = TeamMember.createInitialTeamMember(team, member, teamRole);
-        return teamMember.getId();
     }
 
     /**

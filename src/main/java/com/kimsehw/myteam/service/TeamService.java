@@ -1,10 +1,11 @@
 package com.kimsehw.myteam.service;
 
-import com.kimsehw.myteam.dto.team.TeamFormDto;
-import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.domain.entity.team.TeamLogo;
+import com.kimsehw.myteam.dto.team.TeamFormDto;
+import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.repository.TeamLogoRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,12 +34,12 @@ public class TeamService {
     private String logoImgLocation;
 
     @Transactional
-    public Team saveTeam(Member member, TeamFormDto teamFormDto, MultipartFile teamLogoFile) {
-        if (teamRepository.findByMemberIdAndTeamName(member.getId(), teamFormDto.getTeamName()) != null) {
+    public Team saveTeam(TeamMember leader, TeamFormDto teamFormDto, MultipartFile teamLogoFile) {
+        if (teamRepository.findByMemberIdAndTeamName(leader.getMember().getId(), teamFormDto.getTeamName()) != null) {
             throw new IllegalStateException(DUPLICATE_TEAM_NAME_EXCEPTION);
         }
 
-        Team team = Team.createTeam(teamFormDto, member);
+        Team team = Team.createTeam(teamFormDto, leader);
         teamRepository.save(team);
 
         TeamLogo teamLogo = TeamLogo.of(team);

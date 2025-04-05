@@ -1,10 +1,10 @@
 package com.kimsehw.myteam.domain.entity;
 
 import com.kimsehw.myteam.constant.member.Role;
-import com.kimsehw.myteam.dto.member.MemberFormDto;
-import com.kimsehw.myteam.domain.entity.baseentity.BaseTimeEntity;
-import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.embedded.record.PersonalRecord;
+import com.kimsehw.myteam.domain.entity.baseentity.BaseTimeEntity;
+import com.kimsehw.myteam.dto.member.MemberFormDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -51,7 +51,7 @@ public class Member extends BaseTimeEntity {
     private PersonalRecord memberRecord;
 
     @OneToMany(mappedBy = "member")
-    private List<Team> teams = new ArrayList<>();
+    private List<TeamMember> myTeams = new ArrayList<>();
 
     private Member(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
         name = memberFormDto.getName();
@@ -65,9 +65,9 @@ public class Member extends BaseTimeEntity {
         return new Member(memberFormDto, passwordEncoder);
     }
 
-    public void addTeam(Team team) {
-        teams.add(team);
-        if (role == Role.MEMBER) {
+    public void addMyTeam(TeamMember team) {
+        myTeams.add(team);
+        if (role == Role.MEMBER && team.getTeamRole() == TeamRole.LEADER) {
             role = Role.LEADER;
         }
     }

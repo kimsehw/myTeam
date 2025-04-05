@@ -1,11 +1,11 @@
 package com.kimsehw.myteam.application;
 
-import com.kimsehw.myteam.constant.teammember.TeamRole;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
-import com.kimsehw.myteam.domain.entity.Member;
-import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
@@ -30,8 +30,8 @@ public class TeamFacade {
             throw new EntityNotFoundException();
         }
 
-        Team team = teamService.saveTeam(member, teamFormDto, teamLogoFile);
-        teamMemberService.addInitialTeamMember(team, member, TeamRole.LEADER);
+        TeamMember leader = TeamMember.createInitialTeamMember(member);
+        Team team = teamService.saveTeam(leader, teamFormDto, teamLogoFile);
         return team.getId();
     }
 

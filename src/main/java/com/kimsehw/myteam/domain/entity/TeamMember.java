@@ -2,10 +2,10 @@ package com.kimsehw.myteam.domain.entity;
 
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.teammember.TeamRole;
-import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
+import com.kimsehw.myteam.domain.embedded.record.PersonalRecord;
 import com.kimsehw.myteam.domain.entity.baseentity.BaseEntity;
 import com.kimsehw.myteam.domain.entity.team.Team;
-import com.kimsehw.myteam.domain.embedded.record.PersonalRecord;
+import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -55,13 +55,12 @@ public class TeamMember extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    private TeamMember(Team team, Member member, TeamRole teamRole) {
-        this.team = team;
+    private TeamMember(Member member, TeamRole teamRole) {
         this.member = member;
         this.teamRole = teamRole;
         name = member.getName();
         teamMemberRecord = new PersonalRecord(member.getMemberRecord().getPosition());
-        team.addTeamMember(this);
+        member.addMyTeam(this);
     }
 
     public TeamMember(Team team, Member member, TeamRole teamRole, int playerNum) {
@@ -83,8 +82,14 @@ public class TeamMember extends BaseEntity {
         team.addTeamMember(this);
     }
 
-    public static TeamMember createInitialTeamMember(Team team, Member member, TeamRole teamRole) {
-        return new TeamMember(team, member, teamRole);
+    /**
+     * 팀 생성 시 리더로 추가합니다.
+     *
+     * @param member 리더 회원
+     * @return TeamMember leader
+     */
+    public static TeamMember createInitialTeamMember(Member member) {
+        return new TeamMember(member, TeamRole.LEADER);
     }
 
     public static TeamMember createTeamMember(Team team, Member member, TeamRole teamRole, int playerNum) {
@@ -101,5 +106,9 @@ public class TeamMember extends BaseEntity {
         this.name = teamMemberUpdateDto.getName();
         this.playerNum = teamMemberUpdateDto.getPlayerNum();
         this.teamMemberRecord.changePosition(teamMemberUpdateDto.getPosition());
+    }
+
+    public void beLeaderOf(Team team) {
+        this.team = team;
     }
 }
