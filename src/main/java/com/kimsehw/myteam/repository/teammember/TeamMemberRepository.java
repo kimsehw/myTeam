@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.repository.teammember;
 
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
-import com.kimsehw.myteam.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

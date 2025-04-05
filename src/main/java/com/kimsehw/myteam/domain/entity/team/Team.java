@@ -1,13 +1,13 @@
-package com.kimsehw.myteam.entity.team;
+package com.kimsehw.myteam.domain.entity.team;
 
 import com.kimsehw.myteam.constant.team.AgeRange;
 import com.kimsehw.myteam.constant.team.Region;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
-import com.kimsehw.myteam.embedded.record.TeamRecord;
-import com.kimsehw.myteam.entity.Member;
-import com.kimsehw.myteam.entity.TeamMember;
-import com.kimsehw.myteam.entity.baseentity.BaseEntity;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.baseentity.BaseEntity;
+import com.kimsehw.myteam.domain.embedded.record.TeamRecord;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

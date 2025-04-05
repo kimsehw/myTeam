@@ -2,12 +2,12 @@ package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
+import com.kimsehw.myteam.domain.entity.Alarm;
+import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
-import com.kimsehw.myteam.entity.Alarm;
-import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.service.AlarmService;
 import com.kimsehw.myteam.service.MemberService;
@@ -101,7 +101,7 @@ public class TeamMemFacade {
         String emailOfInvitee = teamMemInviteFormDto.getEmail();
 //        log.info("emailOfInvitee: " + emailOfInvitee);
 
-        if (!StringUtils.hasText(email)) {
+        if (!StringUtils.hasText(emailOfInvitee)) {
             throw new FieldErrorException(FieldError.of("email", NO_EMAIL_ERROR));
         }
         if (emailOfInvitee.equals(email)) {

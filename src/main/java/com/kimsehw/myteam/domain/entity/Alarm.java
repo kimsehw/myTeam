@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.entity;
+package com.kimsehw.myteam.domain.entity;
 
 import com.kimsehw.myteam.constant.alarm.AlarmType;
 import jakarta.persistence.Column;

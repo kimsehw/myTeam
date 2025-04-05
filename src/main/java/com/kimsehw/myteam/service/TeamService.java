@@ -2,9 +2,9 @@ package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
-import com.kimsehw.myteam.entity.Member;
-import com.kimsehw.myteam.entity.team.Team;
-import com.kimsehw.myteam.entity.team.TeamLogo;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.domain.entity.team.TeamLogo;
 import com.kimsehw.myteam.repository.TeamLogoRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
 import jakarta.persistence.EntityNotFoundException;

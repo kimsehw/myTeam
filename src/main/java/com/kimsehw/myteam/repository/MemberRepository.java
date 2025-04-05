@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.repository;
 
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
-import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.domain.entity.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

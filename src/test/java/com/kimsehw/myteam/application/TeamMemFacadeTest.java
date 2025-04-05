@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.kimsehw.myteam.constant.team.AgeRange;
 import com.kimsehw.myteam.constant.team.Region;
+import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
-import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import java.util.HashMap;

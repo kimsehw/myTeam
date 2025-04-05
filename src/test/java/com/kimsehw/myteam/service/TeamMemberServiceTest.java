@@ -9,7 +9,7 @@ import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
-import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.repository.MemberRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;

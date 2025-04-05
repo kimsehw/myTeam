@@ -1,11 +1,11 @@
-package com.kimsehw.myteam.entity;
+package com.kimsehw.myteam.domain.entity;
 
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
-import com.kimsehw.myteam.embedded.record.PersonalRecord;
-import com.kimsehw.myteam.entity.baseentity.BaseEntity;
-import com.kimsehw.myteam.entity.team.Team;
+import com.kimsehw.myteam.domain.entity.baseentity.BaseEntity;
+import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.domain.embedded.record.PersonalRecord;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

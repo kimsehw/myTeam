@@ -1,6 +1,6 @@
-package com.kimsehw.myteam.entity.team;
+package com.kimsehw.myteam.domain.entity.team;
 
-import com.kimsehw.myteam.entity.baseentity.BaseEntity;
+import com.kimsehw.myteam.domain.entity.baseentity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

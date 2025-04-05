@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.entity.baseentity;
+package com.kimsehw.myteam.domain.entity.baseentity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

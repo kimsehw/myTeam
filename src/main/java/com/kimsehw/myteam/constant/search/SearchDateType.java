@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.constant.serch;
+package com.kimsehw.myteam.constant.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

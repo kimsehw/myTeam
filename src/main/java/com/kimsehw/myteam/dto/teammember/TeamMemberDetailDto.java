@@ -2,7 +2,7 @@ package com.kimsehw.myteam.dto.teammember;
 
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.teammember.TeamRole;
-import com.kimsehw.myteam.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

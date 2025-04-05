@@ -1,17 +1,17 @@
 package com.kimsehw.myteam.repository.post;
 
 import com.kimsehw.myteam.constant.post.PostType;
-import com.kimsehw.myteam.constant.serch.SearchDateType;
-import com.kimsehw.myteam.constant.serch.SearchType;
+import com.kimsehw.myteam.constant.search.SearchDateType;
+import com.kimsehw.myteam.constant.search.SearchType;
+import com.kimsehw.myteam.domain.entity.post.Post;
+import com.kimsehw.myteam.domain.entity.post.QChat;
+import com.kimsehw.myteam.domain.entity.post.QPost;
+import com.kimsehw.myteam.domain.entity.team.QTeam;
+import com.kimsehw.myteam.domain.entity.team.QTeamLogo;
 import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
 import com.kimsehw.myteam.dto.post.QPostDto;
-import com.kimsehw.myteam.entity.post.Post;
-import com.kimsehw.myteam.entity.post.QChat;
-import com.kimsehw.myteam.entity.post.QPost;
-import com.kimsehw.myteam.entity.team.QTeam;
-import com.kimsehw.myteam.entity.team.QTeamLogo;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

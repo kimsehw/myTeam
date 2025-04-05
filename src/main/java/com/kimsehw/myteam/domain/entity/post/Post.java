@@ -1,9 +1,9 @@
-package com.kimsehw.myteam.entity.post;
+package com.kimsehw.myteam.domain.entity.post;
 
 import com.kimsehw.myteam.constant.post.PostType;
 import com.kimsehw.myteam.dto.post.PostFormDto;
-import com.kimsehw.myteam.entity.baseentity.BaseEntity;
-import com.kimsehw.myteam.entity.team.Team;
+import com.kimsehw.myteam.domain.entity.baseentity.BaseEntity;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

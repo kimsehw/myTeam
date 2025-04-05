@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.embedded.record;
+package com.kimsehw.myteam.domain.embedded.record;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

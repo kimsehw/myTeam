@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.embedded.record;
+package com.kimsehw.myteam.domain.embedded.record;
 
 public interface RecordCalculator {
     default String calcWinRate(int wins, int loses, int draws) {

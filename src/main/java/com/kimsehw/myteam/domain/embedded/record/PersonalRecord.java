@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.embedded.record;
+package com.kimsehw.myteam.domain.embedded.record;
 
 import com.kimsehw.myteam.constant.Position;
 import jakarta.persistence.Embeddable;
@@ -7,18 +7,25 @@ import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
+@Embeddable
 @Getter
 @NoArgsConstructor
-@Embeddable
-public class MatchPersonalRecord extends BaseRecord {
+public class PersonalRecord extends BaseRecord {
+
 
     private int assist = 0;
+
+    private String winRate;
 
     @Enumerated(EnumType.STRING)
     private Position position;
 
-    public MatchPersonalRecord(Position position) {
+    public PersonalRecord(Position position) {
+        this.winRate = this.calcWinRate(getWins(), getLoses(), getDraws());
+        this.position = position;
+    }
+
+    public void changePosition(Position position) {
         this.position = position;
     }
 }

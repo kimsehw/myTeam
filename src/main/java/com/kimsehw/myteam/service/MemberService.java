@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
-import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;

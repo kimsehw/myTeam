@@ -2,8 +2,8 @@ package com.kimsehw.myteam.controller.post;
 
 import com.kimsehw.myteam.application.PostFacade;
 import com.kimsehw.myteam.constant.post.PostType;
-import com.kimsehw.myteam.constant.serch.SearchDateType;
-import com.kimsehw.myteam.constant.serch.SearchType;
+import com.kimsehw.myteam.constant.search.SearchDateType;
+import com.kimsehw.myteam.constant.search.SearchType;
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
 import com.kimsehw.myteam.dto.post.ChatDto;
 import com.kimsehw.myteam.dto.post.PostDetailDto;
