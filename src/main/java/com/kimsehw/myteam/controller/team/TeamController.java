@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class TeamController {
 
-    public static final int MAX_TEAM_SHOW = 10;
+    public static final int MAX_TEAM_SHOW = 1;
     private final TeamFacade teamFacade;
 
     @GetMapping("/teams/new")

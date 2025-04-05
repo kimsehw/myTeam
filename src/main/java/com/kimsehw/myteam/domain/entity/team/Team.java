@@ -64,7 +64,8 @@ public class Team extends BaseEntity {
     private TeamMember leader;
 
     @Setter
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "logo_id")
     private TeamLogo teamLogo;
 
     private Team(TeamFormDto teamFormDto, TeamMember leader) {

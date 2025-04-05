@@ -5,13 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.kimsehw.myteam.application.TeamFacade;
 import com.kimsehw.myteam.constant.team.AgeRange;
 import com.kimsehw.myteam.constant.team.Region;
+import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
-import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
-import com.kimsehw.myteam.domain.entity.Member;
-import com.kimsehw.myteam.repository.MemberRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
+import com.kimsehw.myteam.repository.member.MemberRepository;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,23 +57,6 @@ class TeamMemberServiceTest {
         teamFormDto.setRegion(Region.GYEONGGIDO);
         teamFormDto.setAgeRange(AgeRange.TWENTY);
         return teamFacade.createTeam(email, teamFormDto, null);
-    }
-
-    @Test
-    void 팀목록조회_테스트() {
-        Member member = createMember("test@naver.com");
-        Member member2 = createMember("test2@naver.com");
-        memberRepository.save(member);
-        memberRepository.save(member2);
-        Long teamA = createTeam(member.getEmail(), "teamA");
-        Long teamB = createTeam(member.getEmail(), "teamB");
-        Long teamC = createTeam(member2.getEmail(), "teamB");
-        Long teamD = createTeam(member2.getEmail(), "teamD");
-        Pageable pageable = PageRequest.of(0, 6);
-        Page<TeamsDto> teamsDtoPage = teamMemberService.getTeamsDtoPage(member2.getId(), pageable);
-        for (TeamsDto teamsDto : teamsDtoPage) {
-            assertThat(teamsDto.getTeamName()).containsAnyOf("teamB", "teamD");
-        }
     }
 
     @Test

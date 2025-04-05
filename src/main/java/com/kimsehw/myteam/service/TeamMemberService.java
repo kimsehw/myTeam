@@ -6,7 +6,6 @@ import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
-import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
@@ -33,10 +32,6 @@ public class TeamMemberService {
     public static final String NO_NUM_INPUT_ERROR = "등 번호를 입력해주세요.";
     public static final String DUPLICATE_NUM_ERROR = "중복된 등 번호 선수가 존재합니다.";
     private final TeamMemberRepository teamMemberRepository;
-
-    public Page<TeamsDto> getTeamsDtoPage(Long memberId, Pageable pageable) {
-        return teamMemberRepository.getTeamsDtoPage(memberId, pageable);
-    }
 
     /**
      * 등번호를 배정하며 회원인 팀 멤버 등록
