@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.repository.member.MemberRepository;
@@ -55,7 +56,14 @@ public class MemberService implements UserDetailsService {
     }
 
     public List<MyTeamsInfoDto> findMyTeamsInfoByEmail(String email) {
-        return memberRepository.findMyTeamsInfoByEmail(email);
+        Member member = memberRepository.findWithMyTeamsInfoByEmail(email).orElseThrow(EntityNotFoundException::new);
+        return member.getMyTeams().stream()
+                .map(this::getMyTeamsInfoDto)
+                .toList();
+    }
+
+    private MyTeamsInfoDto getMyTeamsInfoDto(TeamMember tm) {
+        return new MyTeamsInfoDto(tm.getTeam().getId(), tm.getTeam().getTeamName());
     }
 
     /**
