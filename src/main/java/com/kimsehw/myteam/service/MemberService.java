@@ -2,7 +2,7 @@ package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
-import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
+import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
 import com.kimsehw.myteam.repository.member.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,15 +55,15 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<MyTeamsInfoDto> findMyTeamsInfoByEmail(String email) {
+    public List<TeamInfoDto> findMyTeamsInfoByEmail(String email) {
         Member member = memberRepository.findWithMyTeamsInfoByEmail(email).orElseThrow(EntityNotFoundException::new);
         return member.getMyTeams().stream()
                 .map(this::getMyTeamsInfoDto)
                 .toList();
     }
 
-    private MyTeamsInfoDto getMyTeamsInfoDto(TeamMember tm) {
-        return new MyTeamsInfoDto(tm.getTeam().getId(), tm.getTeam().getTeamName());
+    private TeamInfoDto getMyTeamsInfoDto(TeamMember tm) {
+        return TeamInfoDto.of(tm.getTeam());
     }
 
     /**
