@@ -14,5 +14,5 @@ public class MatchSearchDto {
 
     private SearchDateType searchDateType;
 
-    private Long myTeamId;
+    private Long teamId;
 }

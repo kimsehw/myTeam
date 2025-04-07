@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,15 +25,16 @@ public class MatchRepositoryCustomImpl implements MatchRepositoryCustom {
     }
 
     @Override
-    public Page<Match> findAllSearchedMatchPage(MatchSearchDto matchSearchDto, List<Long> TeamIds, Pageable pageable) {
+    public Page<Match> findAllSearchedMatchPage(MatchSearchDto matchSearchDto, Set<Long> TeamIds, Pageable pageable) {
         QMatch match = QMatch.match;
 
         List<Match> matches = queryFactory.select(match)
                 .from(match)
                 .where(
-                        match.myTeam.id.in(TeamIds), match.isDone.eq(matchSearchDto.getIsDone()),
+                        match.myTeam.id.in(TeamIds), searchIsDoneEq(matchSearchDto, match),
                         matchDateBetween(matchSearchDto.getToDate(), matchSearchDto.getToDate(),
-                                matchSearchDto.getSearchDateType(), match)
+                                matchSearchDto.getSearchDateType(), match),
+                        searchTeamEq(matchSearchDto.getTeamId(), match)
                 )
                 .orderBy(match.matchDate.desc())
                 .offset(pageable.getOffset())
@@ -42,12 +44,26 @@ public class MatchRepositoryCustomImpl implements MatchRepositoryCustom {
         Long total = queryFactory.select(match.count())
                 .from(match)
                 .where(
-                        match.myTeam.id.in(TeamIds), match.isDone.eq(matchSearchDto.getIsDone()),
+                        match.myTeam.id.in(TeamIds), searchIsDoneEq(matchSearchDto, match),
                         matchDateBetween(matchSearchDto.getToDate(), matchSearchDto.getToDate(),
                                 matchSearchDto.getSearchDateType(), match)
                 )
                 .fetchOne();
         return new PageImpl<>(matches, pageable, total == null ? 0L : total);
+    }
+
+    private BooleanExpression searchTeamEq(Long teamId, QMatch match) {
+        if (teamId == null) {
+            return null;
+        }
+        return match.myTeam.id.eq(teamId);
+    }
+
+    private static BooleanExpression searchIsDoneEq(MatchSearchDto matchSearchDto, QMatch match) {
+        if (matchSearchDto.getIsDone() == null) {
+            return null;
+        }
+        return match.isDone.eq(matchSearchDto.getIsDone());
     }
 
     private BooleanExpression matchDateBetween(String fromDate, String toDate, SearchDateType searchDateType,

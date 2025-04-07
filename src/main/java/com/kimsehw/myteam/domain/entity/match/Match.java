@@ -38,6 +38,8 @@ public class Match {
     private Integer goal;
     private Integer lostGoal;
 
+    private Integer headCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "myTeam_id")
     private Team myTeam;

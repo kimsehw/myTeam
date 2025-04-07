@@ -2,9 +2,9 @@ package com.kimsehw.myteam.dto.team;
 
 import com.kimsehw.myteam.constant.team.AgeRange;
 import com.kimsehw.myteam.constant.team.Region;
-import com.kimsehw.myteam.dto.ScheduleDto;
-import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.domain.embedded.record.TeamRecord;
+import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.dto.ScheduleDto;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class TeamInfoDto {
     @NotBlank(message = "팀명은 빈칸이 될 수 없습니다.")
     private String teamName;
     private String logoUrl;
-    private int memberNum;
+    private Integer memberNum;
     private Region region;
     private AgeRange ageRange;
     private int wins;
@@ -28,7 +28,8 @@ public class TeamInfoDto {
     private String teamDetail;
     private List<ScheduleDto> schedules;
 
-    public TeamInfoDto(Long teamId, String teamName, String logoUrl, int memberNum, Region region, AgeRange ageRange,
+    public TeamInfoDto(Long teamId, String teamName, String logoUrl, Integer memberNum, Region region,
+                       AgeRange ageRange,
                        TeamRecord teamRecord, String teamDetail) {
         this.teamId = teamId;
         this.teamName = teamName;
@@ -43,7 +44,8 @@ public class TeamInfoDto {
         this.teamDetail = teamDetail;
     }
 
-    public TeamInfoDto(Long teamId, String teamName, String logoUrl, int memberNum, Region region, AgeRange ageRange,
+    public TeamInfoDto(Long teamId, String teamName, String logoUrl, Integer memberNum, Region region,
+                       AgeRange ageRange,
                        int wins, int loses, int draws, String winRate, String teamDetail) {
         this.teamId = teamId;
         this.teamName = teamName;
@@ -61,6 +63,12 @@ public class TeamInfoDto {
     public static TeamInfoDto of(Team team) {
         return new TeamInfoDto(team.getId(), team.getTeamName(), team.getTeamLogo().getImgUrl(),
                 team.getTeamMembers().size(), team.getRegion(), team.getAgeRange(),
+                team.getTeamRecord(), team.getTeamDetail());
+    }
+
+    public static TeamInfoDto withOutLogoAndMemberNumOf(Team team) {
+        return new TeamInfoDto(team.getId(), team.getTeamName(), null,
+                null, team.getRegion(), team.getAgeRange(),
                 team.getTeamRecord(), team.getTeamDetail());
     }
 }

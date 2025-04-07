@@ -55,6 +55,12 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 
+    /**
+     * 내 팀의 정보들을 가져옵니다. (teamLogo 및 멤버 수 제외)
+     *
+     * @param email
+     * @return List<TeamInfoDto> (teamLogo 및 멤버 수 제외)
+     */
     public List<TeamInfoDto> findMyTeamsInfoByEmail(String email) {
         Member member = memberRepository.findWithMyTeamsInfoByEmail(email).orElseThrow(EntityNotFoundException::new);
         return member.getMyTeams().stream()
@@ -63,7 +69,7 @@ public class MemberService implements UserDetailsService {
     }
 
     private TeamInfoDto getMyTeamsInfoDto(TeamMember tm) {
-        return TeamInfoDto.of(tm.getTeam());
+        return TeamInfoDto.withOutLogoAndMemberNumOf(tm.getTeam());
     }
 
     /**
