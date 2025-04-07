@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글</title>
+</head>
+<th:block layout:fragment="script">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchDateType = document.getElementById("searchDateType");
+            const fromDate = document.getElementById("fromDate");
+            const toDate = document.getElementById("toDate");
+
+            function handleDateChange() {
+                if (fromDate.value || toDate.value) {
+                    searchDateType.value = ""; // 기간 선택 초기화
+                    searchDateType.setAttribute("disabled", "true"); // 비활성화
+                } else {
+                    searchDateType.removeAttribute("disabled"); // 활성화
+                }
+            }
+
+            function handlePeriodChange() {
+                if (searchDateType.value) {
+                    fromDate.value = "";
+                    toDate.value = "";
+                    fromDate.setAttribute("disabled", "true"); // 비활성화
+                    toDate.setAttribute("disabled", "true"); // 비활성화
+                } else {
+                    fromDate.removeAttribute("disabled"); // 활성화
+                    toDate.removeAttribute("disabled"); // 활성화
+                }
+            }
+
+            fromDate.addEventListener("change", handleDateChange);
+            toDate.addEventListener("change", handleDateChange);
+            searchDateType.addEventListener("change", handlePeriodChange);
+        });
+    </script>
+</th:block>
+
+
+<div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">글 목록</h2>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
+            <thead class="bg-gray-200">
+            <tr class="text-gray-700 center">
+                <th rowspan="2" class="px-6 py-3 border-b-2 border-gray-300">날 짜</th>
+                <th rowspan="2" class="px-6 py-3 border-b-2 border-gray-300">경기장</th>
+                <th colspan="3" class="px-12 py-1 border-b-2 border-gray-300">상대팀 정보</th>
+                <th rowspan="2" class="px-6 py-3 border-b-2 border-gray-300">결 과</th>
+            </tr>
+            <tr>
+                <th class="px-6 py-2 border-b-2 border-gray-300">팀 명</th>
+                <th class="px-3 py-2 border-b-2 border-gray-300">지 역</th>
+                <th class="px-3 py-2 border-b-2 border-gray-300">나이대</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="match : ${matches.content}"
+                class="hover:bg-gray-100 transition cursor-pointer"
+                th:attr="data-post-id=${match.id}">
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${match.matchDate}"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${match.stadium}"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${match.opposingTeamInfo.teamName}"></td>
+                <td class="px-3 py-4 border-b border-gray-300"
+                    th:text="${match.opposingTeamInfo.region.regionName}"></td>
+                <td class="px-3 py-4 border-b border-gray-300" th:text="${match.opposingTeamInfo.ageRange.range}"></td>
+                <td class="px-6 py-4 border-b border-gray-300" th:text="${match.result}"></td>
+            </tr>
+            </tbody>
+            <tbody th:if="${matches == null or #lists.isEmpty(matches.content)}">
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                    매치 기록이 없습니다.
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</html>
