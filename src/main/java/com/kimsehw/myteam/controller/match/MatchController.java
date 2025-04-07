@@ -31,6 +31,7 @@ public class MatchController {
                 matchSearchDto);
         model.addAttribute("matches", matchListResponse.getMatches());
         model.addAttribute("myTeams", matchListResponse.getMyTeamIdsAndNames());
+        model.addAttribute("myListView", true);
         model.addAttribute("searchDateTypes", SearchDateType.values());
         model.addAttribute("maxPage", MAX_MATCH_SHOW);
         model.addAttribute("page", pageable.getPageNumber());

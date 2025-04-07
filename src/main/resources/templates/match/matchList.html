@@ -46,9 +46,9 @@
 
 
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">글 목록</h2>
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">내 일정</h2>
 
-    <div class="overflow-x-auto">
+    <div layout:fragment="matchTableAndTable">
         <table class="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
             <thead class="bg-gray-200">
             <tr class="text-gray-700 center">
@@ -85,47 +85,12 @@
                 </td>
             </tr>
         </table>
+        <div th:insert="fragments/pagination :: pagination(${matches}, ${page}, ${maxPage})"></div>
     </div>
-
-    <div th:insert="fragments/pagination :: pagination(${matches}, ${page}, ${maxPage})"></div>
-
-    <form id="searchForm" th:object="${matchSearch}" method="get" th:action="@{/matches}"
-          class="flex flex-wrap items-center gap-2 bg-gray-100 p-4 rounded-lg shadow-md mt-3 w-full max-w-4xl mx-auto">
-        <select th:field="*{isDone}" class="px-3 py-1 border rounded-lg text-sm">
-            <option value="">-- 경기 전/후 --</option>
-            <option th:value=null th:text="'전체'"></option>
-            <option th:value=true th:text="'경기 후'"></option>
-            <option th:value=false th:text="'경기 전'"></option>
-        </select>
-        <div class="flex items-center gap-1">
-            <input id="fromDate" th:field="*{fromDate}" type="date"
-                   class="px-3 py-1 border rounded-md text-sm w-[120px]">
-            <span>~</span>
-            <input id="toDate" th:field="*{toDate}" type="date" class="px-3 py-1 border rounded-md text-sm w-[120px]">
-        </div>
-        <select th:field="*{searchDateType}" class="px-3 py-1 border rounded-lg text-sm">
-            <option value="">-- 기간 선택 --</option>
-            <option th:each="type : ${searchDateTypes}"
-                    th:value="${type.name()}"
-                    th:text="${type.text}">
-            </option>
-        </select>
-        <select th:field="*{teamId}" class="px-3 py-1 border rounded-lg text-sm">
-            <option value="">-- 팀 선택 --</option>
-            <option th:each="team : ${myTeams}"
-                    th:value="${team.key}"
-                    th:text="${team.value}">
-            </option>
-        </select>
-        <button id="searchBtn" type="submit"
-                class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm">검색
-        </button>
-    </form>
-
-    <script>
-        function page(pageNumber) {
-            window.location.href = '/posts?page=' + pageNumber;
-        }
-    </script>
+    <div layout:fragment="matchSearch">
+        <div th:insert="~{match/fragments/matchSearchForm :: matchSearchForm(${myListView})}"></div>
+    </div>
 </div>
+
+
 </html>

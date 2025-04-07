@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{match/matchList}">
+
+<div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">팀 일정</h2>
+    <div class="flex justify-end space-x-4">
+        <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-3"
+                th:classappend="${manageTeam}?'':'hidden'" th:onclick="toggleModal('inviteModal',true)">
+            + 매치 등록/초대
+        </button>
+    </div>
+    <div layout:include="~{match/matchList :: matchTableAndTable}"></div>
+    <div layout:fragment="matchSearch">
+        <div th:insert="~{match/fragments/matchSearchForm :: matchSearchForm(${myListView})}"></div>
+    </div>
+</div>
+</html>
