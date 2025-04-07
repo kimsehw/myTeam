@@ -1,18 +1,22 @@
 package com.kimsehw.myteam.application;
 
+import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.match.MatchDto;
 import com.kimsehw.myteam.dto.match.MatchSearchDto;
+import com.kimsehw.myteam.dto.team.MatchTeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
+import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -84,5 +88,18 @@ public class TeamFacade {
      */
     public Page<MatchDto> getSearchedTeamMatchList(Long teamId, Pageable pageable, MatchSearchDto matchSearchDto) {
         return matchService.getSearchedMatchDtoPages(matchSearchDto, Set.of(teamId), pageable);
+    }
+
+    public List<MatchTeamInfoDto> getMatchingTeamsByName(String searchTeamName) {
+        if (searchTeamName.isBlank()) {
+            throw new FieldErrorException(FieldError.of("searchTeamName", "팀명을 입력해주세요."));
+        }
+        List<Team> teams = teamService.findAllByTeamNameWithLeaderInfo(searchTeamName);
+        if (teams == null || teams.isEmpty()) {
+            throw new FieldErrorException(FieldError.of("searchTeamName", "존재하지 않는 팀명입니다. 팀명을 확인해주세요."));
+        }
+        return teams.stream()
+                .map(MatchTeamInfoDto::of)
+                .toList();
     }
 }

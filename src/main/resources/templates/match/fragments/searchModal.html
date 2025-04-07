@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+<div id="searchModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-start items-start hidden z-50">
+    <div class="bg-white p-6 rounded-lg w-[600px] shadow-lg relative z-50">
+        <h2 class="text-2xl font-bold text-center mb-4">팀 목록</h2>
+        <div class="mb-4">
+            <input type="text" id="teamSearchInput" placeholder="팀명을 입력하세요"
+                   class="w-full px-4 py-2 border rounded-lg shadow-sm"/>
+            <button onclick="searchTeams()" type="button"
+                    class="mt-2 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                팀 검색
+            </button>
+        </div>
+        <div id="teamListContainer">
+            <p class="text-center text-gray-500">검색 결과가 없습니다.</p>
+        </div>
+        <div class="mt-4 flex justify-end">
+            <button onclick="toggleModal('searchModal', false)" type="button"
+                    class="text-sm px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                닫기
+            </button>
+        </div>
+    </div>
+</div>
+</html>

@@ -10,6 +10,7 @@ import com.kimsehw.myteam.repository.TeamLogoRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
@@ -123,5 +124,11 @@ public class TeamService {
 
     public Team findById(Long teamId) {
         return teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<Team> findAllByTeamNameWithLeaderInfo(String teamName) {
+        teamName = teamName.replaceAll(" ", "");
+        teamName = "%" + teamName + "%";
+        return teamRepository.findAllByTeamNameWithLeaderInfo(teamName);
     }
 }
