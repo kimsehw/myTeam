@@ -3,12 +3,17 @@ package com.kimsehw.myteam.application;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.dto.match.MatchDto;
+import com.kimsehw.myteam.dto.match.MatchSearchDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
+import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
+import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
@@ -23,6 +28,8 @@ public class TeamFacade {
 
     private final TeamService teamService;
     private final MemberService memberService;
+    private final TeamMemberService teamMemberService;
+    private final MatchService matchService;
 
     public Long createTeam(String email, TeamFormDto teamFormDto, MultipartFile teamLogoFile) {
         Member member = memberService.findMemberByEmail(email);
@@ -65,5 +72,17 @@ public class TeamFacade {
 
     public String getTeamName(Long teamId) {
         return teamService.getTeamName(teamId);
+    }
+
+    /**
+     * 팀의 일정을 조회합니다.
+     *
+     * @param teamId
+     * @param pageable
+     * @param matchSearchDto
+     * @return Page<MatchDto>
+     */
+    public Page<MatchDto> getSearchedTeamMatchList(Long teamId, Pageable pageable, MatchSearchDto matchSearchDto) {
+        return matchService.getSearchedMatchDtoPages(matchSearchDto, Set.of(teamId), pageable);
     }
 }

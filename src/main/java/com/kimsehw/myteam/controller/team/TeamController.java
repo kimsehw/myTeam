@@ -1,8 +1,12 @@
 package com.kimsehw.myteam.controller.team;
 
 import com.kimsehw.myteam.application.TeamFacade;
+import com.kimsehw.myteam.application.TeamMemFacade;
+import com.kimsehw.myteam.constant.search.SearchDateType;
 import com.kimsehw.myteam.constant.team.AgeRange;
 import com.kimsehw.myteam.constant.team.Region;
+import com.kimsehw.myteam.dto.match.MatchDto;
+import com.kimsehw.myteam.dto.match.MatchSearchDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
@@ -29,7 +33,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class TeamController {
 
     public static final int MAX_TEAM_SHOW = 1;
+    public static final int MAX_MATCH_SHOW = 10;
+
     private final TeamFacade teamFacade;
+    private final TeamMemFacade teamMemFacade;
 
     @GetMapping("/teams/new")
     public String teamForm(Model model) {
@@ -131,5 +138,21 @@ public class TeamController {
     private void addAttributeWhenUpdateNotDone(Model model) {
         addRegionAndAgeRangeSelection(model);
         model.addAttribute("updateNotDone", true);
+    }
+
+    @GetMapping("/teams/{teamId}/matches")
+    public String matchView(Model model, @PathVariable("teamId") Long teamId, Principal principal,
+                            @RequestParam(value = "page", defaultValue = "0") int page,
+                            @ModelAttribute("matchSearch") MatchSearchDto matchSearchDto) {
+        Pageable pageable = PageRequest.of(page, MAX_MATCH_SHOW);
+        Page<MatchDto> matches = teamFacade.getSearchedTeamMatchList(teamId, pageable, matchSearchDto);
+        boolean manageTeam = teamMemFacade.isAuthorizeToManageTeam(principal, teamId);
+        model.addAttribute("matches", matches);
+        model.addAttribute("manageTeam", manageTeam);
+        model.addAttribute("myListView", false);
+        model.addAttribute("searchDateTypes", SearchDateType.values());
+        model.addAttribute("maxPage", MAX_MATCH_SHOW);
+        model.addAttribute("page", pageable.getPageNumber());
+        return "team/teamMatchList";
     }
 }
