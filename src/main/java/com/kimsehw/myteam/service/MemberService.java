@@ -57,8 +57,12 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
-    public Member findMemberByEmail(String email) {
-        return getMemberOf(email);
+    public Member getMemberOf(String email) {
+        Optional<Member> optionalMember = memberRepository.findWithMyTeamsInfoByEmail(email);
+        if (optionalMember.isEmpty()) {
+            throw new EntityNotFoundException(WRONG_EMAIL_ERROR);
+        }
+        return optionalMember.get();
     }
 
     /**
@@ -111,13 +115,5 @@ public class MemberService implements UserDetailsService {
             throw new IllegalArgumentException(WRONG_TEAM_INFO_ERROR);
         }
         return true;
-    }
-
-    private Member getMemberOf(String email) {
-        Optional<Member> optionalMember = memberRepository.findWithMyTeamsInfoByEmail(email);
-        if (optionalMember.isEmpty()) {
-            throw new EntityNotFoundException(WRONG_EMAIL_ERROR);
-        }
-        return optionalMember.get();
     }
 }
