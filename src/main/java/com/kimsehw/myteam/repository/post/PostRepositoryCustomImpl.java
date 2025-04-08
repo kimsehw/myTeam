@@ -18,7 +18,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -105,9 +104,8 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
             return regDtsAfter(searchDateType);
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime fromDateTime = DateTimeUtil.getFromDateTime(fromDate, formatter);
-        LocalDateTime toDateTime = DateTimeUtil.getToDateTime(toDate, formatter);
+        LocalDateTime fromDateTime = DateTimeUtil.getFromDateTime(fromDate, "yyyy-MM-dd");
+        LocalDateTime toDateTime = DateTimeUtil.getToDateTime(toDate, "yyyy-MM-dd");
 
         if (fromDateTime != null && toDateTime != null) {
             return QPost.post.regTime.between(fromDateTime, toDateTime);
