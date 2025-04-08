@@ -10,38 +10,7 @@
     <title>게시글</title>
 </head>
 <th:block layout:fragment="script">
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchDateType = document.getElementById("searchDateType");
-            const fromDate = document.getElementById("fromDate");
-            const toDate = document.getElementById("toDate");
-
-            function handleDateChange() {
-                if (fromDate.value || toDate.value) {
-                    searchDateType.value = ""; // 기간 선택 초기화
-                    searchDateType.setAttribute("disabled", "true"); // 비활성화
-                } else {
-                    searchDateType.removeAttribute("disabled"); // 활성화
-                }
-            }
-
-            function handlePeriodChange() {
-                if (searchDateType.value) {
-                    fromDate.value = "";
-                    toDate.value = "";
-                    fromDate.setAttribute("disabled", "true"); // 비활성화
-                    toDate.setAttribute("disabled", "true"); // 비활성화
-                } else {
-                    fromDate.removeAttribute("disabled"); // 활성화
-                    toDate.removeAttribute("disabled"); // 활성화
-                }
-            }
-
-            fromDate.addEventListener("change", handleDateChange);
-            toDate.addEventListener("change", handleDateChange);
-            searchDateType.addEventListener("change", handlePeriodChange);
-        });
-    </script>
+    <script th:inline="javascript" src="/js/searchDate.js"></script>
 </th:block>
 
 
@@ -73,8 +42,9 @@
                 <td class="px-6 py-4 border-b border-gray-300" th:text="${match.headCount}"></td>
                 <td class="px-6 py-4 border-b border-gray-300" th:text="${match.opposingTeamInfo.teamName}"></td>
                 <td class="px-3 py-4 border-b border-gray-300"
-                    th:text="${match.opposingTeamInfo.region.regionName}"></td>
-                <td class="px-3 py-4 border-b border-gray-300" th:text="${match.opposingTeamInfo.ageRange.range}"></td>
+                    th:text="${match.opposingTeamInfo.region == null?'':match.opposingTeamInfo.region.regionName}"></td>
+                <td class="px-3 py-4 border-b border-gray-300"
+                    th:text="${match.opposingTeamInfo.ageRange == null?'':match.opposingTeamInfo.ageRange.range}"></td>
                 <td class="px-6 py-4 border-b border-gray-300" th:text="${match.result}"></td>
             </tr>
             </tbody>
@@ -85,7 +55,7 @@
                 </td>
             </tr>
         </table>
-        <div th:insert="fragments/pagination :: pagination(${matches}, ${page}, ${maxPage})"></div>
+        <div th:insert="~{fragments/pagination :: pagination(${matches}, ${page}, ${maxPage})}"></div>
     </div>
     <div layout:fragment="matchSearch">
         <div th:insert="~{match/fragments/matchSearchForm :: matchSearchForm(${myListView})}"></div>

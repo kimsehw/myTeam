@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
 
+    public static final String Y_M_D_H_M_TYPE = "yyyy-MM-dd'T'HH:mm";
+    public static final String Y_M_D_TYPE = "yyyy-MM-dd";
+
     public static LocalDateTime getToDateTime(String toDate, String pattern) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         if (toDate != null && !toDate.isBlank()) {

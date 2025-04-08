@@ -31,4 +31,9 @@ public class MatchDto {
         return new MatchDto(match.getId(), match.getMatchDate(), match.getStadium(), match.getResult(),
                 match.getHeadCount(), TeamInfoDto.of(match.getOpposingTeam()));
     }
+
+    public static MatchDto ofNotUser(Match match, TeamInfoDto teamInfoDto) {
+        return new MatchDto(match.getId(), match.getMatchDate(), match.getStadium(), match.getResult(),
+                match.getHeadCount(), teamInfoDto);
+    }
 }

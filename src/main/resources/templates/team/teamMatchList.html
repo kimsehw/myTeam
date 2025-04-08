@@ -4,10 +4,24 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{match/matchList}">
 
+<th:block layout:fragment="css">
+    <style>
+        .fieldError {
+            color: #bd2130
+        }
+    </style>
+</th:block>
+<th:block layout:fragment="script">
+    <script th:inline="javascript" src="/js/modal.js"></script>
+    <script th:inline="javascript" src="/js/searchDate.js"></script>
+    <script th:inline="javascript" src="/js/match/SearchMatchingTeams.js"></script>
+    <script th:inline="javascript" src="/js/match/MatchInvite.js"></script>
+</th:block>
+
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
     <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">팀 일정</h2>
     <div class="flex justify-end space-x-4">
-        <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-3"
+        <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-3" type="button"
                 th:classappend="${manageTeam}?'':'hidden'" th:onclick="toggleModal('inviteModal',true)">
             + 매치 등록/초대
         </button>
@@ -16,5 +30,9 @@
     <div layout:fragment="matchSearch">
         <div th:insert="~{match/fragments/matchSearchForm :: matchSearchForm(${myListView})}"></div>
     </div>
+
+    <div th:insert="~{match/fragments/inviteModal}"></div>
 </div>
+
+
 </html>

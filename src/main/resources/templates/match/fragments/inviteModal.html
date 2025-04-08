@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<div id="inviteModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+    <div class="bg-white p-8 rounded-lg w-96 shadow-lg">
+        <h2 class="text-2xl font-bold text-center mb-4">매치 신청</h2>
+        <form id="inviteForm" th:attr="data-team-id=${teamId}">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <label for="isNotUser" class="text-sm font-medium text-gray-700">비회원 팀 매치 등록</label>
+                    <input type="checkbox" id="isNotUser" name="isNotUser" class="ml-1">
+                </div>
+                <button id="searchTeamBtn"
+                        class="text-sm bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 mb-3"
+                        type="button"
+                        th:onclick="toggleModal('searchModal',true)">
+                    팀 찾기
+                </button>
+            </div>
+
+            <input type="hidden" id="inviteeTeamId" name="inviteeTeamId"/>
+            <input type="hidden" id="inviteeEmail" name="inviteeEmail"/>
+            <input type="hidden" id="inviteeTeamName" name="inviteeTeamName"/>
+            <div id="opposingTeamInfoContainer">
+                <label for="opposingTeamInfo" class="block text-sm font-medium text-gray-700">상대 팀 정보</label>
+                <input type="text" id="opposingTeamInfo" name="opposingTeamInfo" readonly
+                       class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100 cursor-not-allowed
+                               focus:outline-none px-4 py-2 mb-1 transition-all
+                               overflow-x-auto whitespace-nowrap"
+                       style="text-overflow: ellipsis;"
+                       title="상대 팀 정보 전체가 여기에 보여집니다"/>
+                <p class="hidden fieldError text-sm error" id="inviteeError"></p>
+            </div>
+            <div id="notUserTeamNameInputContainer" class="hidden">
+                <label for="notUserTeamNameInput" class="block text-sm font-medium text-gray-700">상대 팀 명을
+                    입력해주세요.</label>
+                <input type="text" id="notUserTeamNameInput" name="inviteeTeamName"
+                       class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2 mb-1">
+                <p class="hidden fieldError text-sm error" id="inviteeTeamNameError"></p>
+            </div>
+            <div id="DateInputContainer">
+                <label for="matchDate" class="block text-sm font-medium text-gray-700">날짜를 선택해주세요.</label>
+                <input type="datetime-local" id="matchDate" class="px-4 py-2 border rounded-md text-sm w-[200px] mb-1">
+                <p class="hidden fieldError text-sm error" id="matchDateError"></p>
+
+                <label for="matchDate" class="block text-sm font-medium text-gray-700">경기 시간을 입력해주세요.</label>
+                <input type="number" id="matchTime"
+                       class="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 px-4 py-2 mb-1">
+                <p class="hidden fieldError text-sm error" id="matchTimeError"></p>
+            </div>
+
+            <div class="flex justify-between mt-6">
+                <button onclick="resetInviteModalForm(); toggleModal('inviteModal', false);" type="button"
+                        class="text-sm px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                    취소
+                </button>
+                <button id="inviteBtn" type="submit"
+                        class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 w-1/3">
+                    신청
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const isNorUserCheckbox = document.getElementById('isNotUser');
+        const notUserTeamNameInputContainer = document.getElementById('notUserTeamNameInputContainer');
+        const opposingTeamInfoContainer = document.getElementById('opposingTeamInfoContainer');
+        const searchTeamBtn = document.getElementById('searchTeamBtn');
+        const notUserTeamNameInput = document.getElementById('notUserTeamNameInput');
+        const inviteeTeamName = document.getElementById('inviteeTeamName');
+
+        isNorUserCheckbox.addEventListener('change', () => {
+            if (isNorUserCheckbox.checked) {
+                // 비회원 초대 시
+                inviteeTeamName.disabled = true;
+                notUserTeamNameInput.disabled = false;
+                notUserTeamNameInputContainer.classList.remove("hidden");
+                opposingTeamInfoContainer.classList.add("hidden");
+                searchTeamBtn.classList.add("hidden");
+            } else {
+                // 회원 초대 시
+                inviteeTeamName.disabled = false;
+                notUserTeamNameInput.disabled = true;
+                notUserTeamNameInputContainer.classList.add("hidden");
+                opposingTeamInfoContainer.classList.remove("hidden");
+                searchTeamBtn.classList.remove("hidden");
+            }
+        });
+    });
+
+    function resetInviteModalForm() {
+        const form = document.getElementById('inviteForm');
+        form.reset(); // 기본 input들 초기화
+
+        // 비회원 관련 컨트롤도 초기화
+        document.getElementById('notUserTeamNameInputContainer').classList.add("hidden");
+        document.getElementById('opposingTeamInfoContainer').classList.remove("hidden");
+        document.getElementById('searchTeamBtn').classList.remove("hidden");
+
+        document.getElementById('notUserTeamNameInput').disabled = true;
+        document.getElementById('inviteeTeamName').disabled = false;
+
+        // 숨겨져 있던 에러 메시지들도 숨기기
+        document.querySelectorAll('.fieldError').forEach(el => el.classList.add("hidden"));
+    }
+</script>
+<div th:insert="~{match/fragments/searchModal}"></div>
+
+</html>

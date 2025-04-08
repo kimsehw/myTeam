@@ -1,14 +1,17 @@
 package com.kimsehw.myteam.application;
 
+import com.kimsehw.myteam.domain.entity.Alarm;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.match.MatchInviteFormDto;
 import com.kimsehw.myteam.dto.match.MatchListResponse;
 import com.kimsehw.myteam.dto.match.MatchSearchDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
+import com.kimsehw.myteam.service.AlarmService;
 import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
-import java.security.Principal;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +20,7 @@ import lombok.extern.java.Log;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class MatchFacade {
     private final MemberService memberService;
     private final MatchService matchService;
     private final TeamService teamService;
+    private final AlarmService alarmService;
 
     public MatchListResponse getSearchedMyMatchListResponse(String email, Pageable pageable,
                                                             MatchSearchDto matchSearchDto) {
@@ -38,15 +43,35 @@ public class MatchFacade {
         return matchService.getSearchedMatchListResponse(myTeams, matchSearchDto, pageable);
     }
 
-    public void invite(Principal principal, MatchInviteFormDto matchInviteFormDto) {
-
+    @Transactional
+    public void invite(String email, MatchInviteFormDto matchInviteFormDto, Long sessionTeamId) {
+        if (!matchInviteFormDto.getIsNotUser()) {
+            Member fromMember = memberService.getMemberBy(email);
+            Member toMember = memberService.getMemberBy(matchInviteFormDto.getInviteeEmail());
+            alarmService.save(
+                    Alarm.createMatchInviteAlarm(fromMember, toMember, sessionTeamId, matchInviteFormDto));
+            return;
+        }
+        Team myTeam = teamService.findById(sessionTeamId);
+        matchService.addMatchOn(myTeam, matchInviteFormDto.getInviteeTeamName(), matchInviteFormDto.getMatchDate(),
+                matchInviteFormDto.getMatchTime());
     }
 
     public void validateInviteForm(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
+        validateInviteeTeam(matchInviteFormDto, errors);
+        validateMatchDateTime(matchInviteFormDto, errors);
+    }
+
+    private void validateInviteeTeam(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
         if (!matchInviteFormDto.getIsNotUser()) {
             validateInviteeTeamInfo(matchInviteFormDto, errors);
+            return;
         }
-        validateMatchDateTime(matchInviteFormDto, errors);
+        String inviteeTeamName = matchInviteFormDto.getInviteeTeamName();
+        log.info(inviteeTeamName);
+        if (inviteeTeamName == null || inviteeTeamName.isBlank()) {
+            errors.put("inviteeTeamName", "팀 이름을 입력해주세요.");
+        }
     }
 
     private void validateMatchDateTime(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {

@@ -10,6 +10,7 @@ import com.kimsehw.myteam.dto.match.MatchSearchDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
@@ -88,8 +89,7 @@ public class TeamController {
         Page<TeamsDto> teams = teamFacade.getMyTeams(email, pageable);
 
         model.addAttribute("teams", teams);
-        model.addAttribute("maxPage", MAX_TEAM_SHOW);
-        model.addAttribute("page", pageable.getPageNumber());
+        addAttributeOfPage(model, MAX_TEAM_SHOW, pageable);
         return "team/teamList";
     }
 
@@ -141,18 +141,25 @@ public class TeamController {
     }
 
     @GetMapping("/teams/{teamId}/matches")
-    public String matchView(Model model, @PathVariable("teamId") Long teamId, Principal principal,
+    public String matchView(Model model, @PathVariable("teamId") Long teamId, HttpSession session, Principal principal,
                             @RequestParam(value = "page", defaultValue = "0") int page,
                             @ModelAttribute("matchSearch") MatchSearchDto matchSearchDto) {
         Pageable pageable = PageRequest.of(page, MAX_MATCH_SHOW);
         Page<MatchDto> matches = teamFacade.getSearchedTeamMatchList(teamId, pageable, matchSearchDto);
         boolean manageTeam = teamMemFacade.isAuthorizeToManageTeam(principal, teamId);
+
+        session.setAttribute("currentViewTeamId", teamId);
         model.addAttribute("matches", matches);
+        model.addAttribute("teamId", teamId);
         model.addAttribute("manageTeam", manageTeam);
         model.addAttribute("myListView", false);
         model.addAttribute("searchDateTypes", SearchDateType.values());
-        model.addAttribute("maxPage", MAX_MATCH_SHOW);
-        model.addAttribute("page", pageable.getPageNumber());
+        addAttributeOfPage(model, MAX_MATCH_SHOW, pageable);
         return "team/teamMatchList";
+    }
+
+    private static void addAttributeOfPage(Model model, int maxMatchShow, Pageable pageable) {
+        model.addAttribute("maxPage", maxMatchShow);
+        model.addAttribute("page", pageable.getPageNumber());
     }
 }

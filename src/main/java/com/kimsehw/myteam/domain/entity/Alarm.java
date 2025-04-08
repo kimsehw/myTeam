@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.domain.entity;
 
 import com.kimsehw.myteam.constant.alarm.AlarmType;
+import com.kimsehw.myteam.dto.match.MatchInviteFormDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +30,9 @@ public class Alarm {
 
     private int playerNum;
 
-    private LocalDateTime matchDate;
+    private String matchDate;
+
+    private int matchTime;
 
     @Enumerated(EnumType.STRING)
     private AlarmType alarmType;
@@ -51,7 +53,23 @@ public class Alarm {
         this.playerNum = playerNum;
     }
 
-    public static Alarm createInviteAlarm(Member fromMember, Member toMember, Long fromTeamId, int playerNum) {
+    public Alarm(Member fromMember, Member toMember, Long fromTeamId, String matchDate, int matchTime,
+                 AlarmType alarmType) {
+        this.fromMember = fromMember;
+        this.toMember = toMember;
+        this.fromTeamId = fromTeamId;
+        this.matchDate = matchDate;
+        this.matchTime = matchTime;
+        this.alarmType = alarmType;
+    }
+
+    public static Alarm createTeamMemInviteAlarm(Member fromMember, Member toMember, Long fromTeamId, int playerNum) {
         return new Alarm(fromMember, toMember, fromTeamId, AlarmType.TEAM_MEM_INVITE, playerNum);
+    }
+
+    public static Alarm createMatchInviteAlarm(Member fromMember, Member toMember, Long fromTeamId,
+                                               MatchInviteFormDto matchInviteFormDto) {
+        return new Alarm(fromMember, toMember, fromTeamId, matchInviteFormDto.getMatchDate(),
+                matchInviteFormDto.getMatchTime(), AlarmType.TEAM_MATCH_REQUEST);
     }
 }

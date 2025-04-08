@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.domain.entity.match.Match;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.domain.utill.DateTimeUtil;
 import com.kimsehw.myteam.dto.match.MatchDto;
 import com.kimsehw.myteam.dto.match.MatchListResponse;
@@ -34,7 +35,14 @@ public class MatchService {
     public Page<MatchDto> getSearchedMatchDtoPages(MatchSearchDto matchSearchDto, Set<Long> TeamIds,
                                                    Pageable pageable) {
         Page<Match> matchPage = matchRepository.findAllSearchedMatchPage(matchSearchDto, TeamIds, pageable);
-        return matchPage.map(MatchDto::of);
+        return matchPage.map(match -> {
+            if (match.getOpposingTeam() == null) {
+                TeamInfoDto teamInfoDto = new TeamInfoDto();
+                teamInfoDto.setTeamName(match.getNotUserOpposingTeamName());
+                return MatchDto.ofNotUser(match, teamInfoDto);
+            }
+            return MatchDto.of(match);
+        });
     }
 
     public MatchListResponse getSearchedMatchListResponse(List<TeamInfoDto> myTeams, MatchSearchDto matchSearchDto,
@@ -68,7 +76,7 @@ public class MatchService {
      */
     public void validateMatchDate(String matchDate) {
         try {
-            LocalDateTime matchDateFormat = DateTimeUtil.formatting(matchDate, "yyyy-MM-dd'T'HH:mm");
+            LocalDateTime matchDateFormat = DateTimeUtil.formatting(matchDate, DateTimeUtil.Y_M_D_H_M_TYPE);
             if (matchDateFormat == null) {
                 throw new NullPointerException(NULL_MATCH_DATE_ERROR);
             }
@@ -76,9 +84,15 @@ public class MatchService {
                 throw new IllegalArgumentException(MIN_HOUR_OVER_ERROR);
             }
         } catch (DateTimeParseException e) {
-            throw new DateTimeParseException(MATCH_DATE_PARSE_ERROR, "yyyy-MM-dd'T'HH:mm", 0);
+            throw new DateTimeParseException(MATCH_DATE_PARSE_ERROR, DateTimeUtil.Y_M_D_H_M_TYPE, 0);
         }
 
 
+    }
+
+    @Transactional
+    public void addMatchOn(Team myTeam, String inviteeTeamName, String matchDate, Integer matchTime) {
+        Match match = Match.createMatchOf(myTeam, inviteeTeamName, matchDate, matchTime);
+        matchRepository.save(match);
     }
 }

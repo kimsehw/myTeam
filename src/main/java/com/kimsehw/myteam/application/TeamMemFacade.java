@@ -61,7 +61,7 @@ public class TeamMemFacade {
 
         try {
             Long inviteeId = validateOfInviteeEmail(teamMemInviteFormDto, email);
-            Member member = memberService.getMemberOf(email);
+            Member member = memberService.getMemberBy(email);
             alarmService.validateDuplicateInviteAlarm(teamId, member.getId(), inviteeId, errors);
         } catch (FieldErrorException e) {
             addFieldError(errors, e);
@@ -109,7 +109,7 @@ public class TeamMemFacade {
         }
         Member invitee;
         try {
-            invitee = memberService.getMemberOf(emailOfInvitee);
+            invitee = memberService.getMemberBy(emailOfInvitee);
         } catch (EntityNotFoundException e) {
             throw new FieldErrorException(FieldError.of("email", WRONG_EMAIL_ERROR));
         }
@@ -118,10 +118,10 @@ public class TeamMemFacade {
 
     public void invite(String email, Long teamId, TeamMemInviteFormDto teamMemInviteFormDto) {
         if (!teamMemInviteFormDto.isNotUser()) {
-            Member fromMember = memberService.getMemberOf(email);
-            Member toMember = memberService.getMemberOf(teamMemInviteFormDto.getEmail());
+            Member fromMember = memberService.getMemberBy(email);
+            Member toMember = memberService.getMemberBy(teamMemInviteFormDto.getEmail());
             alarmService.save(
-                    Alarm.createInviteAlarm(fromMember, toMember, teamId, teamMemInviteFormDto.getPlayerNum()));
+                    Alarm.createTeamMemInviteAlarm(fromMember, toMember, teamId, teamMemInviteFormDto.getPlayerNum()));
             return;
         }
         teamMemberService.addTeamMemberIn(teamService.findById(teamId), teamMemInviteFormDto.getName(), TeamRole.MEMBER,
@@ -141,7 +141,7 @@ public class TeamMemFacade {
     }
 
     public boolean isAuthorizeToManageTeam(Principal principal, Long teamId) {
-        Member member = memberService.getMemberOf(principal.getName());
+        Member member = memberService.getMemberBy(principal.getName());
         return teamMemberService.isAuthorizeMemberToManageTeam(member.getId(), teamId);
     }
 

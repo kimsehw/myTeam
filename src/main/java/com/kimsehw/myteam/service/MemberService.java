@@ -57,7 +57,15 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
-    public Member getMemberOf(String email) {
+    public Member getMemberBy(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        if (optionalMember.isEmpty()) {
+            throw new EntityNotFoundException(WRONG_EMAIL_ERROR);
+        }
+        return optionalMember.get();
+    }
+
+    public Member getMemberWithMyTeamInfoBy(String email) {
         Optional<Member> optionalMember = memberRepository.findWithMyTeamsInfoByEmail(email);
         if (optionalMember.isEmpty()) {
             throw new EntityNotFoundException(WRONG_EMAIL_ERROR);
@@ -72,7 +80,7 @@ public class MemberService implements UserDetailsService {
      * @return List<TeamInfoDto> (teamLogo 및 멤버 수 제외)
      */
     public List<TeamInfoDto> findMyTeamsInfoByEmail(String email) {
-        Member member = getMemberOf(email);
+        Member member = getMemberWithMyTeamInfoBy(email);
         return member.getMyTeams().stream()
                 .map(this::getMyTeamsInfoDto)
                 .toList();
@@ -104,7 +112,7 @@ public class MemberService implements UserDetailsService {
      * @throws IllegalArgumentException 해당 유저의 팀 목록에 존재하지 않는 팀 아이디 혹은 팀 명
      */
     public boolean isMyTeam(String email, Long teamId, String teamName) {
-        Member member = getMemberOf(email);
+        Member member = getMemberWithMyTeamInfoBy(email);
         Map<Long, String> myTeamIdsAndNames = member.getMyTeams().stream()
                 .map(TeamMember::getTeam)
                 .collect(Collectors.toMap(Team::getId, Team::getTeamName));

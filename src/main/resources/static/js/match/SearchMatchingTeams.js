@@ -39,7 +39,7 @@ function searchTeams() {
                         <td class="py-2 px-4 border">${team.region}</td>
                         <td class="py-2 px-4 border">${team.ageRange}</td>
                         <td class="py-2 px-4 border text-center">
-                            <button onclick="selectTeam('${team.teamName}', '${team.leaderName}', '${team.leaderEmail}'
+                            <button onclick="selectTeam('${team.teamId}', '${team.teamName}', '${team.leaderName}', '${team.leaderEmail}'
                             , '${team.region}', '${team.ageRange}')"
                                     class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm">
                                 선택
@@ -57,13 +57,15 @@ function searchTeams() {
         });
 }
 
-function selectTeam(teamName, leaderName, leaderEmail, region, ageRange) {
+function selectTeam(teamId, teamName, leaderName, leaderEmail, region, ageRange) {
     const opposingTeamInfo = document.getElementById("opposingTeamInfo");
+    const inviteeTeamId = document.getElementById("inviteeTeamId");
     const inviteeEmail = document.getElementById("inviteeEmail");
     const inviteeTeamName = document.getElementById("inviteeTeamName");
 
     opposingTeamInfo.value = `${teamName} / ${leaderName} / ${leaderEmail} / ${region} / ${ageRange}`;
     opposingTeamInfo.title = `${teamName} / ${leaderName} / ${leaderEmail} / ${region} / ${ageRange}`;
+    inviteeTeamId.value = teamId;
     inviteeEmail.value = leaderEmail;
     inviteeTeamName.value = teamName;
 
