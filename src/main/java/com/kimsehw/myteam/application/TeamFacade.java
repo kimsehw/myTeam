@@ -1,6 +1,5 @@
 package com.kimsehw.myteam.application;
 
-import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
@@ -10,7 +9,6 @@ import com.kimsehw.myteam.dto.team.MatchTeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
-import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
@@ -90,14 +88,8 @@ public class TeamFacade {
         return matchService.getSearchedMatchDtoPages(matchSearchDto, Set.of(teamId), pageable);
     }
 
-    public List<MatchTeamInfoDto> getMatchingTeamsByName(String searchTeamName) {
-        if (searchTeamName.isBlank()) {
-            throw new FieldErrorException(FieldError.of("searchTeamName", "팀명을 입력해주세요."));
-        }
-        List<Team> teams = teamService.findAllByTeamNameWithLeaderInfo(searchTeamName);
-        if (teams == null || teams.isEmpty()) {
-            throw new FieldErrorException(FieldError.of("searchTeamName", "존재하지 않는 팀명입니다. 팀명을 확인해주세요."));
-        }
+    public List<MatchTeamInfoDto> getMatchingTeamsByName(String searchTeamName, String myEmail) {
+        List<Team> teams = teamService.findAllByTeamNameWithLeaderInfo(searchTeamName, myEmail);
         return teams.stream()
                 .map(MatchTeamInfoDto::of)
                 .toList();

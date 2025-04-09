@@ -26,6 +26,8 @@ import org.thymeleaf.util.StringUtils;
 public class TeamService {
 
     public static final String DUPLICATE_TEAM_NAME_EXCEPTION = "같은 이름의 팀이 존재합니다. 같은 이름의 팀은 한 개 이상 만들 수 없습니다.";
+    public static final String THERE_IS_NO_TEAMS_LIKE_TEAM_NAME_ERROR = "존재하지 않는 팀명입니다. 팀명을 확인해주세요.";
+    public static final String NO_TEAM_NAME_INPUT_ERROR = "팀명을 입력해주세요.";
 
     private final TeamRepository teamRepository;
     private final TeamLogoRepository teamLogoRepository;
@@ -126,9 +128,21 @@ public class TeamService {
         return teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<Team> findAllByTeamNameWithLeaderInfo(String teamName) {
+    public List<Team> findAllByTeamNameWithLeaderInfo(String teamName, String myEmail) {
+        if (teamName.isBlank()) {
+            throw new IllegalArgumentException(NO_TEAM_NAME_INPUT_ERROR);
+        }
         teamName = teamName.replaceAll(" ", "");
         teamName = "%" + teamName + "%";
-        return teamRepository.findAllByTeamNameWithLeaderInfo(teamName);
+        List<Team> teams = teamRepository.findAllByTeamNameWithLeaderInfo(teamName);
+        if (teams == null || teams.isEmpty()) {
+            throw new IllegalArgumentException(THERE_IS_NO_TEAMS_LIKE_TEAM_NAME_ERROR);
+        }
+        teams.removeIf(team -> isInMyTeam(myEmail, team));
+        return teams;
+    }
+
+    private static boolean isInMyTeam(String myEmail, Team team) {
+        return team.getLeader().getMember().getEmail().equals(myEmail);
     }
 }

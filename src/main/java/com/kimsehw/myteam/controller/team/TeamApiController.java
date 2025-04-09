@@ -1,9 +1,8 @@
 package com.kimsehw.myteam.controller.team;
 
 import com.kimsehw.myteam.application.TeamFacade;
-import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.dto.team.MatchTeamInfoDto;
-import com.kimsehw.myteam.exception.FieldErrorException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +35,14 @@ public class TeamApiController {
     }
 
     @GetMapping("/teams/searchMatchingTeams")
-    public ResponseEntity searchMatchingTeams(@RequestParam("teamName") String teamName) {
+    public ResponseEntity searchMatchingTeams(@RequestParam("teamName") String teamName, Principal principal) {
         List<MatchTeamInfoDto> matchTeams;
         try {
-            matchTeams = teamFacade.getMatchingTeamsByName(teamName);
-        } catch (FieldErrorException e) {
-            FieldError fieldError = e.getFieldError();
-            return ResponseEntity.badRequest().body(Map.of(fieldError.getField(), fieldError.getErrorMessage()));
+            String myEmail = principal.getName();
+            matchTeams = teamFacade.getMatchingTeamsByName(teamName, myEmail);
+        } catch (IllegalArgumentException e) {
+            String fieldName = "searchTeamName";
+            return ResponseEntity.badRequest().body(Map.of(fieldName, e.getMessage()));
         }
         return ResponseEntity.ok(matchTeams);
     }
