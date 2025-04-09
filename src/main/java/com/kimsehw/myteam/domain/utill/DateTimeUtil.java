@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.domain.utill;
 
+import com.kimsehw.myteam.constant.search.SearchDateType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,5 +32,29 @@ public class DateTimeUtil {
             return LocalDateTime.parse(date, formatter);
         }
         return null;
+    }
+
+    public static LocalDateTime getBeforeDateTypeOf(SearchDateType searchDateType) {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (SearchDateType.ALL == searchDateType) {
+            return now.minusYears(100L);
+        }
+        if (SearchDateType.TODAY == searchDateType) {
+            return now.minusDays(1);
+        }
+        if (SearchDateType.ONE_WEEK == searchDateType) {
+            return now.minusWeeks(1);
+        }
+        if (SearchDateType.ONE_MONTH == searchDateType) {
+            return now.minusMonths(1);
+        }
+        if (SearchDateType.SIX_MONTH == searchDateType) {
+            return now.minusMonths(6);
+        }
+        if (SearchDateType.ONE_YEAR == searchDateType) {
+            return now.minusMonths(12);
+        }
+        return now;
     }
 }

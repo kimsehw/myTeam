@@ -101,7 +101,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
             return null;
         }
         if (searchDateType != null) {
-            return regDtsAfter(searchDateType);
+            return QPost.post.regTime.goe(DateTimeUtil.getBeforeDateTypeOf(searchDateType));
         }
 
         LocalDateTime fromDateTime = DateTimeUtil.getFromDateTime(fromDate, "yyyy-MM-dd");
@@ -118,31 +118,6 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         }
 
         return null;
-    }
-
-    private BooleanExpression regDtsAfter(SearchDateType searchDateType) {
-        LocalDateTime now = LocalDateTime.now();
-
-        if (SearchDateType.ALL == searchDateType) {
-            return null;
-        }
-        if (SearchDateType.TODAY == searchDateType) {
-            now = now.minusDays(1);
-        }
-        if (SearchDateType.ONE_WEEK == searchDateType) {
-            now = now.minusWeeks(1);
-        }
-        if (SearchDateType.ONE_MONTH == searchDateType) {
-            now = now.minusMonths(1);
-        }
-        if (SearchDateType.SIX_MONTH == searchDateType) {
-            now = now.minusMonths(6);
-        }
-        if (SearchDateType.ONE_YEAR == searchDateType) {
-            now = now.minusMonths(12);
-        }
-
-        return QPost.post.regTime.goe(now);
     }
 
     @Override

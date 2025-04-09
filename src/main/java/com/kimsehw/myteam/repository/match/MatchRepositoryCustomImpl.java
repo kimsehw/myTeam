@@ -3,6 +3,7 @@ package com.kimsehw.myteam.repository.match;
 import com.kimsehw.myteam.constant.search.SearchDateType;
 import com.kimsehw.myteam.domain.entity.match.Match;
 import com.kimsehw.myteam.domain.entity.match.QMatch;
+import com.kimsehw.myteam.domain.utill.DateTimeUtil;
 import com.kimsehw.myteam.dto.match.MatchSearchDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,10 +13,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
+import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+@Log
 public class MatchRepositoryCustomImpl implements MatchRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
@@ -27,12 +30,12 @@ public class MatchRepositoryCustomImpl implements MatchRepositoryCustom {
     @Override
     public Page<Match> findAllSearchedMatchPage(MatchSearchDto matchSearchDto, Set<Long> TeamIds, Pageable pageable) {
         QMatch match = QMatch.match;
-
+//        log.info(matchSearchDto.toString());
         List<Match> matches = queryFactory.select(match)
                 .from(match)
                 .where(
                         match.myTeam.id.in(TeamIds), searchIsDoneEq(matchSearchDto, match),
-                        matchDateBetween(matchSearchDto.getToDate(), matchSearchDto.getToDate(),
+                        matchDateBetween(matchSearchDto.getFromDate(), matchSearchDto.getToDate(),
                                 matchSearchDto.getSearchDateType(), match),
                         searchTeamEq(matchSearchDto.getTeamId(), match)
                 )
@@ -68,13 +71,12 @@ public class MatchRepositoryCustomImpl implements MatchRepositoryCustom {
 
     private BooleanExpression matchDateBetween(String fromDate, String toDate, SearchDateType searchDateType,
                                                QMatch match) {
-
         if ((fromDate == null || fromDate.isBlank()) && (toDate == null || toDate.isBlank())
                 && searchDateType == null) {
             return null;
         }
         if (searchDateType != null) {
-            return match.matchDate.goe(MatchDateAfter(searchDateType));
+            return match.matchDate.goe(DateTimeUtil.getBeforeDateTypeOf(searchDateType));
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -106,30 +108,5 @@ public class MatchRepositoryCustomImpl implements MatchRepositoryCustom {
             return LocalDate.parse(fromDate, formatter).atStartOfDay();
         }
         return null;
-    }
-
-    private LocalDateTime MatchDateAfter(SearchDateType searchDateType) {
-        LocalDateTime now = LocalDateTime.now();
-
-        if (SearchDateType.ALL == searchDateType) {
-            return null;
-        }
-        if (SearchDateType.TODAY == searchDateType) {
-            now = now.minusDays(1);
-        }
-        if (SearchDateType.ONE_WEEK == searchDateType) {
-            now = now.minusWeeks(1);
-        }
-        if (SearchDateType.ONE_MONTH == searchDateType) {
-            now = now.minusMonths(1);
-        }
-        if (SearchDateType.SIX_MONTH == searchDateType) {
-            now = now.minusMonths(6);
-        }
-        if (SearchDateType.ONE_YEAR == searchDateType) {
-            now = now.minusMonths(12);
-        }
-
-        return now;
     }
 }
