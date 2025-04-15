@@ -28,7 +28,13 @@
 
     <script>
         function page(pageNumber) {
-            window.location.href = '/posts?page=' + pageNumber;
+            const url = new URL(window.location.href);
+            const params = url.searchParams;
+
+            params.set("page", pageNumber);
+            url.search = params.toString();
+
+            window.location.href = url.toString();
         }
     </script>
 </th:block>
