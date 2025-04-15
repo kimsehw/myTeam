@@ -170,4 +170,8 @@ public class TeamMemberService {
         TeamMember teamMember = teamMemberRepository.findById(teamMemId).orElseThrow(EntityNotFoundException::new);
         return teamMember.getTeamRole() == TeamRole.LEADER;
     }
+
+    public List<TeamMember> getTeamMembersFrom(List<Long> addMemberIds) {
+        return teamMemberRepository.findAllById(addMemberIds);
+    }
 }

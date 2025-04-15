@@ -35,4 +35,14 @@ public class MatchMemberRecord {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "match_id")
     private Match match;
+
+    private MatchMemberRecord(Match match, TeamMember teamMember) {
+        this.match = match;
+        this.teamMember = teamMember;
+        matchPersonalRecord = new MatchPersonalRecord();
+    }
+
+    public static MatchMemberRecord createRecordOf(Match match, TeamMember addMember) {
+        return new MatchMemberRecord(match, addMember);
+    }
 }

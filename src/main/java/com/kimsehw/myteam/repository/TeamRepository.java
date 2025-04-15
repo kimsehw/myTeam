@@ -24,4 +24,9 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             + " join fetch l.member m"
             + " where t.teamName like :teamName")
     List<Team> findAllByTeamNameWithLeaderInfo(String teamName);
+
+    @Query("select t from Team t"
+            + " join fetch t.teamMembers tms"
+            + " where t.id = :teamId")
+    Team findByIdFetchTeamMems(Long teamId);
 }

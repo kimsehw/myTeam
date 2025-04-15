@@ -145,4 +145,9 @@ public class TeamService {
     private static boolean isInMyTeam(String myEmail, Team team) {
         return team.getLeader().getMember().getEmail().equals(myEmail);
     }
+
+    public boolean areTheyInThisTeam(List<Long> teamMemIds, Long teamId) {
+        Team team = teamRepository.findByIdFetchTeamMems(teamId);
+        return team.areTheyTeamMember(teamMemIds);
+    }
 }

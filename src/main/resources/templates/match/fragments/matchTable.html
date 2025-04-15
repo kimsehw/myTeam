@@ -22,7 +22,8 @@
             <td class="px-6 py-4 border-b border-gray-300" th:text="${match.matchDate}"></td>
             <td class="px-6 py-4 border-b border-gray-300" th:text="${match.stadium}"></td>
             <td th:unless="${myListView}" class="px-6 py-4 border-b border-gray-300">
-                <a href="javascript:void(0)" onclick="openTeamMemberModal(0)" class="text-blue-600 hover:underline">
+                <a href="javascript:void(0)" th:onclick="openTeamMemberModal([[${match.id}]])"
+                   class="text-blue-600 hover:underline">
                     <span id="memberCount" th:text="${match.headCount == null ?'0':match.headCount}"></span>
                 </a>
             </td>

@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.domain.entity.match;
 
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.domain.utill.DateTimeUtil;
 import jakarta.persistence.CascadeType;
@@ -15,14 +16,18 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "match_games")
+@Log
 public class Match {
 
     @Id
@@ -78,5 +83,26 @@ public class Match {
             return String.format("%d : %d 무승부", goal, lostGoal);
         }
         return String.format("%d : %d 패배", goal, lostGoal);
+    }
+
+    public void addMembers(List<TeamMember> addMembers) {
+        Map<Long, MatchMemberRecord> teamMemIdAndRecord
+                = matchMemberRecords.stream()
+                .collect(Collectors.toMap(matchMemberRecord -> matchMemberRecord.getTeamMember().getId(),
+                        matchMemberRecord -> matchMemberRecord));
+        log.info("시작");
+        for (TeamMember addMember : addMembers) {
+            Long addMemberId = addMember.getId();
+            if (!teamMemIdAndRecord.containsKey(addMemberId)) {
+                MatchMemberRecord record = MatchMemberRecord.createRecordOf(this, addMember);
+                matchMemberRecords.add(record);
+                continue;
+            }
+            teamMemIdAndRecord.remove(addMemberId);
+        }
+        log.info("add 끝");
+        matchMemberRecords.removeIf(teamMemIdAndRecord::containsValue);
+        log.info("remove 끝");
+        headCount = matchMemberRecords.size();
     }
 }

@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.service;
 
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.match.Match;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.domain.utill.DateTimeUtil;
@@ -94,5 +95,11 @@ public class MatchService {
     public void addMatchOn(Team myTeam, String inviteeTeamName, String matchDate, Integer matchTime) {
         Match match = Match.createMatchOf(myTeam, inviteeTeamName, matchDate, matchTime);
         matchRepository.save(match);
+    }
+
+    @Transactional
+    public void addMemberOn(Long matchId, List<TeamMember> addMembers) {
+        Match match = matchRepository.findByIdFetchAll(matchId);
+        match.addMembers(addMembers);
     }
 }

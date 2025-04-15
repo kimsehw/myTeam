@@ -78,11 +78,13 @@ function loadNextPageAndFillUntilScrollable() {
         });
 }
 */
+let selectedMatchId = null;
 
-function openTeamMemberModal(page = 0) {
+function openTeamMemberModal(matchId) {
     const listEl = document.getElementById("teamMemberList");
     listEl.innerHTML = ''; // 기존 내용 초기화
 
+    selectedMatchId = matchId
     currentPage = 0;
     isLastPage = false;
     isLoading = false;
@@ -115,7 +117,7 @@ function loadNextPage(callback) {
                 const li = document.createElement("li");
                 li.innerHTML = `
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="teamMemIds" value="${teamMember.id}" class="form-checkbox">
+                        <input type="checkbox" name="addMemberIds" value="${teamMember.teamMemId}" class="form-checkbox">
                         <span>등번호 ${teamMember.playerNum} - ${teamMember.name}</span>
                     </label>
                 `;
@@ -134,3 +136,40 @@ function loadNextPage(callback) {
             }
         });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('addMemberSelectForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const selectedIds = Array.from(document.querySelectorAll('input[name="addMemberIds"]:checked'))
+                    .map(checkbox => checkbox.value);
+        const formData = {
+            addMemberIds: selectedIds,
+            matchId: selectedMatchId
+        }
+
+        var url = '/matches/addMember'
+
+        fetch(url , {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(({ status, body }) => {
+            if (status === 200) {
+                alert("신청이 성공적으로 전송되었습니다!");
+            } else {
+                alert(body.errorMessage || "에러가 발생했습니다.");
+            }
+            window.location.reload();
+        })
+        .catch(error => {
+             console.error("Error:", error);
+             alert('참여인원 추가 요청 중 오류가 발생했습니다.');
+        });
+    });
+});

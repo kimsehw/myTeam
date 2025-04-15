@@ -93,4 +93,22 @@ public class Team extends BaseEntity {
         ageRange = updateTeamInfoDto.getAgeRange();
         teamDetail = updateTeamInfoDto.getTeamDetail();
     }
+
+    public boolean isTeamMember(Long id) {
+        for (TeamMember teamMember : teamMembers) {
+            if (teamMember.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean areTheyTeamMember(List<Long> teamMemIds) {
+        for (Long teamMemId : teamMemIds) {
+            if (!isTeamMember(teamMemId)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -2,7 +2,9 @@ package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.domain.entity.Alarm;
 import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.dto.match.AddMemberFormDto;
 import com.kimsehw.myteam.dto.match.MatchInviteFormDto;
 import com.kimsehw.myteam.dto.match.MatchListResponse;
 import com.kimsehw.myteam.dto.match.MatchSearchDto;
@@ -10,6 +12,7 @@ import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.service.AlarmService;
 import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
+import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.format.DateTimeParseException;
@@ -27,9 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Log
 public class MatchFacade {
 
+    public static final String ADD_MEMBER_ERROR = "유효하지 않은 팀원이 참여 인원에 추가 요청 되었습니다. 다시 시도해주세요.";
     private final MemberService memberService;
     private final MatchService matchService;
     private final TeamService teamService;
+    private final TeamMemberService teamMemberService;
     private final AlarmService alarmService;
 
     public MatchListResponse getSearchedMyMatchListResponse(String email, Pageable pageable,
@@ -74,6 +79,16 @@ public class MatchFacade {
         }
     }
 
+    private void validateInviteeTeamInfo(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
+        String fieldName = "invitee";
+        try {
+            memberService.isMyTeam(matchInviteFormDto.getInviteeEmail(), matchInviteFormDto.getInviteeTeamId(),
+                    matchInviteFormDto.getInviteeTeamName());
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            errors.put(fieldName, e.getMessage());
+        }
+    }
+
     private void validateMatchDateTime(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
         validateMatchTime(matchInviteFormDto, errors);
         validateMatchDate(matchInviteFormDto, errors);
@@ -97,13 +112,15 @@ public class MatchFacade {
         }
     }
 
-    private void validateInviteeTeamInfo(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
-        String fieldName = "invitee";
-        try {
-            memberService.isMyTeam(matchInviteFormDto.getInviteeEmail(), matchInviteFormDto.getInviteeTeamId(),
-                    matchInviteFormDto.getInviteeTeamName());
-        } catch (EntityNotFoundException | IllegalArgumentException e) {
-            errors.put(fieldName, e.getMessage());
+    public void validateAddMemberIds(List<Long> addMemberIds, Long teamId, Map<String, String> errors) {
+        if (!teamService.areTheyInThisTeam(addMemberIds, teamId)) {
+            errors.put("errorMessage", ADD_MEMBER_ERROR);
         }
+    }
+
+    public void addMember(AddMemberFormDto addMemberFormDto, Long teamId) {
+        log.info(addMemberFormDto.toString());
+        List<TeamMember> addMembers = teamMemberService.getTeamMembersFrom(addMemberFormDto.getAddMemberIds());
+        matchService.addMemberOn(addMemberFormDto.getMatchId(), addMembers);
     }
 }
