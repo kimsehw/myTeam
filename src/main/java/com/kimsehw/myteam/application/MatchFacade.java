@@ -37,6 +37,14 @@ public class MatchFacade {
     private final TeamMemberService teamMemberService;
     private final AlarmService alarmService;
 
+    /**
+     * 검색 조건에 맞춰 해당 회원이 속한 팀들의 일정 정보와 팀 이름 및 아이디를 반환합니다.
+     *
+     * @param email          회원 아이디
+     * @param pageable       페이지 정보
+     * @param matchSearchDto 검색 조건
+     * @return MatchListResponse
+     */
     public MatchListResponse getSearchedMyMatchListResponse(String email, Pageable pageable,
                                                             MatchSearchDto matchSearchDto) {
         List<TeamInfoDto> myTeams;
@@ -48,16 +56,23 @@ public class MatchFacade {
         return matchService.getSearchedMatchListResponse(myTeams, matchSearchDto, pageable);
     }
 
+    /**
+     * 매치를 추가 혹은 초대 합니다. (비회원 - 매치 추가, 회원 - 매치 초대 알림 생성)
+     *
+     * @param email              회원 아이디
+     * @param matchInviteFormDto 초대 정보
+     * @param myTeamId           팀 아이디
+     */
     @Transactional
-    public void invite(String email, MatchInviteFormDto matchInviteFormDto, Long sessionTeamId) {
+    public void invite(String email, MatchInviteFormDto matchInviteFormDto, Long myTeamId) {
         if (!matchInviteFormDto.getIsNotUser()) {
             Member fromMember = memberService.getMemberBy(email);
             Member toMember = memberService.getMemberBy(matchInviteFormDto.getInviteeEmail());
             alarmService.save(
-                    Alarm.createMatchInviteAlarm(fromMember, toMember, sessionTeamId, matchInviteFormDto));
+                    Alarm.createMatchInviteAlarm(fromMember, toMember, myTeamId, matchInviteFormDto));
             return;
         }
-        Team myTeam = teamService.findById(sessionTeamId);
+        Team myTeam = teamService.findById(myTeamId);
         matchService.addMatchOn(myTeam, matchInviteFormDto.getInviteeTeamName(), matchInviteFormDto.getMatchDate(),
                 matchInviteFormDto.getMatchTime());
     }
