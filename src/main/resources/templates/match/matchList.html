@@ -18,7 +18,7 @@
     <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">내 일정</h2>
 
     <div layout:fragment="matchTable">
-        <div th:insert="~{match/fragments/matchTable :: matchTable(${myListView})}"></div>
+        <div th:insert="~{match/fragments/matchTable :: matchTable(${myListView}, ${manageTeam==null?false:manageTeam})}"></div>
         <div th:insert="~{fragments/pagination :: pagination(${matches}, ${page}, ${maxPage})}"></div>
     </div>
     <div layout:fragment="matchSearch">
