@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="matchSearchForm(myListView)">
-    <form id="searchForm" th:object="${matchSearch}" method="get" th:action="@{/matches}"
+    <form id="searchForm" th:object="${matchSearch}" method="get"
+          th:action="${myListView} ? @{/matches} : @{/teams/{teamId}/matches(teamId=${teamId})}"
           class="flex flex-wrap items-center gap-2 bg-gray-100 p-4 rounded-lg shadow-md mt-3 w-full max-w-4xl mx-auto">
         <select th:field="*{isDone}" class="px-3 py-1 border rounded-lg text-sm">
             <option value="">-- 경기 전/후 --</option>
