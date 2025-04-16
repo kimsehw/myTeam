@@ -4,12 +4,15 @@ import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.domain.entity.Alarm;
 import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberForAddMatchDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.service.AlarmService;
+import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
@@ -22,6 +25,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -40,6 +44,7 @@ public class TeamMemFacade {
     private final TeamService teamService;
     private final MemberService memberService;
     private final AlarmService alarmService;
+    private final MatchService matchService;
 
 
     public void validateInviteInfo(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors,
@@ -189,5 +194,12 @@ public class TeamMemFacade {
         } catch (FieldErrorException e) {
             addFieldError(error, e);
         }
+    }
+
+    public Page<TeamMemberForAddMatchDto> getTeamMemberForAddMatchDtoPagesOf(Long matchId, Long teamId,
+                                                                             Pageable pageable) {
+        Page<TeamMember> teamMemberPages = teamMemberService.getTeamMembersIn(teamId, pageable);
+        return new PageImpl<>(matchService.getTeamMemberForAddMatchDto(matchId, teamMemberPages.getContent()), pageable,
+                teamMemberPages.getTotalElements());
     }
 }

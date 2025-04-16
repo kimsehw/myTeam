@@ -86,23 +86,32 @@ public class Match {
     }
 
     public void addMembers(List<TeamMember> addMembers) {
-        Map<Long, MatchMemberRecord> teamMemIdAndRecord
-                = matchMemberRecords.stream()
-                .collect(Collectors.toMap(matchMemberRecord -> matchMemberRecord.getTeamMember().getId(),
-                        matchMemberRecord -> matchMemberRecord));
-        log.info("시작");
+        Map<Long, MatchMemberRecord> teamMemIdAndRecord = getTeamMemIdAndRecord();
         for (TeamMember addMember : addMembers) {
             Long addMemberId = addMember.getId();
-            if (!teamMemIdAndRecord.containsKey(addMemberId)) {
+            if (!isAlreadyIn(teamMemIdAndRecord, addMemberId)) {
                 MatchMemberRecord record = MatchMemberRecord.createRecordOf(this, addMember);
                 matchMemberRecords.add(record);
                 continue;
             }
             teamMemIdAndRecord.remove(addMemberId);
         }
-        log.info("add 끝");
         matchMemberRecords.removeIf(teamMemIdAndRecord::containsValue);
-        log.info("remove 끝");
         headCount = matchMemberRecords.size();
+    }
+
+    private Map<Long, MatchMemberRecord> getTeamMemIdAndRecord() {
+        return matchMemberRecords.stream()
+                .collect(Collectors.toMap(matchMemberRecord -> matchMemberRecord.getTeamMember().getId(),
+                        matchMemberRecord -> matchMemberRecord));
+    }
+
+    public boolean isAlreadyIn(Map<Long, MatchMemberRecord> teamMemIdAndRecord, Long teamMemId) {
+        return teamMemIdAndRecord.containsKey(teamMemId);
+    }
+
+    public boolean isAlreadyIn(Long teamMemId) {
+        Map<Long, MatchMemberRecord> teamMemIdAndRecord = getTeamMemIdAndRecord();
+        return teamMemIdAndRecord.containsKey(teamMemId);
     }
 }

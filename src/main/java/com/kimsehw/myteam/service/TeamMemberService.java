@@ -171,7 +171,15 @@ public class TeamMemberService {
         return teamMember.getTeamRole() == TeamRole.LEADER;
     }
 
-    public List<TeamMember> getTeamMembersFrom(List<Long> addMemberIds) {
-        return teamMemberRepository.findAllById(addMemberIds);
+    public List<TeamMember> getTeamMembersFrom(List<Long> teamMemIds) {
+        return teamMemberRepository.findAllById(teamMemIds);
+    }
+
+    public List<TeamMember> getTeamMembersIn(Long teamId) {
+        return teamMemberRepository.findAllByTeamId(teamId);
+    }
+
+    public Page<TeamMember> getTeamMembersIn(Long teamId, Pageable pageable) {
+        return teamMemberRepository.findAllByTeamId(teamId, pageable);
     }
 }

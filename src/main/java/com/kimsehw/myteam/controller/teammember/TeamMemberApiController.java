@@ -3,7 +3,7 @@ package com.kimsehw.myteam.controller.teammember;
 import com.kimsehw.myteam.application.TeamMemFacade;
 import com.kimsehw.myteam.dto.CustomPage;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
-import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberForAddMatchDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateRequest;
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
@@ -77,13 +77,13 @@ public class TeamMemberApiController {
     }
 
     @GetMapping("/team-members/forAddMatch")
-    public ResponseEntity viewForAddMatch(HttpSession session,
+    public ResponseEntity viewForAddMatch(HttpSession session, @RequestParam(value = "matchId") Long matchId,
                                           @RequestParam(value = "page", defaultValue = "0") int page) {
         Long sessionTeamId = (Long) session.getAttribute("currentViewTeamId");
         Pageable pageable = PageRequest.of(page, MAX_TEAM_MEM_SHOW);
-        Page<TeamMemberDto> teamMemberDtos = teamMemFacade.getTeamMemberDtoPagesOf(sessionTeamId, pageable);
-        CustomPage<TeamMemberDto> body = new CustomPage<>(teamMemberDtos);
-        log.info(body.getContent().toString());
-        return ResponseEntity.ok().body(body);
+        Page<TeamMemberForAddMatchDto> teamMemberForAddMatchDtoPage = teamMemFacade.getTeamMemberForAddMatchDtoPagesOf(
+                matchId, sessionTeamId, pageable);
+        CustomPage<TeamMemberForAddMatchDto> body = new CustomPage<>(teamMemberForAddMatchDtoPage);
+        return ResponseEntity.ok(body);
     }
 }

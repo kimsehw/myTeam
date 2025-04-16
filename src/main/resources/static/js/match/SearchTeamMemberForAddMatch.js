@@ -97,7 +97,7 @@ function openTeamMemberModal(matchId) {
             const scrollBottom = listEl.scrollTop + listEl.clientHeight;
             const scrollHeight = listEl.scrollHeight;
             if (!isLoading && !isLastPage && scrollBottom >= scrollHeight - 5) {
-                console.log("스크롤 바닥 도달 → 다음 페이지 로딩");
+//                console.log("스크롤 바닥 도달 → 다음 페이지 로딩");
                 loadNextPage();
             }
         };
@@ -108,7 +108,7 @@ function openTeamMemberModal(matchId) {
 function loadNextPage(callback) {
     isLoading = true;
 
-    fetch(`/team-members/forAddMatch?page=${currentPage}`)
+    fetch(`/team-members/forAddMatch?page=${currentPage}&matchId=${selectedMatchId}`)
         .then(response => response.json())
         .then(data => {
             const listEl = document.getElementById("teamMemberList");
@@ -117,7 +117,8 @@ function loadNextPage(callback) {
                 const li = document.createElement("li");
                 li.innerHTML = `
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="addMemberIds" value="${teamMember.teamMemId}" class="form-checkbox">
+                        <input type="checkbox" name="addMemberIds" value="${teamMember.teamMemId}" class="form-checkbox"
+                                                ${teamMember.isAlreadyIn ? 'checked' : ''}>
                         <span>등번호 ${teamMember.playerNum} - ${teamMember.name}</span>
                     </label>
                 `;
@@ -128,6 +129,7 @@ function loadNextPage(callback) {
             currentPage++;
             isLoading = false;
 
+//            console.log(!isLastPage && listEl.scrollHeight <= listEl.clientHeight)
             // 스크롤 안 생기면 계속 로드
             if (!isLastPage && listEl.scrollHeight <= listEl.clientHeight) {
                 loadNextPage(callback);
