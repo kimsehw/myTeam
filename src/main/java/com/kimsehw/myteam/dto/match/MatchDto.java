@@ -4,7 +4,6 @@ import com.kimsehw.myteam.domain.entity.match.Match;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import lombok.Data;
 
 @Data
@@ -15,7 +14,6 @@ public class MatchDto {
     private String result;
     private Integer headCount;
     private TeamInfoDto opposingTeamInfo;
-    private List<Long> myTeamIds;
 
     public MatchDto(Long id, LocalDateTime matchDate, String stadium, String result, Integer headCount,
                     TeamInfoDto opposingTeamInfo) {

@@ -1,8 +1,11 @@
 package com.kimsehw.myteam.domain.entity.match;
 
+import com.kimsehw.myteam.constant.team.AgeRange;
+import com.kimsehw.myteam.constant.team.Region;
 import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.domain.utill.DateTimeUtil;
+import com.kimsehw.myteam.dto.match.MatchUpdateFormDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +43,10 @@ public class Match {
     private Integer matchTime;
 
     private String stadium;
+
     private String notUserOpposingTeamName;
+    private Region notUserOpposingTeamRegion;
+    private AgeRange notUserOpposingTeamAgeRange;
 
     private Boolean isDone;
 
@@ -113,5 +119,20 @@ public class Match {
     public boolean isAlreadyIn(Long teamMemId) {
         Map<Long, MatchMemberRecord> teamMemIdAndRecord = getTeamMemIdAndRecord();
         return teamMemIdAndRecord.containsKey(teamMemId);
+    }
+
+    public void update(MatchUpdateFormDto matchUpdateFormDto) {
+        matchTime = matchUpdateFormDto.getMatchTime();
+        matchDate = DateTimeUtil.formatting(matchUpdateFormDto.getMatchDate(), DateTimeUtil.Y_M_D_H_M_TYPE);
+        stadium = matchUpdateFormDto.getStadium();
+        updateNotUserInfo(matchUpdateFormDto);
+    }
+
+    private void updateNotUserInfo(MatchUpdateFormDto matchUpdateFormDto) {
+        if (opposingTeam == null) {
+            notUserOpposingTeamName = matchUpdateFormDto.getOpposingTeamName();
+            notUserOpposingTeamRegion = matchUpdateFormDto.getOpposingTeamRegion();
+            notUserOpposingTeamAgeRange = matchUpdateFormDto.getOpposingTeamAgeRange();
+        }
     }
 }

@@ -7,9 +7,11 @@ import com.kimsehw.myteam.domain.utill.DateTimeUtil;
 import com.kimsehw.myteam.dto.match.MatchDto;
 import com.kimsehw.myteam.dto.match.MatchListResponse;
 import com.kimsehw.myteam.dto.match.MatchSearchDto;
+import com.kimsehw.myteam.dto.match.MatchUpdateFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberForAddMatchDto;
 import com.kimsehw.myteam.repository.match.MatchRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -138,5 +140,10 @@ public class MatchService {
                 .map(teamMember -> new TeamMemberForAddMatchDto(teamMember.getId(), teamMember.getPlayerNum(),
                         teamMember.getName(), match.isAlreadyIn(teamMember.getId())))
                 .toList();
+    }
+
+    public void updateBy(MatchUpdateFormDto matchUpdateFormDto) {
+        Match match = matchRepository.findById(matchUpdateFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+        match.update(matchUpdateFormDto);
     }
 }

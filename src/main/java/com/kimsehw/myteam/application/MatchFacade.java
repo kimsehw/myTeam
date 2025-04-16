@@ -8,6 +8,7 @@ import com.kimsehw.myteam.dto.match.AddMemberFormDto;
 import com.kimsehw.myteam.dto.match.MatchInviteFormDto;
 import com.kimsehw.myteam.dto.match.MatchListResponse;
 import com.kimsehw.myteam.dto.match.MatchSearchDto;
+import com.kimsehw.myteam.dto.match.MatchUpdateFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.service.AlarmService;
 import com.kimsehw.myteam.service.MatchService;
@@ -133,9 +134,13 @@ public class MatchFacade {
         }
     }
 
-    public void addMember(AddMemberFormDto addMemberFormDto, Long teamId) {
+    public void addMember(AddMemberFormDto addMemberFormDto) {
         log.info(addMemberFormDto.toString());
         List<TeamMember> addMembers = teamMemberService.getTeamMembersFrom(addMemberFormDto.getAddMemberIds());
         matchService.addMemberOn(addMemberFormDto.getMatchId(), addMembers);
+    }
+
+    public void update(MatchUpdateFormDto matchUpdateFormDto) {
+        matchService.updateBy(matchUpdateFormDto);
     }
 }
