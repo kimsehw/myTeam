@@ -34,6 +34,7 @@ public class MatchService {
     public static final String NULL_MATCH_DATE_ERROR = "매치 날짜가 입력되지 않았습니다. 매치 날짜를 입력해주세요";
     public static final String MATCH_DATE_PARSE_ERROR = "유효하지 않은 매치 날짜가 입력되었습니다.";
     public static final String MATCH_TIME_ERROR = "시간은 필수 입력값이며 음수가 될 수 없습니다.";
+    public static final String WRONG_MATCH_INFO_ERROR = "잘못된 매치 정보가 요청되었습니다. 매치 정보를 확인해주세요.";
     private final MatchRepository matchRepository;
 
     /**
@@ -51,6 +52,8 @@ public class MatchService {
             if (match.getOpposingTeam() == null) {
                 TeamInfoDto teamInfoDto = new TeamInfoDto();
                 teamInfoDto.setTeamName(match.getNotUserOpposingTeamName());
+                teamInfoDto.setRegion(match.getNotUserOpposingTeamRegion());
+                teamInfoDto.setAgeRange(match.getNotUserOpposingTeamAgeRange());
                 return MatchDto.ofNotUser(match, teamInfoDto);
             }
             return MatchDto.of(match);
@@ -142,8 +145,20 @@ public class MatchService {
                 .toList();
     }
 
+    @Transactional
     public void updateBy(MatchUpdateFormDto matchUpdateFormDto) {
-        Match match = matchRepository.findById(matchUpdateFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+        Match match = getMatchById(matchUpdateFormDto.getId());
         match.update(matchUpdateFormDto);
+    }
+
+    private Match getMatchById(Long matchId) {
+        return matchRepository.findById(matchId).orElseThrow(() -> new EntityNotFoundException(WRONG_MATCH_INFO_ERROR));
+    }
+
+    public void validateIsMatchOfTeam(Long matchId, Long teamId) {
+        Match match = getMatchById(matchId);
+        if (!match.getMyTeam().getId().equals(teamId)) {
+            throw new IllegalArgumentException(WRONG_MATCH_INFO_ERROR);
+        }
     }
 }

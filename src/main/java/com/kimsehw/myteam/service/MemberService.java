@@ -31,6 +31,7 @@ public class MemberService implements UserDetailsService {
     public static final String DUPLICATE_MEMBER_EXIST = "중복된 회원이 존재합니다.";
     public static final String WRONG_TEAM_INFO_ERROR = "팀 정보가 잘못되었습니다. 팀 정보를 확인해주세요.";
     public static final String WRONG_EMAIL_ERROR = "존재하지 않는 회원입니다. 이메일을 확인해주세요.";
+    public static final String NOT_MY_TEAM_ERROR = "접근 권한이 없는 팀입니다.";
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -121,6 +122,24 @@ public class MemberService implements UserDetailsService {
         }
         if (!myTeamIdsAndNames.get(teamId).equals(teamName)) {
             throw new IllegalArgumentException(WRONG_TEAM_INFO_ERROR);
+        }
+        return true;
+    }
+
+    /**
+     * 해당 유저의 팀인지 검사
+     *
+     * @param email  유저 이메일
+     * @param teamId 검사 하고자하는 팀 아이디
+     * @return 내 팀의 정보가 맞다면 true
+     * @throws EntityNotFoundException  해당 이메일의 유저가 존재하지 않음
+     * @throws IllegalArgumentException 해당 유저의 팀 목록에 존재하지 않는 팀 아이디
+     */
+    public boolean isMyTeam(String email, Long teamId) {
+        Member member = getMemberWithMyTeamInfoBy(email);
+        List<Long> teamIds = member.getMyTeams().stream().map(TeamMember::getTeam).map(Team::getId).toList();
+        if (!teamIds.contains(teamId)) {
+            throw new IllegalArgumentException(NOT_MY_TEAM_ERROR);
         }
         return true;
     }

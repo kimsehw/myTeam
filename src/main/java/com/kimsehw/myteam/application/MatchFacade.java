@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MatchFacade {
 
     public static final String ADD_MEMBER_ERROR = "유효하지 않은 팀원이 참여 인원에 추가 요청 되었습니다. 다시 시도해주세요.";
+    public static final String NO_TEAM_NAME_ERROR = "팀 이름을 입력해주세요.";
     private final MemberService memberService;
     private final MatchService matchService;
     private final TeamService teamService;
@@ -67,8 +68,8 @@ public class MatchFacade {
     @Transactional
     public void invite(String email, MatchInviteFormDto matchInviteFormDto, Long myTeamId) {
         if (!matchInviteFormDto.getIsNotUser()) {
-            Member fromMember = memberService.getMemberBy(email);
-            Member toMember = memberService.getMemberBy(matchInviteFormDto.getInviteeEmail());
+            Member fromMember = memberService.getMemberByEmail(email);
+            Member toMember = memberService.getMemberByEmail(matchInviteFormDto.getInviteeEmail());
             alarmService.save(
                     Alarm.createMatchInviteAlarm(fromMember, toMember, myTeamId, matchInviteFormDto));
             return;
@@ -85,18 +86,18 @@ public class MatchFacade {
 
     private void validateInviteeTeam(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
         if (!matchInviteFormDto.getIsNotUser()) {
-            validateInviteeTeamInfo(matchInviteFormDto, errors);
+            validateInviteeTeamInfo(matchInviteFormDto, errors, "invitee");
             return;
         }
         String inviteeTeamName = matchInviteFormDto.getInviteeTeamName();
         log.info(inviteeTeamName);
         if (inviteeTeamName == null || inviteeTeamName.isBlank()) {
-            errors.put("inviteeTeamName", "팀 이름을 입력해주세요.");
+            errors.put("inviteeTeamName", NO_TEAM_NAME_ERROR);
         }
     }
 
-    private void validateInviteeTeamInfo(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
-        String fieldName = "invitee";
+    private void validateInviteeTeamInfo(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors,
+                                         String fieldName) {
         try {
             memberService.isMyTeam(matchInviteFormDto.getInviteeEmail(), matchInviteFormDto.getInviteeTeamId(),
                     matchInviteFormDto.getInviteeTeamName());
@@ -106,23 +107,21 @@ public class MatchFacade {
     }
 
     private void validateMatchDateTime(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
-        validateMatchTime(matchInviteFormDto, errors);
-        validateMatchDate(matchInviteFormDto, errors);
+        validateMatchTime(matchInviteFormDto.getMatchTime(), errors, "matchTime");
+        validateMatchDate(matchInviteFormDto.getMatchDate(), errors, "matchDate");
     }
 
-    private void validateMatchTime(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
-        String fieldName = "matchTime";
+    private void validateMatchTime(int matchTime, Map<String, String> errors, String fieldName) {
         try {
-            matchService.validateMatchTime(matchInviteFormDto.getMatchTime());
+            matchService.validateMatchTime(matchTime);
         } catch (IllegalArgumentException e) {
             errors.put(fieldName, e.getMessage());
         }
     }
 
-    private void validateMatchDate(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
-        String fieldName = "matchDate";
+    private void validateMatchDate(String matchDate, Map<String, String> errors, String fieldName) {
         try {
-            matchService.validateMatchDate(matchInviteFormDto.getMatchDate());
+            matchService.validateMatchDate(matchDate);
         } catch (DateTimeParseException | IllegalArgumentException | NullPointerException e) {
             errors.put(fieldName, e.getMessage());
         }
@@ -142,5 +141,27 @@ public class MatchFacade {
 
     public void update(MatchUpdateFormDto matchUpdateFormDto) {
         matchService.updateBy(matchUpdateFormDto);
+    }
+
+    public void validateUpdateForm(MatchUpdateFormDto matchUpdateFormDto, Long teamId, String email,
+                                   Map<String, String> errors) {
+        try {
+            memberService.isMyTeam(email, teamId);
+            matchService.validateIsMatchOfTeam(matchUpdateFormDto.getId(), teamId);
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
+            errors.put("errorMessage", e.getMessage());
+            return;
+        }
+        validateMatchTime(matchUpdateFormDto.getMatchTime(), errors, "updateMatchTime");
+        validateMatchDate(matchUpdateFormDto.getMatchDate(), errors, "updateMatchDate");
+        validateUpdateNotUserMatch(matchUpdateFormDto.getIsNotUserMatch(), matchUpdateFormDto.getOpposingTeamName(),
+                errors, "updateNotUserTeamName");
+    }
+
+    private void validateUpdateNotUserMatch(Boolean isNotUserMatch, String opposingTeamName, Map<String, String> errors,
+                                            String fieldName) {
+        if (isNotUserMatch && (opposingTeamName == null || opposingTeamName.isBlank())) {
+            errors.put(fieldName, NO_TEAM_NAME_ERROR);
+        }
     }
 }

@@ -27,7 +27,6 @@ public class MatchApiController {
     @PostMapping("/matches/invite")
     public ResponseEntity invite(@RequestBody MatchInviteFormDto matchInviteFormDto, Principal principal,
                                  HttpSession session) {
-        log.info("inviteStart");
         Map<String, String> errors = new HashMap<>();
         String email = principal.getName();
         Long sessionTeamId = (Long) session.getAttribute("currentViewTeamId");
@@ -52,15 +51,16 @@ public class MatchApiController {
     }
 
     @PatchMapping("/matches/update")
-    public ResponseEntity update(@RequestBody MatchUpdateFormDto matchUpdateFormDto, HttpSession session) {
+    public ResponseEntity update(@RequestBody MatchUpdateFormDto matchUpdateFormDto, Principal principal,
+                                 HttpSession session) {
         Long teamId = (Long) session.getAttribute("currentViewTeamId");
-        /*
-        추후 검증 과정 추가
         Map<String, String> errors = new HashMap<>();
-        matchFacade.validateAddMemberIds(addMemberFormDto.getAddMemberIds(), teamId, errors);
+        String email = principal.getName();
+        matchFacade.validateUpdateForm(matchUpdateFormDto, teamId, email, errors);
         if (!errors.isEmpty()) {
             return ResponseEntity.badRequest().body(errors);
-        }*/
+        }
+
         matchFacade.update(matchUpdateFormDto);
         return ResponseEntity.ok(Collections.emptyMap());
     }

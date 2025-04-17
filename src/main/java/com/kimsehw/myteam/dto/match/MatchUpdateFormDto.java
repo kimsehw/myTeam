@@ -10,6 +10,7 @@ public class MatchUpdateFormDto {
     private String stadium;
     private String matchDate;
     private Integer matchTime;
+    private Boolean isNotUserMatch;
     private String opposingTeamName;
     private Region opposingTeamRegion;
     private AgeRange opposingTeamAgeRange;

@@ -10,6 +10,13 @@
             color: #bd2130
         }
     </style>
+    <style>
+        #floatingMenu {
+            min-width: 120px;
+            background-color: white;
+            border: 1px solid #ccc;
+        }
+    </style>
 </th:block>
 <th:block layout:fragment="script">
     <script th:inline="javascript" src="/js/modal.js"></script>
@@ -17,6 +24,7 @@
     <script th:inline="javascript" src="/js/match/SearchMatchingTeams.js"></script>
     <script th:inline="javascript" src="/js/match/MatchInvite.js"></script>
     <script th:inline="javascript" src="/js/match/SearchTeamMemberForAddMatch.js"></script>
+    <script th:inline="javascript" src="/js/match/MatchUpdate.js"></script>
 </th:block>
 
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
@@ -34,6 +42,13 @@
 
     <div th:insert="~{match/fragments/inviteModal}"></div>
     <div th:insert="~{match/fragments/addTeamMemberModal}"></div>
+
+    <div id="floatingMenu" class="absolute bg-white border rounded shadow-md p-2 z-50 hidden">
+        <button class="block w-full text-left px-4 py-2 hover:bg-gray-100 edit-btn">수정</button>
+        <button class="block w-full text-left px-4 py-2 hover:bg-gray-100 detail-btn">상세</button>
+        <button class="block w-full text-left px-4 py-2 hover:bg-gray-100 record-btn">기록</button>
+    </div>
+
 </div>
 
 

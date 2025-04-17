@@ -41,9 +41,8 @@
 <div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
 
     <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">팀원 목록</h2>
-    <div class="flex justify-end space-x-4 mb-3">
-        <button id="editButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                th:classappend="${manageTeam}?'':'hidden'">
+    <div th:if="${manageTeam}" class="flex justify-end space-x-4 mb-3">
+        <button id="editButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
             팀원 편집
         </button>
         <button id="saveButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 hidden"
@@ -54,7 +53,7 @@
             취소
         </button>
         <button class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                th:classappend="${manageTeam}?'':'hidden'" th:onclick="toggleModal('inviteModal',true)">
+                th:onclick="toggleModal('inviteModal',true)">
             팀 초대 보내기
         </button>
     </div>

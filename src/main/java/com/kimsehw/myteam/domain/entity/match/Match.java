@@ -125,14 +125,14 @@ public class Match {
         matchTime = matchUpdateFormDto.getMatchTime();
         matchDate = DateTimeUtil.formatting(matchUpdateFormDto.getMatchDate(), DateTimeUtil.Y_M_D_H_M_TYPE);
         stadium = matchUpdateFormDto.getStadium();
-        updateNotUserInfo(matchUpdateFormDto);
+        if (matchUpdateFormDto.getIsNotUserMatch()) {
+            updateNotUserInfo(matchUpdateFormDto);
+        }
     }
 
     private void updateNotUserInfo(MatchUpdateFormDto matchUpdateFormDto) {
-        if (opposingTeam == null) {
-            notUserOpposingTeamName = matchUpdateFormDto.getOpposingTeamName();
-            notUserOpposingTeamRegion = matchUpdateFormDto.getOpposingTeamRegion();
-            notUserOpposingTeamAgeRange = matchUpdateFormDto.getOpposingTeamAgeRange();
-        }
+        notUserOpposingTeamName = matchUpdateFormDto.getOpposingTeamName();
+        notUserOpposingTeamRegion = matchUpdateFormDto.getOpposingTeamRegion();
+        notUserOpposingTeamAgeRange = matchUpdateFormDto.getOpposingTeamAgeRange();
     }
 }

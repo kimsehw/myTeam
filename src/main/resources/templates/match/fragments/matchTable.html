@@ -7,7 +7,7 @@
             <th rowspan="2" class="px-6 py-3 border-b-2 border-gray-300">날 짜</th>
             <th rowspan="2" class="px-6 py-3 border-b-2 border-gray-300">경기장</th>
             <th rowspan="2" class="px-6 py-3 border-b-2 border-gray-300">참여 인원</th>
-            <th colspan="3" class="px-12 py-1 border-b-2 border-gray-300">상대팀 정보</th>
+            <th colspan="3" class="px-14 py-1 border-b-2 border-gray-300">상대팀 정보</th>
             <th rowspan="2" class="px-6 py-3 border-b-2 border-gray-300">결 과</th>
         </tr>
         <tr>
@@ -18,9 +18,29 @@
         </thead>
         <tbody>
         <tr th:each="match : ${matches.content}"
-            class="hover:bg-gray-100 transition cursor-pointer text-center">
-            <td class="px-6 py-4 border-b border-gray-300" th:text="${match.matchDate}"></td>
-            <td class="px-6 py-4 border-b border-gray-300" th:text="${match.stadium}"></td>
+            class="hover:bg-gray-100 transition cursor-pointer text-center match-row"
+            th:attr="data-match-id=${match.id}, data-match-matchTime=${match.matchTime}, data-match-matchDate=${match.matchDate}">
+            <td class="px-6 py-4 border-b border-gray-300">
+                <div class="flex-container flex-col">
+                    <p th:text="${match.matchDate}" class="matchDateView view-mode"
+                       th:value="${match.matchDate}"></p>
+                    <div th:if="${manageTeam and !myListView}">
+                        <input type="datetime-local"
+                               class="matchDateInput hidden edit-mode h-8 px-2 text-sm border rounded w-full"
+                               value=""/>
+                        <p class="text-xs fieldError hidden updateMatchDateError"></p>
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 border-b border-gray-300">
+                <div class="flex-container flex-col">
+                    <p th:text="${match.stadium}" class="view-mode"></p>
+                    <div th:if="${manageTeam and !myListView}">
+                        <input type="text" class="stadiumInput hidden edit-mode h-8 px-2 text-sm border rounded w-full"
+                               th:value="${match.stadium}"/>
+                    </div>
+                </div>
+            </td>
             <td th:unless="${myListView}" class="px-6 py-4 border-b border-gray-300">
                 <span th:text="${match.headCount == null ?'0':match.headCount}"></span>
                 <a th:if="${manageTeam}" href="javascript:void(0)" th:onclick="openTeamMemberModal([[${match.id}]])"
@@ -30,12 +50,54 @@
             </td>
             <td th:if="${myListView}" class="px-6 py-4 border-b border-gray-300"
                 th:text="${match.headCount == null ?'0':match.headCount}"></td>
-            <td class="px-6 py-4 border-b border-gray-300" th:text="${match.opposingTeamInfo.teamName}"></td>
-            <td class="px-3 py-4 border-b border-gray-300"
-                th:text="${match.opposingTeamInfo.region == null?'':match.opposingTeamInfo.region.regionName}"></td>
-            <td class="px-3 py-4 border-b border-gray-300"
-                th:text="${match.opposingTeamInfo.ageRange == null?'':match.opposingTeamInfo.ageRange.range}"></td>
+            <td class="px-6 py-4 border-b border-gray-300">
+                <div class="flex-container flex-col">
+                    <p th:text="${match.opposingTeamInfo.teamName}" class="view-mode"></p>
+                    <div th:if="${manageTeam and !myListView}">
+                        <input type="text" class="teamNameInput hidden edit-mode h-8 px-2 text-sm border rounded w-full"
+                               th:value="${match.opposingTeamInfo.teamName}"/>
+                        <p class="text-xs fieldError hidden updateNotUserTeamNameError"></p>
+                    </div>
+                </div>
+            </td>
+            <td class="px-4 py-4 border-b border-gray-300">
+                <div class="flex-container flex-col">
+                    <p th:text="${match.opposingTeamInfo.region == null?'':match.opposingTeamInfo.region.regionName}"
+                       class="view-mode"></p>
+                    <div th:if="${manageTeam and !myListView}">
+                        <select class="edit-mode hidden regionInput h-8 px-2 text-sm border rounded w-full">
+                            <option th:each="region : ${regions}" th:value="${region.name()}"
+                                    th:text="${region.getRegionName}"
+                                    th:selected="${match.opposingTeamInfo.region != null
+                                                    and match.opposingTeamInfo.region.name() == region.name()}"
+                            ></option>
+                        </select>
+                    </div>
+                </div>
+            </td>
+            <td class="px-4 py-4 border-b border-gray-300">
+                <div class="flex-container flex-col">
+                    <p th:text="${match.opposingTeamInfo.ageRange == null?'':match.opposingTeamInfo.ageRange.range}"
+                       class="view-mode"></p>
+                    <div th:if="${manageTeam and !myListView}">
+                        <select class="edit-mode hidden regionInput h-8 px-2 text-sm border rounded w-full">
+                            <option th:each="age : ${ageRanges}" th:value="${age.name()}"
+                                    th:text="${age.getRange}"
+                                    th:selected="${match.opposingTeamInfo.ageRange != null
+                                                    and match.opposingTeamInfo.ageRange.name() == age.name()}"
+                            ></option>
+                        </select>
+                    </div>
+                </div>
+            </td>
             <td class="px-6 py-4 border-b border-gray-300" th:text="${match.result}"></td>
+            <td th:if="${manageTeam and !myListView}" class="px-3 py-4 border-b border-gray-300 hidden save-td">
+                <button type="button" class="save-btn hidden bg-blue-600 text-white px-2 py-1 text-sm rounded">저장
+                </button>
+                <button type="button" class="cancel-btn hidden bg-gray-400 text-white px-2 py-1 text-sm rounded ml-1">
+                    취소
+                </button>
+            </td>
         </tr>
         </tbody>
         <tbody th:if="${matches == null or #lists.isEmpty(matches.content)}">
@@ -45,5 +107,6 @@
             </td>
         </tr>
     </table>
+
 </th:block>
 </html>

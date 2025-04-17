@@ -154,6 +154,7 @@ public class TeamController {
         model.addAttribute("manageTeam", manageTeam);
         model.addAttribute("myListView", false);
         model.addAttribute("searchDateTypes", SearchDateType.values());
+        addRegionAndAgeRangeSelection(model);
         addAttributeOfPage(model, MAX_MATCH_SHOW, pageable);
         return "team/teamMatchList";
     }
