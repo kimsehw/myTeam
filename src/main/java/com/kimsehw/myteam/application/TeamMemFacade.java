@@ -66,7 +66,7 @@ public class TeamMemFacade {
 
         try {
             Long inviteeId = validateOfInviteeEmail(teamMemInviteFormDto, email);
-            Member member = memberService.getMemberBy(email);
+            Member member = memberService.getMemberByEmail(email);
             alarmService.validateDuplicateInviteAlarm(teamId, member.getId(), inviteeId, errors);
         } catch (FieldErrorException e) {
             addFieldError(errors, e);
@@ -114,7 +114,7 @@ public class TeamMemFacade {
         }
         Member invitee;
         try {
-            invitee = memberService.getMemberBy(emailOfInvitee);
+            invitee = memberService.getMemberByEmail(emailOfInvitee);
         } catch (EntityNotFoundException e) {
             throw new FieldErrorException(FieldError.of("email", WRONG_EMAIL_ERROR));
         }
@@ -123,8 +123,8 @@ public class TeamMemFacade {
 
     public void invite(String email, Long teamId, TeamMemInviteFormDto teamMemInviteFormDto) {
         if (!teamMemInviteFormDto.isNotUser()) {
-            Member fromMember = memberService.getMemberBy(email);
-            Member toMember = memberService.getMemberBy(teamMemInviteFormDto.getEmail());
+            Member fromMember = memberService.getMemberByEmail(email);
+            Member toMember = memberService.getMemberByEmail(teamMemInviteFormDto.getEmail());
             alarmService.save(
                     Alarm.createTeamMemInviteAlarm(fromMember, toMember, teamId, teamMemInviteFormDto.getPlayerNum()));
             return;
@@ -146,7 +146,7 @@ public class TeamMemFacade {
     }
 
     public boolean isAuthorizeToManageTeam(Principal principal, Long teamId) {
-        Member member = memberService.getMemberBy(principal.getName());
+        Member member = memberService.getMemberByEmail(principal.getName());
         return teamMemberService.isAuthorizeMemberToManageTeam(member.getId(), teamId);
     }
 

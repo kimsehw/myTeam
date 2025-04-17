@@ -62,7 +62,7 @@ class TeamFacadeTest {
         Long teamId = createTeam(email, "test Team");
 
         Team team = teamRepository.findById(teamId).orElseThrow();
-        Member member1 = memberService.getMemberBy(email);
+        Member member1 = memberService.getMemberByEmail(email);
 
         assertThat(team.getLeader().getMember()).isEqualTo(member1);
     }

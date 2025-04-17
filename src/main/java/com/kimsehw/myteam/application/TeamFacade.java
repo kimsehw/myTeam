@@ -34,7 +34,7 @@ public class TeamFacade {
     private final MatchService matchService;
 
     public Long createTeam(String email, TeamFormDto teamFormDto, MultipartFile teamLogoFile) {
-        Member member = memberService.getMemberBy(email);
+        Member member = memberService.getMemberByEmail(email);
         if (member == null) {
             throw new EntityNotFoundException();
         }
@@ -60,7 +60,7 @@ public class TeamFacade {
      * @param updateTeamLogoFile 업데이트 로고 파일
      */
     public void updateTeam(String email, TeamInfoDto updateTeamInfoDto, MultipartFile updateTeamLogoFile) {
-        Member member = memberService.getMemberBy(email);
+        Member member = memberService.getMemberByEmail(email);
         if (member == null) {
             throw new EntityNotFoundException();
         }
