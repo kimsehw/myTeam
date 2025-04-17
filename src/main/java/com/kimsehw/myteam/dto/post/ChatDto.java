@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.dto.post;
 
-import com.kimsehw.myteam.entity.post.Chat;
+import com.kimsehw.myteam.domain.entity.post.Chat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

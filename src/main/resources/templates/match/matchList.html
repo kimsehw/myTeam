@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일정 조회</title>
+</head>
+<th:block layout:fragment="script">
+    <script th:inline="javascript" src="/js/searchDate.js"></script>
+</th:block>
+
+
+<div layout:fragment="content" class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">내 일정</h2>
+
+    <div layout:fragment="matchTable">
+        <div th:insert="~{match/fragments/matchTable :: matchTable(${myListView}, ${manageTeam==null?false:manageTeam})}"></div>
+        <div th:insert="~{fragments/pagination :: pagination(${matches}, ${page}, ${maxPage})}"></div>
+    </div>
+    <div layout:fragment="matchSearch">
+        <div th:insert="~{match/fragments/matchSearchForm :: matchSearchForm(${myListView})}"></div>
+    </div>
+</div>
+
+
+</html>

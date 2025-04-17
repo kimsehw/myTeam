@@ -2,8 +2,8 @@ package com.kimsehw.myteam.dto.teammember;
 
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.teammember.TeamRole;
-import com.kimsehw.myteam.embedded.record.PersonalRecord;
-import com.kimsehw.myteam.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.embedded.record.PersonalRecord;
 import lombok.Data;
 
 @Data

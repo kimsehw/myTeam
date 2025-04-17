@@ -6,17 +6,15 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import com.kimsehw.myteam.constant.team.AgeRange;
 import com.kimsehw.myteam.constant.team.Region;
 import com.kimsehw.myteam.constant.teammember.TeamRole;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.dto.team.TeamsDto;
-import com.kimsehw.myteam.entity.Member;
-import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.repository.TeamRepository;
 import com.kimsehw.myteam.service.MemberService;
-import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -47,12 +45,6 @@ class TeamFacadeTest {
     @Autowired
     private TeamRepository teamRepository;
 
-    @Autowired
-    EntityManager em;
-
-    @Autowired
-    private TeamMemberService teamMemberService;
-
     private Member createMember(String email) {
         MemberFormDto memberFormDto = new MemberFormDto();
         memberFormDto.setName("test");
@@ -70,9 +62,9 @@ class TeamFacadeTest {
         Long teamId = createTeam(email, "test Team");
 
         Team team = teamRepository.findById(teamId).orElseThrow();
-        Member member1 = memberService.findMemberByEmail(email);
+        Member member1 = memberService.getMemberByEmail(email);
 
-        assertThat(team.getMember()).isEqualTo(member1);
+        assertThat(team.getLeader().getMember()).isEqualTo(member1);
     }
 
     @Test
@@ -104,7 +96,7 @@ class TeamFacadeTest {
         String email = member.getEmail();
         Long teamId = createTeam(email, "test Team");
         Pageable pageable = PageRequest.of(0, 6);
-        Page<TeamsDto> teamsDtoPage = teamMemberService.getTeamsDtoPage(member.getId(), pageable);
+        Page<TeamsDto> teamsDtoPage = memberService.getTeamsDtoPage(email, pageable);
 
         TeamsDto teamsDto = teamsDtoPage.getContent().get(0);
         assertThat(teamsDto.getTeamId()).isEqualTo(teamId);
@@ -134,5 +126,22 @@ class TeamFacadeTest {
                 findTeam.getTeamDetail());
         System.out.println(teamInfoDto.toString());
         //em.flush();
+    }
+
+    @Test
+    void 팀목록조회_테스트() {
+        Member member = createMember("test@naver.com");
+        Member member2 = createMember("test2@naver.com");
+        memberService.saveMember(member);
+        memberService.saveMember(member2);
+        Long teamA = createTeam(member.getEmail(), "teamA");
+        Long teamB = createTeam(member.getEmail(), "teamB");
+        Long teamC = createTeam(member2.getEmail(), "teamB");
+        Long teamD = createTeam(member2.getEmail(), "teamD");
+        Pageable pageable = PageRequest.of(0, 6);
+        Page<TeamsDto> teamsDtoPage = memberService.getTeamsDtoPage(member2.getEmail(), pageable);
+        for (TeamsDto teamsDto : teamsDtoPage) {
+            assertThat(teamsDto.getTeamName()).containsAnyOf("teamB", "teamD");
+        }
     }
 }

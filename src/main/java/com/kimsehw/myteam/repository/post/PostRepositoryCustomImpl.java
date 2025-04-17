@@ -1,24 +1,23 @@
 package com.kimsehw.myteam.repository.post;
 
 import com.kimsehw.myteam.constant.post.PostType;
-import com.kimsehw.myteam.constant.serch.SearchDateType;
-import com.kimsehw.myteam.constant.serch.SearchType;
+import com.kimsehw.myteam.constant.search.SearchDateType;
+import com.kimsehw.myteam.constant.search.SearchType;
+import com.kimsehw.myteam.domain.entity.post.Post;
+import com.kimsehw.myteam.domain.entity.post.QChat;
+import com.kimsehw.myteam.domain.entity.post.QPost;
+import com.kimsehw.myteam.domain.entity.team.QTeam;
+import com.kimsehw.myteam.domain.entity.team.QTeamLogo;
+import com.kimsehw.myteam.domain.utill.DateTimeUtil;
 import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
 import com.kimsehw.myteam.dto.post.QPostDto;
-import com.kimsehw.myteam.entity.post.Post;
-import com.kimsehw.myteam.entity.post.QChat;
-import com.kimsehw.myteam.entity.post.QPost;
-import com.kimsehw.myteam.entity.team.QTeam;
-import com.kimsehw.myteam.entity.team.QTeamLogo;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -102,12 +101,11 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
             return null;
         }
         if (searchDateType != null) {
-            return regDtsAfter(searchDateType);
+            return QPost.post.regTime.goe(DateTimeUtil.getBeforeDateTypeOf(searchDateType));
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime fromDateTime = getFromDateTime(fromDate, formatter);
-        LocalDateTime toDateTime = getToDateTime(toDate, formatter);
+        LocalDateTime fromDateTime = DateTimeUtil.getFromDateTime(fromDate, "yyyy-MM-dd");
+        LocalDateTime toDateTime = DateTimeUtil.getToDateTime(toDate, "yyyy-MM-dd");
 
         if (fromDateTime != null && toDateTime != null) {
             return QPost.post.regTime.between(fromDateTime, toDateTime);
@@ -120,45 +118,6 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         }
 
         return null;
-    }
-
-    private static LocalDateTime getToDateTime(String toDate, DateTimeFormatter formatter) {
-        if (toDate != null && !toDate.isBlank()) {
-            return LocalDate.parse(toDate, formatter).atTime(23, 59, 59);
-        }
-        return null;
-    }
-
-    private static LocalDateTime getFromDateTime(String fromDate, DateTimeFormatter formatter) {
-        if (fromDate != null && !fromDate.isBlank()) {
-            return LocalDate.parse(fromDate, formatter).atStartOfDay();
-        }
-        return null;
-    }
-
-    private BooleanExpression regDtsAfter(SearchDateType searchDateType) {
-        LocalDateTime now = LocalDateTime.now();
-
-        if (SearchDateType.ALL == searchDateType) {
-            return null;
-        }
-        if (SearchDateType.TODAY == searchDateType) {
-            now = now.minusDays(1);
-        }
-        if (SearchDateType.ONE_WEEK == searchDateType) {
-            now = now.minusWeeks(1);
-        }
-        if (SearchDateType.ONE_MONTH == searchDateType) {
-            now = now.minusMonths(1);
-        }
-        if (SearchDateType.SIX_MONTH == searchDateType) {
-            now = now.minusMonths(6);
-        }
-        if (SearchDateType.ONE_YEAR == searchDateType) {
-            now = now.minusMonths(12);
-        }
-
-        return QPost.post.regTime.goe(now);
     }
 
     @Override

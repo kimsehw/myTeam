@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.repository.teammember;
 
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
-import com.kimsehw.myteam.entity.TeamMember;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +27,8 @@ public interface TeamMemberRepository extends JpaRepository<TeamMember, Long>, T
             + " where tm.member.id = :memberId"
             + " and tm.team.id = :teamId")
     TeamMember findByMemberIdAndTeamId(Long memberId, Long teamId);
+
+    List<TeamMember> findAllByTeamId(Long teamId);
+
+    Page<TeamMember> findAllByTeamId(Long teamId, Pageable pageable);
 }

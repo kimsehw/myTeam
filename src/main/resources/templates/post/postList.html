@@ -87,30 +87,7 @@
         </table>
     </div>
 
-    <!-- 페이지네이션 -->
-    <div class="mt-6 flex justify-center"
-         th:with="start=${(posts.number/maxPage)*maxPage + 1},
-              end=(${(posts.totalPages == 0) ? 1 : (start + (maxPage - 1) < posts.totalPages ? start + (maxPage - 1) : posts.totalPages)})">
-        <ul class="flex space-x-2">
-
-            <li th:classappend="${posts.first}?'opacity-50 pointer-events-none'"
-                class="bg-gray-300 px-3 py-2 rounded">
-                <a th:onclick="'javascript:page(' + ${posts.number - 1} + ')'" class="cursor-pointer">« 이전</a>
-            </li>
-
-            <li th:each="page: ${#numbers.sequence(start, end)}"
-                th:classappend="${posts.number eq page-1}?'bg-blue-500 text-white'"
-                class="px-3 py-2 rounded cursor-pointer hover:bg-gray-200">
-                <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text">[[${page}]]</a>
-            </li>
-
-            <li th:classappend="${posts.last}?'opacity-50 pointer-events-none'"
-                class="bg-gray-300 px-3 py-2 rounded">
-                <a th:onclick="'javascript:page(' + ${posts.number + 1} + ')'" class="cursor-pointer">다음 »</a>
-            </li>
-
-        </ul>
-    </div>
+    <div th:insert="fragments/pagination :: pagination(${posts}, ${page}, ${maxPage})"></div>
 
     <form id="searchForm" th:object="${postSearch}" method="get" th:action="@{/posts}"
           class="flex flex-wrap items-center gap-2 bg-gray-100 p-4 rounded-lg shadow-md mt-3 w-full max-w-4xl mx-auto">

@@ -2,14 +2,14 @@ package com.kimsehw.myteam.controller.post;
 
 import com.kimsehw.myteam.application.PostFacade;
 import com.kimsehw.myteam.constant.post.PostType;
-import com.kimsehw.myteam.constant.serch.SearchDateType;
-import com.kimsehw.myteam.constant.serch.SearchType;
-import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
+import com.kimsehw.myteam.constant.search.SearchDateType;
+import com.kimsehw.myteam.constant.search.SearchType;
 import com.kimsehw.myteam.dto.post.ChatDto;
 import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
+import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -39,7 +39,7 @@ public class PostController {
     @GetMapping("/posts/new")
     public String postForm(Model model, Principal principal) {
         String email = principal.getName();
-        List<MyTeamsInfoDto> myTeams = postFacade.findMyTeamsInfoByEmail(email);
+        List<TeamInfoDto> myTeams = postFacade.findMyTeamsInfoByEmail(email);
         addForNewPost(model, new PostFormDto(), myTeams);
         return "post/postForm";
     }
@@ -60,14 +60,14 @@ public class PostController {
     @GetMapping("/posts/new/{postId}")
     public String update(@PathVariable("postId") Long postId, Model model, Principal principal) {
         String email = principal.getName();
-        List<MyTeamsInfoDto> myTeams = postFacade.findMyTeamsInfoByEmail(email);
+        List<TeamInfoDto> myTeams = postFacade.findMyTeamsInfoByEmail(email);
         PostFormDto postFormDto = postFacade.getPostFormOf(postId);
         addForNewPost(model, postFormDto, myTeams);
         model.addAttribute("postId", postId);
         return "post/postUpdate";
     }
 
-    private static void addForNewPost(Model model, PostFormDto postFormDto, List<MyTeamsInfoDto> myTeams) {
+    private static void addForNewPost(Model model, PostFormDto postFormDto, List<TeamInfoDto> myTeams) {
         model.addAttribute("postForm", postFormDto);
         model.addAttribute("myTeams", myTeams);
         model.addAttribute("postTypes", PostType.values());

@@ -59,7 +59,7 @@
             <p th:name="extraText" th:text="'글 유형을 먼저 선택해주세요.'" class="text-xs text-red-500 mt-1"></p>
         </div>
 
-        <div th:replace="post/fragments/formField::formField(text, '제목', 'title', '제목을 입력해주세요.','글 유형을 먼저 선택해주세요.')"></div>
+        <div th:replace="~{post/fragments/formField::formField(text, '제목', 'title', '제목을 입력해주세요.','글 유형을 먼저 선택해주세요.')}"></div>
 
         <div class="mb-3">
             <label for="detail" class="block text-sm font-medium text-gray-700">글 내용</label>

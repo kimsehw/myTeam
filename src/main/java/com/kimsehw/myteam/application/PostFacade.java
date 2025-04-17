@@ -1,16 +1,16 @@
 package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.domain.FieldError;
-import com.kimsehw.myteam.dto.member.MyTeamsInfoDto;
+import com.kimsehw.myteam.domain.entity.post.Chat;
+import com.kimsehw.myteam.domain.entity.post.Post;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.post.ChatDto;
 import com.kimsehw.myteam.dto.post.ChatFormDto;
 import com.kimsehw.myteam.dto.post.PostDetailDto;
 import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.dto.post.PostFormDto;
 import com.kimsehw.myteam.dto.post.PostSearchDto;
-import com.kimsehw.myteam.entity.post.Chat;
-import com.kimsehw.myteam.entity.post.Post;
-import com.kimsehw.myteam.entity.team.Team;
+import com.kimsehw.myteam.dto.team.TeamInfoDto;
 import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.service.ChatService;
 import com.kimsehw.myteam.service.MemberService;
@@ -36,7 +36,7 @@ public class PostFacade {
     private final ChatService chatService;
 
 
-    public List<MyTeamsInfoDto> findMyTeamsInfoByEmail(String email) {
+    public List<TeamInfoDto> findMyTeamsInfoByEmail(String email) {
         return memberService.findMyTeamsInfoByEmail(email);
     }
 

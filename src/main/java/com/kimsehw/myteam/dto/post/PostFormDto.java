@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.dto.post;
 
 import com.kimsehw.myteam.constant.post.PostType;
-import com.kimsehw.myteam.entity.post.Post;
+import com.kimsehw.myteam.domain.entity.post.Post;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

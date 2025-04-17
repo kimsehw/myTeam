@@ -3,13 +3,12 @@ package com.kimsehw.myteam.service;
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
-import com.kimsehw.myteam.dto.team.TeamsDto;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
-import com.kimsehw.myteam.entity.Member;
-import com.kimsehw.myteam.entity.TeamMember;
-import com.kimsehw.myteam.entity.team.Team;
 import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.repository.teammember.TeamMemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,24 +32,6 @@ public class TeamMemberService {
     public static final String NO_NUM_INPUT_ERROR = "등 번호를 입력해주세요.";
     public static final String DUPLICATE_NUM_ERROR = "중복된 등 번호 선수가 존재합니다.";
     private final TeamMemberRepository teamMemberRepository;
-
-    public Page<TeamsDto> getTeamsDtoPage(Long memberId, Pageable pageable) {
-        return teamMemberRepository.getTeamsDtoPage(memberId, pageable);
-    }
-
-    /**
-     * 팀 생성 시 팀 초기 멤버(리더)를 등록
-     *
-     * @param team     소속 팀
-     * @param member   팀원이 될 회원
-     * @param teamRole 팀내 직책
-     * @return teamMemberId
-     */
-    @Transactional
-    public Long addInitialTeamMember(Team team, Member member, TeamRole teamRole) {
-        TeamMember teamMember = TeamMember.createInitialTeamMember(team, member, teamRole);
-        return teamMember.getId();
-    }
 
     /**
      * 등번호를 배정하며 회원인 팀 멤버 등록
@@ -188,5 +169,17 @@ public class TeamMemberService {
     public boolean isTeamLeader(Long teamMemId) {
         TeamMember teamMember = teamMemberRepository.findById(teamMemId).orElseThrow(EntityNotFoundException::new);
         return teamMember.getTeamRole() == TeamRole.LEADER;
+    }
+
+    public List<TeamMember> getTeamMembersFrom(List<Long> teamMemIds) {
+        return teamMemberRepository.findAllById(teamMemIds);
+    }
+
+    public List<TeamMember> getTeamMembersIn(Long teamId) {
+        return teamMemberRepository.findAllByTeamId(teamId);
+    }
+
+    public Page<TeamMember> getTeamMembersIn(Long teamId, Pageable pageable) {
+        return teamMemberRepository.findAllByTeamId(teamId, pageable);
     }
 }

@@ -2,7 +2,7 @@ package com.kimsehw.myteam.controller.member;
 
 import com.kimsehw.myteam.constant.Position;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
-import com.kimsehw.myteam.entity.Member;
+import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.constant.alarm.AlarmType;
-import com.kimsehw.myteam.entity.Alarm;
+import com.kimsehw.myteam.domain.entity.Alarm;
 import com.kimsehw.myteam.repository.AlarmRepository;
 import java.util.List;
 import java.util.Map;

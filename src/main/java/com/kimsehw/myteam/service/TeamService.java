@@ -1,14 +1,16 @@
 package com.kimsehw.myteam.service;
 
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.domain.entity.team.TeamLogo;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
-import com.kimsehw.myteam.entity.Member;
-import com.kimsehw.myteam.entity.team.Team;
-import com.kimsehw.myteam.entity.team.TeamLogo;
 import com.kimsehw.myteam.repository.TeamLogoRepository;
 import com.kimsehw.myteam.repository.TeamRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,8 @@ import org.thymeleaf.util.StringUtils;
 public class TeamService {
 
     public static final String DUPLICATE_TEAM_NAME_EXCEPTION = "같은 이름의 팀이 존재합니다. 같은 이름의 팀은 한 개 이상 만들 수 없습니다.";
+    public static final String THERE_IS_NO_TEAMS_LIKE_TEAM_NAME_ERROR = "존재하지 않는 팀명입니다. 팀명을 확인해주세요.";
+    public static final String NO_TEAM_NAME_INPUT_ERROR = "팀명을 입력해주세요.";
 
     private final TeamRepository teamRepository;
     private final TeamLogoRepository teamLogoRepository;
@@ -33,12 +37,12 @@ public class TeamService {
     private String logoImgLocation;
 
     @Transactional
-    public Team saveTeam(Member member, TeamFormDto teamFormDto, MultipartFile teamLogoFile) {
-        if (teamRepository.findByMemberIdAndTeamName(member.getId(), teamFormDto.getTeamName()) != null) {
+    public Team saveTeam(TeamMember leader, TeamFormDto teamFormDto, MultipartFile teamLogoFile) {
+        if (teamRepository.findByMemberIdAndTeamName(leader.getMember().getId(), teamFormDto.getTeamName()) != null) {
             throw new IllegalStateException(DUPLICATE_TEAM_NAME_EXCEPTION);
         }
 
-        Team team = Team.createTeam(teamFormDto, member);
+        Team team = Team.createTeam(teamFormDto, leader);
         teamRepository.save(team);
 
         TeamLogo teamLogo = TeamLogo.of(team);
@@ -122,5 +126,28 @@ public class TeamService {
 
     public Team findById(Long teamId) {
         return teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<Team> findAllByTeamNameWithLeaderInfo(String teamName, String myEmail) {
+        if (teamName.isBlank()) {
+            throw new IllegalArgumentException(NO_TEAM_NAME_INPUT_ERROR);
+        }
+        teamName = teamName.replaceAll(" ", "");
+        teamName = "%" + teamName + "%";
+        List<Team> teams = teamRepository.findAllByTeamNameWithLeaderInfo(teamName);
+        if (teams == null || teams.isEmpty()) {
+            throw new IllegalArgumentException(THERE_IS_NO_TEAMS_LIKE_TEAM_NAME_ERROR);
+        }
+        teams.removeIf(team -> isInMyTeam(myEmail, team));
+        return teams;
+    }
+
+    private static boolean isInMyTeam(String myEmail, Team team) {
+        return team.getLeader().getMember().getEmail().equals(myEmail);
+    }
+
+    public boolean areTheyInThisTeam(List<Long> teamMemIds, Long teamId) {
+        Team team = teamRepository.findByIdFetchTeamMems(teamId);
+        return team.areTheyTeamMember(teamMemIds);
     }
 }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- 모달창 -->
+<div id="addTeamMemberModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-96 max-h-[80vh]">
+        <h3 class="text-xl font-bold mb-4">팀원 선택</h3>
+        <form id="addMemberSelectForm" method="post" th:action="@{/matches/addMember}">
+            <ul id="teamMemberList"
+                class="space-y-2 overflow-y-scroll max-h-60 pr-2 border border-gray-200 rounded"
+                style="scrollbar-width: thin;">
+            </ul>
+            <div class="flex justify-end mt-4 space-x-2">
+                <button type="button" onclick="toggleModal('addTeamMemberModal', false)"
+                        class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">닫기
+                </button>
+                <button type="submit"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">등록
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</html>

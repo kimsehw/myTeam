@@ -1,6 +1,6 @@
 package com.kimsehw.myteam.repository;
 
-import com.kimsehw.myteam.entity.post.Chat;
+import com.kimsehw.myteam.domain.entity.post.Chat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

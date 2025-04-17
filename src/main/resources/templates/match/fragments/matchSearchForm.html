@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="matchSearchForm(myListView)">
+    <form id="searchForm" th:object="${matchSearch}" method="get"
+          th:action="${myListView} ? @{/matches} : @{/teams/{teamId}/matches(teamId=${teamId})}"
+          class="flex flex-wrap items-center gap-2 bg-gray-100 p-4 rounded-lg shadow-md mt-3 w-full max-w-4xl mx-auto">
+        <select th:field="*{isDone}" class="px-3 py-1 border rounded-lg text-sm">
+            <option value="">-- 경기 전/후 --</option>
+            <option th:value=null th:text="'전체'"></option>
+            <option th:value=true th:text="'경기 후'"></option>
+            <option th:value=false th:text="'경기 전'"></option>
+        </select>
+        <div class="flex items-center gap-1">
+            <input id="fromDate" th:field="*{fromDate}" type="date"
+                   class="px-3 py-1 border rounded-md text-sm w-[120px]">
+            <span>~</span>
+            <input id="toDate" th:field="*{toDate}" type="date" class="px-3 py-1 border rounded-md text-sm w-[120px]">
+        </div>
+        <select th:field="*{searchDateType}" class="px-3 py-1 border rounded-lg text-sm">
+            <option value="">-- 기간 선택 --</option>
+            <option th:each="type : ${searchDateTypes}"
+                    th:value="${type.name()}"
+                    th:text="${type.text}">
+            </option>
+        </select>
+        <select th:if="${myListView}" th:field="*{teamId}" class="px-3 py-1 border rounded-lg text-sm">
+            <option value="">-- 팀 선택 --</option>
+            <option th:each="team : ${myTeams}"
+                    th:value="${team.key}"
+                    th:text="${team.value}">
+            </option>
+        </select>
+        <button id="searchBtn" type="submit"
+                class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm">검색
+        </button>
+    </form>
+</th:block>
+</html>

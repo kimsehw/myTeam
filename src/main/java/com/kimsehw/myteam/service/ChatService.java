@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.service;
 
 import com.kimsehw.myteam.dto.post.ChatFormDto;
-import com.kimsehw.myteam.entity.post.Chat;
+import com.kimsehw.myteam.domain.entity.post.Chat;
 import com.kimsehw.myteam.repository.ChatRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;

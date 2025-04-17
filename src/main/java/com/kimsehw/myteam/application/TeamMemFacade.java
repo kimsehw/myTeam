@@ -2,14 +2,17 @@ package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
+import com.kimsehw.myteam.domain.entity.Alarm;
+import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
+import com.kimsehw.myteam.dto.teammember.TeamMemberForAddMatchDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
-import com.kimsehw.myteam.entity.Alarm;
-import com.kimsehw.myteam.entity.Member;
 import com.kimsehw.myteam.exception.FieldErrorException;
 import com.kimsehw.myteam.service.AlarmService;
+import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
@@ -22,6 +25,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -40,6 +44,7 @@ public class TeamMemFacade {
     private final TeamService teamService;
     private final MemberService memberService;
     private final AlarmService alarmService;
+    private final MatchService matchService;
 
 
     public void validateInviteInfo(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors,
@@ -61,7 +66,7 @@ public class TeamMemFacade {
 
         try {
             Long inviteeId = validateOfInviteeEmail(teamMemInviteFormDto, email);
-            Member member = memberService.findMemberByEmail(email);
+            Member member = memberService.getMemberByEmail(email);
             alarmService.validateDuplicateInviteAlarm(teamId, member.getId(), inviteeId, errors);
         } catch (FieldErrorException e) {
             addFieldError(errors, e);
@@ -101,7 +106,7 @@ public class TeamMemFacade {
         String emailOfInvitee = teamMemInviteFormDto.getEmail();
 //        log.info("emailOfInvitee: " + emailOfInvitee);
 
-        if (!StringUtils.hasText(email)) {
+        if (!StringUtils.hasText(emailOfInvitee)) {
             throw new FieldErrorException(FieldError.of("email", NO_EMAIL_ERROR));
         }
         if (emailOfInvitee.equals(email)) {
@@ -109,7 +114,7 @@ public class TeamMemFacade {
         }
         Member invitee;
         try {
-            invitee = memberService.findMemberByEmail(emailOfInvitee);
+            invitee = memberService.getMemberByEmail(emailOfInvitee);
         } catch (EntityNotFoundException e) {
             throw new FieldErrorException(FieldError.of("email", WRONG_EMAIL_ERROR));
         }
@@ -118,10 +123,10 @@ public class TeamMemFacade {
 
     public void invite(String email, Long teamId, TeamMemInviteFormDto teamMemInviteFormDto) {
         if (!teamMemInviteFormDto.isNotUser()) {
-            Member fromMember = memberService.findMemberByEmail(email);
-            Member toMember = memberService.findMemberByEmail(teamMemInviteFormDto.getEmail());
+            Member fromMember = memberService.getMemberByEmail(email);
+            Member toMember = memberService.getMemberByEmail(teamMemInviteFormDto.getEmail());
             alarmService.save(
-                    Alarm.createInviteAlarm(fromMember, toMember, teamId, teamMemInviteFormDto.getPlayerNum()));
+                    Alarm.createTeamMemInviteAlarm(fromMember, toMember, teamId, teamMemInviteFormDto.getPlayerNum()));
             return;
         }
         teamMemberService.addTeamMemberIn(teamService.findById(teamId), teamMemInviteFormDto.getName(), TeamRole.MEMBER,
@@ -141,7 +146,7 @@ public class TeamMemFacade {
     }
 
     public boolean isAuthorizeToManageTeam(Principal principal, Long teamId) {
-        Member member = memberService.findMemberByEmail(principal.getName());
+        Member member = memberService.getMemberByEmail(principal.getName());
         return teamMemberService.isAuthorizeMemberToManageTeam(member.getId(), teamId);
     }
 
@@ -189,5 +194,12 @@ public class TeamMemFacade {
         } catch (FieldErrorException e) {
             addFieldError(error, e);
         }
+    }
+
+    public Page<TeamMemberForAddMatchDto> getTeamMemberForAddMatchDtoPagesOf(Long matchId, Long teamId,
+                                                                             Pageable pageable) {
+        Page<TeamMember> teamMemberPages = teamMemberService.getTeamMembersIn(teamId, pageable);
+        return new PageImpl<>(matchService.getTeamMemberForAddMatchDto(matchId, teamMemberPages.getContent()), pageable,
+                teamMemberPages.getTotalElements());
     }
 }

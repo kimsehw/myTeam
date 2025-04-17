@@ -1,8 +1,8 @@
 package com.kimsehw.myteam.dto.post;
 
 import com.kimsehw.myteam.constant.post.PostType;
-import com.kimsehw.myteam.constant.serch.SearchDateType;
-import com.kimsehw.myteam.constant.serch.SearchType;
+import com.kimsehw.myteam.constant.search.SearchDateType;
+import com.kimsehw.myteam.constant.search.SearchType;
 import lombok.Data;
 
 @Data
