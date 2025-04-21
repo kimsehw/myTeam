@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.repository.post;
 
-import com.kimsehw.myteam.dto.post.PostDto;
 import com.kimsehw.myteam.domain.entity.post.Post;
+import com.kimsehw.myteam.dto.post.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

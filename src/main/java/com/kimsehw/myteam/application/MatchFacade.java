@@ -2,25 +2,28 @@ package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
-import com.kimsehw.myteam.domain.entity.alarm.Alarm;
+import com.kimsehw.myteam.domain.entity.alarm.AlarmFactory;
 import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.domain.utill.DateTimeUtil;
 import com.kimsehw.myteam.dto.match.AddMemberFormDto;
 import com.kimsehw.myteam.dto.match.MatchInviteFormDto;
 import com.kimsehw.myteam.dto.match.MatchListResponse;
 import com.kimsehw.myteam.dto.match.MatchSearchDto;
 import com.kimsehw.myteam.dto.match.MatchUpdateFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
-import com.kimsehw.myteam.service.AlarmService;
 import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
+import com.kimsehw.myteam.service.alarm.InviteAlarmService;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,7 +40,8 @@ public class MatchFacade {
     private final MatchService matchService;
     private final TeamService teamService;
     private final TeamMemberService teamMemberService;
-    private final AlarmService alarmService;
+    @Qualifier(value = "matchInviteAlarmServiceImpl")
+    private final InviteAlarmService inviteAlarmService;
 
     /**
      * 검색 조건에 맞춰 해당 회원이 속한 팀들의 일정 정보와 팀 이름 및 아이디를 반환합니다.
@@ -67,14 +71,16 @@ public class MatchFacade {
      */
     @Transactional
     public void invite(String email, MatchInviteFormDto matchInviteFormDto, Long myTeamId) {
+        Team myTeam = teamService.findById(myTeamId);
         if (!matchInviteFormDto.getIsNotUser()) {
             Member fromMember = memberService.getMemberByEmail(email);
             Member toMember = memberService.getMemberByEmail(matchInviteFormDto.getInviteeEmail());
-            alarmService.save(
-                    Alarm.createMatchInviteAlarm(fromMember, toMember, myTeamId, matchInviteFormDto));
+            LocalDateTime matchDate = DateTimeUtil.formatting(matchInviteFormDto.getMatchDate(),
+                    DateTimeUtil.Y_M_D_H_M_TYPE);
+            inviteAlarmService.send(AlarmFactory.createMatchInviteAlarm(fromMember, toMember, myTeam, matchDate,
+                    matchInviteFormDto.getMatchTime()));
             return;
         }
-        Team myTeam = teamService.findById(myTeamId);
         matchService.addMatchOn(myTeam, matchInviteFormDto.getInviteeTeamName(), matchInviteFormDto.getMatchDate(),
                 matchInviteFormDto.getMatchTime());
     }

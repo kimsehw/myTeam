@@ -4,18 +4,19 @@ import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
-import com.kimsehw.myteam.domain.entity.alarm.Alarm;
+import com.kimsehw.myteam.domain.entity.alarm.AlarmFactory;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberForAddMatchDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberUpdateDto;
 import com.kimsehw.myteam.exception.FieldErrorException;
-import com.kimsehw.myteam.service.AlarmService;
 import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
+import com.kimsehw.myteam.service.alarm.InviteAlarmService;
 import jakarta.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +45,8 @@ public class TeamMemFacade {
     private final TeamMemberService teamMemberService;
     private final TeamService teamService;
     private final MemberService memberService;
-    private final AlarmService alarmService;
+    @Qualifier(value = "teamMemInviteAlarmServiceImpl")
+    private final InviteAlarmService inviteAlarmService;
     private final MatchService matchService;
 
 
@@ -67,9 +70,11 @@ public class TeamMemFacade {
         try {
             Long inviteeId = validateOfInviteeEmail(teamMemInviteFormDto, email);
             Member member = memberService.getMemberByEmail(email);
-            alarmService.validateDuplicateInviteAlarm(teamId, member.getId(), inviteeId, errors);
+            inviteAlarmService.validateDuplicateInvite(teamId, member.getId(), inviteeId);
         } catch (FieldErrorException e) {
             addFieldError(errors, e);
+        } catch (IllegalArgumentException e) {
+            errors.put("email", e.getMessage());
         }
     }
 
@@ -122,14 +127,16 @@ public class TeamMemFacade {
     }
 
     public void invite(String email, Long teamId, TeamMemInviteFormDto teamMemInviteFormDto) {
+        Team team = teamService.findById(teamId);
         if (!teamMemInviteFormDto.isNotUser()) {
             Member fromMember = memberService.getMemberByEmail(email);
             Member toMember = memberService.getMemberByEmail(teamMemInviteFormDto.getEmail());
-            alarmService.save(
-                    Alarm.createTeamMemInviteAlarm(fromMember, toMember, teamId, teamMemInviteFormDto.getPlayerNum()));
+            inviteAlarmService.send(
+                    AlarmFactory.createTeamMemInviteAlarm(fromMember, toMember, team,
+                            teamMemInviteFormDto.getPlayerNum()));
             return;
         }
-        teamMemberService.addTeamMemberIn(teamService.findById(teamId), teamMemInviteFormDto.getName(), TeamRole.MEMBER,
+        teamMemberService.addTeamMemberIn(team, teamMemInviteFormDto.getName(), TeamRole.MEMBER,
                 teamMemInviteFormDto.getPlayerNum(), teamMemInviteFormDto.getPosition());
     }
 
