@@ -1,4 +1,4 @@
-package com.kimsehw.myteam.service.alarm.impl;
+package com.kimsehw.myteam.service.alarm.invite.impl;
 
 import com.kimsehw.myteam.domain.entity.alarm.TeamMemInviteAlarm;
 import com.kimsehw.myteam.repository.alarm.invite.TeamMemInviteAlarmRepository;

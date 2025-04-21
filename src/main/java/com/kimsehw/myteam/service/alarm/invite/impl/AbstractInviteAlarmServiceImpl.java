@@ -1,8 +1,9 @@
-package com.kimsehw.myteam.service.alarm.impl;
+package com.kimsehw.myteam.service.alarm.invite.impl;
 
 import com.kimsehw.myteam.domain.entity.alarm.Alarm;
 import com.kimsehw.myteam.repository.alarm.AlarmRepository;
-import com.kimsehw.myteam.service.alarm.InviteAlarmService;
+import com.kimsehw.myteam.service.alarm.impl.AbstractAlarmServiceImpl;
+import com.kimsehw.myteam.service.alarm.invite.InviteAlarmService;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 

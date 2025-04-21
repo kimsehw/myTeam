@@ -16,7 +16,7 @@ import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
-import com.kimsehw.myteam.service.alarm.InviteAlarmService;
+import com.kimsehw.myteam.service.alarm.invite.InviteAlarmService;
 import jakarta.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.util.ArrayList;

@@ -15,7 +15,7 @@ import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
-import com.kimsehw.myteam.service.alarm.InviteAlarmService;
+import com.kimsehw.myteam.service.alarm.invite.InviteAlarmService;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -77,8 +77,10 @@ public class MatchFacade {
             Member toMember = memberService.getMemberByEmail(matchInviteFormDto.getInviteeEmail());
             LocalDateTime matchDate = DateTimeUtil.formatting(matchInviteFormDto.getMatchDate(),
                     DateTimeUtil.Y_M_D_H_M_TYPE);
-            inviteAlarmService.send(AlarmFactory.createMatchInviteAlarm(fromMember, toMember, myTeam, matchDate,
-                    matchInviteFormDto.getMatchTime()));
+            Team inviteeTeam = teamService.findById(matchInviteFormDto.getInviteeTeamId());
+            inviteAlarmService.send(
+                    AlarmFactory.createMatchInviteAlarm(fromMember, toMember, myTeam, inviteeTeam, matchDate,
+                            matchInviteFormDto.getMatchTime()));
             return;
         }
         matchService.addMatchOn(myTeam, matchInviteFormDto.getInviteeTeamName(), matchInviteFormDto.getMatchDate(),
