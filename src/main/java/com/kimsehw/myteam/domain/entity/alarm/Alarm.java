@@ -1,6 +1,7 @@
-package com.kimsehw.myteam.domain.entity;
+package com.kimsehw.myteam.domain.entity.alarm;
 
 import com.kimsehw.myteam.constant.alarm.AlarmType;
+import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.dto.match.MatchInviteFormDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

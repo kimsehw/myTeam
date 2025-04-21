@@ -1,8 +1,8 @@
 package com.kimsehw.myteam.application;
 
-import com.kimsehw.myteam.domain.entity.Alarm;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.alarm.Alarm;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.dto.match.AddMemberFormDto;
 import com.kimsehw.myteam.dto.match.MatchInviteFormDto;

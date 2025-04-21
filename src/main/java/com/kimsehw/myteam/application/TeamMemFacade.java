@@ -2,9 +2,9 @@ package com.kimsehw.myteam.application;
 
 import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
-import com.kimsehw.myteam.domain.entity.Alarm;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.alarm.Alarm;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDetailDto;
 import com.kimsehw.myteam.dto.teammember.TeamMemberDto;
