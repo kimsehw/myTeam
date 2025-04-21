@@ -19,8 +19,9 @@ public class MatchInviteAlarm extends Alarm {
 
     private int matchTime;
 
-    public MatchInviteAlarm(Member fromMember, Member toMember, Team fromTeam, LocalDateTime matchDate, int matchTime) {
-        super(fromMember, toMember, fromTeam);
+    public MatchInviteAlarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam, LocalDateTime matchDate,
+                            int matchTime) {
+        super(fromMember, toMember, fromTeam, toTeam);
         this.matchDate = matchDate;
         this.matchTime = matchTime;
     }

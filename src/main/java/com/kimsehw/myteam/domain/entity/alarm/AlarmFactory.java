@@ -12,12 +12,12 @@ public class AlarmFactory {
     }
 
     public static MatchInviteAlarm createMatchInviteAlarm(Member fromMember, Member toMember, Team fromTeam,
-                                                          LocalDateTime matchDate, int matchTime) {
-        return new MatchInviteAlarm(fromMember, toMember, fromTeam, matchDate, matchTime);
+                                                          Team toTeam, LocalDateTime matchDate, int matchTime) {
+        return new MatchInviteAlarm(fromMember, toMember, fromTeam, toTeam, matchDate, matchTime);
     }
 
-    public static ResponseAlarm createResponseAlarm(Member fromMember, Member toMember, Team fromTeam,
+    public static ResponseAlarm createResponseAlarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam,
                                                     boolean response) {
-        return new ResponseAlarm(fromMember, toMember, fromTeam, response);
+        return new ResponseAlarm(fromMember, toMember, fromTeam, toTeam, response);
     }
 }

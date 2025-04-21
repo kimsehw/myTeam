@@ -17,8 +17,8 @@ public class ResponseAlarm extends Alarm {
 
     private boolean response;
 
-    public ResponseAlarm(Member fromMember, Member toMember, Team fromTeam, boolean response) {
-        super(fromMember, toMember, fromTeam);
+    public ResponseAlarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam, boolean response) {
+        super(fromMember, toMember, fromTeam, toTeam);
         this.response = response;
     }
 

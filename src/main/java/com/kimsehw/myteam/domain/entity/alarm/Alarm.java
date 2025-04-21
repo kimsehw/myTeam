@@ -43,10 +43,21 @@ public abstract class Alarm {
     @JoinColumn(name = "fromTeam_id")
     private Team fromTeam;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "toTeam_id")
+    private Team toTeam;
+
     public Alarm(Member fromMember, Member toMember, Team fromTeam) {
         this.fromMember = fromMember;
         this.toMember = toMember;
         this.fromTeam = fromTeam;
+    }
+
+    public Alarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam) {
+        this.fromMember = fromMember;
+        this.toMember = toMember;
+        this.fromTeam = fromTeam;
+        this.toTeam = toTeam;
     }
 
     public abstract String getSummary();
