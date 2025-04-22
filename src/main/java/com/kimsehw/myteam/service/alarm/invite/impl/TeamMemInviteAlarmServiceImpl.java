@@ -2,12 +2,15 @@ package com.kimsehw.myteam.service.alarm.invite.impl;
 
 import com.kimsehw.myteam.domain.entity.alarm.TeamMemInviteAlarm;
 import com.kimsehw.myteam.repository.alarm.invite.TeamMemInviteAlarmRepository;
+import java.util.List;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@Log
 public class TeamMemInviteAlarmServiceImpl extends AbstractInviteAlarmServiceImpl<TeamMemInviteAlarm> {
 
     private final TeamMemInviteAlarmRepository teamMemInviteAlarmRepository;
@@ -16,5 +19,15 @@ public class TeamMemInviteAlarmServiceImpl extends AbstractInviteAlarmServiceImp
     public TeamMemInviteAlarmServiceImpl(TeamMemInviteAlarmRepository repository) {
         super(repository);
         teamMemInviteAlarmRepository = repository;
+    }
+
+    @Override
+    public void validateDuplicateInvite(Long teamId, Long memberId, Long inviteeId) {
+        List<Long> toMemberIds = teamMemInviteAlarmRepository.findToMemberIdsByFromMemberIdAndFromTeamId(memberId,
+                teamId);
+//        log.info("TeamMemInviteAlarmServiceImpl " + toMemberIds.toString());
+        if (toMemberIds.contains(inviteeId)) {
+            throw new IllegalArgumentException(DUPLICATE_MEMBER_INVITE);
+        }
     }
 }

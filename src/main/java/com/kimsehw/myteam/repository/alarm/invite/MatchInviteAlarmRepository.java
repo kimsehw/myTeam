@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface MatchInviteAlarmRepository extends AlarmRepository<MatchInviteAlarm> {
 
-    @Query("select al.toMember.id from MatchInviteAlarm al"
+    @Query("select al.toTeam.id from MatchInviteAlarm al"
             + " where al.fromMember.id = :fromMemId"
             + " and al.fromTeam.id = :teamId")
-    List<Long> findToMemberIdsByFromMemberIdAndFromTeamId(Long fromMemId, Long teamId);
+    List<Long> findToTeamIdsByFromMemberIdAndFromTeamId(Long fromMemId, Long teamId);
 }

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -33,7 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 @Service
-@RequiredArgsConstructor
 @Log
 public class TeamMemFacade {
 
@@ -42,13 +40,22 @@ public class TeamMemFacade {
     public static final String WRONG_EMAIL_ERROR = "존재하지 않는 회원입니다. 초대 회원의 이메일을 확인해주세요.";
     public static final String NO_NAME_INPUT_ERROR = "이름은 필수 입력값입니다.";
     public static final String DUPLICATE_LEADER_ERROR = "회장이 이미 존재합니다. 회장은 한명만 가능합니다.";
+
     private final TeamMemberService teamMemberService;
     private final TeamService teamService;
     private final MemberService memberService;
-    @Qualifier(value = "teamMemInviteAlarmServiceImpl")
     private final InviteAlarmService inviteAlarmService;
     private final MatchService matchService;
 
+    public TeamMemFacade(TeamMemberService teamMemberService, TeamService teamService, MemberService memberService,
+                         @Qualifier("teamMemInviteAlarmServiceImpl") InviteAlarmService inviteAlarmService,
+                         MatchService matchService) {
+        this.teamMemberService = teamMemberService;
+        this.teamService = teamService;
+        this.memberService = memberService;
+        this.inviteAlarmService = inviteAlarmService;
+        this.matchService = matchService;
+    }
 
     public void validateInviteInfo(Long teamId, TeamMemInviteFormDto teamMemInviteFormDto, Map<String, String> errors,
                                    String email) {

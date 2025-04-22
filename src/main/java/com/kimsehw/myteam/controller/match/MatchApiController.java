@@ -30,7 +30,7 @@ public class MatchApiController {
         Map<String, String> errors = new HashMap<>();
         String email = principal.getName();
         Long sessionTeamId = (Long) session.getAttribute("currentViewTeamId");
-        matchFacade.validateInviteForm(matchInviteFormDto, errors);
+        matchFacade.validateInviteForm(email, sessionTeamId, matchInviteFormDto, errors);
         if (!errors.isEmpty()) {
             return ResponseEntity.badRequest().body(errors);
         }

@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageImpl;
@@ -30,18 +29,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 @Log
 public class MatchFacade {
 
     public static final String ADD_MEMBER_ERROR = "유효하지 않은 팀원이 참여 인원에 추가 요청 되었습니다. 다시 시도해주세요.";
     public static final String NO_TEAM_NAME_ERROR = "팀 이름을 입력해주세요.";
+
     private final MemberService memberService;
     private final MatchService matchService;
     private final TeamService teamService;
     private final TeamMemberService teamMemberService;
-    @Qualifier(value = "matchInviteAlarmServiceImpl")
     private final InviteAlarmService inviteAlarmService;
+
+    public MatchFacade(MemberService memberService, MatchService matchService, TeamService teamService,
+                       TeamMemberService teamMemberService,
+                       @Qualifier("matchInviteAlarmServiceImpl") InviteAlarmService inviteAlarmService) {
+        this.memberService = memberService;
+        this.matchService = matchService;
+        this.teamService = teamService;
+        this.teamMemberService = teamMemberService;
+        this.inviteAlarmService = inviteAlarmService;
+    }
 
     /**
      * 검색 조건에 맞춰 해당 회원이 속한 팀들의 일정 정보와 팀 이름 및 아이디를 반환합니다.
@@ -87,14 +95,16 @@ public class MatchFacade {
                 matchInviteFormDto.getMatchTime());
     }
 
-    public void validateInviteForm(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
-        validateInviteeTeam(matchInviteFormDto, errors);
+    public void validateInviteForm(String email, Long sessionTeamId, MatchInviteFormDto matchInviteFormDto,
+                                   Map<String, String> errors) {
+        validateInviteeTeam(email, sessionTeamId, matchInviteFormDto, errors);
         validateMatchDateTime(matchInviteFormDto, errors);
     }
 
-    private void validateInviteeTeam(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
+    private void validateInviteeTeam(String email, Long sessionTeamId, MatchInviteFormDto matchInviteFormDto,
+                                     Map<String, String> errors) {
         if (!matchInviteFormDto.getIsNotUser()) {
-            validateInviteeTeamInfo(matchInviteFormDto, errors, "invitee");
+            validateInviteeTeamInfo(email, sessionTeamId, matchInviteFormDto, errors, "invitee");
             return;
         }
         String inviteeTeamName = matchInviteFormDto.getInviteeTeamName();
@@ -104,11 +114,14 @@ public class MatchFacade {
         }
     }
 
-    private void validateInviteeTeamInfo(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors,
+    private void validateInviteeTeamInfo(String email, Long sessionTeamId, MatchInviteFormDto matchInviteFormDto,
+                                         Map<String, String> errors,
                                          String fieldName) {
         try {
             memberService.isMyTeam(matchInviteFormDto.getInviteeEmail(), matchInviteFormDto.getInviteeTeamId(),
                     matchInviteFormDto.getInviteeTeamName());
+            Long memberId = memberService.getMemberByEmail(email).getId();
+            inviteAlarmService.validateDuplicateInvite(sessionTeamId, memberId, matchInviteFormDto.getInviteeTeamId());
         } catch (EntityNotFoundException | IllegalArgumentException e) {
             errors.put(fieldName, e.getMessage());
         }
