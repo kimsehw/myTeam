@@ -69,6 +69,7 @@ public class MemberService implements UserDetailsService {
     public Member getMemberWithMyTeamInfoBy(String email) {
         Optional<Member> optionalMember = memberRepository.findWithMyTeamsInfoByEmail(email);
         if (optionalMember.isEmpty()) {
+            log.info("1");
             throw new EntityNotFoundException(WRONG_EMAIL_ERROR);
         }
         return optionalMember.get();

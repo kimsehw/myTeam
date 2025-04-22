@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
         inviteeTeamNameError.textContent = "";
         matchDateError.textContent = "";
         matchTimeError.textContent = "";
-
+        var isNotUser = document.getElementById('isNotUser').checked
         const formData = {
-            isNotUser: document.getElementById('isNotUser').checked,
+            isNotUser: isNotUser,
             inviteeTeamId: document.getElementById('inviteeTeamId').value,
             inviteeEmail: document.getElementById('inviteeEmail').value,
             inviteeTeamName: isNotUser
@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
             matchDate: document.getElementById('matchDate').value,
             matchTime: document.getElementById('matchTime').value
         };
-
+//        console.log(isNotUser)
+//        console.log(formData)
         var url = '/matches/invite'
 
         fetch(url , {
