@@ -32,10 +32,8 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
 
     @Override
     public Page<AlarmDto> getMyAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable) {
-        if (alarmSearchDto == null) {
-            Page<T> myAlarms = repository.findAllByFromMemberIdOrToMemberIdOrderByRegTime(memberId, memberId, pageable);
-            return myAlarms.map(AlarmDto::of);
-        }
-        return repository.searchAlarms(alarmSearchDto, memberId, pageable).map(AlarmDto::of);
+        return searchAlarms(alarmSearchDto, memberId, pageable).map(AlarmDto::of);
     }
+
+    public abstract Page<T> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable);
 }

@@ -9,7 +9,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
-public abstract class AbstractBasicAlarmRepositoryCustomImpl<T extends Alarm> implements BasicAlarmRepositoryCustom<T> {
+public abstract class AbstractBasicAlarmRepositoryCustomImpl<T extends Alarm> {
 
     protected final JPAQueryFactory queryFactory;
 

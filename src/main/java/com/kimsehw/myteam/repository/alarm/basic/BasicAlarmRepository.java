@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BasicAlarmRepository<T extends Alarm> extends JpaRepository<T, Long>, BasicAlarmRepositoryCustom<T> {
+public interface BasicAlarmRepository<T extends Alarm> extends JpaRepository<T, Long> {
     @EntityGraph(attributePaths = {"fromMember", "toMember", "fromTeam", "toTeam"})
     Page<T> findAllByFromMemberIdOrToMemberIdOrderByRegTime(Long fromMemId, Long toMemId, Pageable pageable);
 }

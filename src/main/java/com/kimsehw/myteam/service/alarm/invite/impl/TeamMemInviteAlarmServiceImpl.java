@@ -1,10 +1,13 @@
 package com.kimsehw.myteam.service.alarm.invite.impl;
 
 import com.kimsehw.myteam.domain.entity.alarm.TeamMemInviteAlarm;
+import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
 import com.kimsehw.myteam.repository.alarm.invite.team.TeamMemInviteAlarmRepository;
 import java.util.List;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,5 +32,10 @@ public class TeamMemInviteAlarmServiceImpl extends AbstractInviteAlarmServiceImp
         if (toMemberIds.contains(inviteeId)) {
             throw new IllegalArgumentException(DUPLICATE_MEMBER_INVITE);
         }
+    }
+
+    @Override
+    public Page<TeamMemInviteAlarm> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable) {
+        return teamMemInviteAlarmRepository.searchAlarms(alarmSearchDto, memberId, pageable);
     }
 }

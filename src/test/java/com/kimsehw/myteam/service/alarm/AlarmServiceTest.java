@@ -116,14 +116,15 @@ class AlarmServiceTest {
         sentSearchDto.setIsSent(true);
         AlarmSearchDto receiveSearchDto = new AlarmSearchDto();
         receiveSearchDto.setIsSent(false);
+        AlarmSearchDto all = new AlarmSearchDto();
         return Stream.of(
-                Arguments.of("alarmServiceImpl", 8, null),
+                Arguments.of("alarmServiceImpl", 8, all),
                 Arguments.of("alarmServiceImpl", 5, sentSearchDto),
                 Arguments.of("alarmServiceImpl", 8 - 5, receiveSearchDto),
-                Arguments.of("teamMemInviteAlarmServiceImpl", 3, null),
+                Arguments.of("teamMemInviteAlarmServiceImpl", 3, all),
                 Arguments.of("teamMemInviteAlarmServiceImpl", 2, sentSearchDto),
                 Arguments.of("teamMemInviteAlarmServiceImpl", 3 - 2, receiveSearchDto),
-                Arguments.of("matchInviteAlarmServiceImpl", 4, null),
+                Arguments.of("matchInviteAlarmServiceImpl", 4, all),
                 Arguments.of("matchInviteAlarmServiceImpl", 2, sentSearchDto),
                 Arguments.of("matchInviteAlarmServiceImpl", 4 - 2, receiveSearchDto)
         );
