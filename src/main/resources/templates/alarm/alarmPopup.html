@@ -1,24 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <div id="alarms_popup"
      class="absolute hidden w-[400px] max-h-[800px] bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-50">
     <div class="flex justify-between mb-4">
         <div id="alarms_popup_header">
             <ul class="flex">
                 <li>
-                    <button class="text-xs font-bold px-3 py-1 rounded hover:bg-gray-100">전체</button>
+                    <button class="filter-btn text-xs font-bold px-3 py-1 rounded hover:bg-gray-100"
+                            th:onclick="|filterAlarmPopup(null, null, 'ALARM', this)|">전체
+                    </button>
                 </li>
                 <li>
-                    <button class="text-xs font-bold px-3 py-1 rounded hover:bg-gray-100">수신</button>
+                    <button class="filter-btn text-xs font-bold px-3 py-1 rounded hover:bg-gray-100"
+                            th:onclick="|filterAlarmPopup(false, null, 'ALARM', this)|">수신
+                    </button>
                 </li>
                 <li>
-                    <button class="text-xs font-bold px-3 py-1 rounded hover:bg-gray-100">발신</button>
+                    <button class="filter-btn text-xs font-bold px-3 py-1 rounded hover:bg-gray-100"
+                            th:onclick="|filterAlarmPopup(true, null, 'ALARM', this)|">발신
+                    </button>
                 </li>
                 <li>
-                    <button class="text-xs font-bold px-3 py-1 rounded hover:bg-gray-100">팀 초대</button>
+                    <button class="filter-btn text-xs font-bold px-3 py-1 rounded hover:bg-gray-100"
+                            th:onclick="|filterAlarmPopup(null, null, 'TEAM_INVITE', this)|">팀 초대
+                    </button>
                 </li>
                 <li>
-                    <button class="text-xs font-bold px-3 py-1 rounded hover:bg-gray-100">매치 초대</button>
+                    <button class="filter-btn text-xs font-bold px-3 py-1 rounded hover:bg-gray-100"
+                            th:onclick="|filterAlarmPopup(null, null, 'MATCH_INVITE', this)|">매치 초대
+                    </button>
                 </li>
             </ul>
         </div>

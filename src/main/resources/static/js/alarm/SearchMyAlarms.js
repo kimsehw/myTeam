@@ -1,8 +1,11 @@
-function loadNextAlarms(callback) {
+function loadNextAlarms(callback, isSent = null, isRead = null, alarmType = null) {
     isLoading = true;
 
     const params = new URLSearchParams();
     params.append("page", currentPage);
+    if (isRead != null) params.append("isRead", isRead);
+    if (isSent != null) params.append("isSent", isSent);
+    if (alarmType !== null) params.append("alarmType", alarmType);
 
     fetch(`/alarms?${params.toString()}`, {
         method: 'GET',
@@ -35,7 +38,7 @@ function loadNextAlarms(callback) {
         isLoading = false;
         // 스크롤 안 생기면 계속 로드
         if (!isLastPage && listEl.scrollHeight <= listEl.clientHeight) {
-            loadNextAlarms(callback);
+            loadNextAlarms(callback, isSent, isRead, alarmType);
         } else if (callback) {
             callback(); // 최초 로딩 후 스크롤 이벤트 등록용 콜백
         }
@@ -59,10 +62,40 @@ function openAlarmPopup() {
             const scrollHeight = listEl.scrollHeight;
             if (!isLoading && !isLastPage && scrollBottom >= scrollHeight - 5) {
 //                console.log("스크롤 바닥 도달 → 다음 페이지 로딩");
-                loadNextAlarms();
+                loadNextAlarms(null, null, null, "ALARM");
             }
         };
+    }, null, null, "ALARM");
+//    console.log('끝');
+}
+
+function filterAlarmPopup(isSent = null, isRead = null, alarmType = null, btnEl = null) {
+//    console.log("필터 파라미터 확인:", { isSent, isRead, alarmType });
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-100', 'text-blue-700');
     });
+    if (btnEl) {
+        btnEl.classList.add('bg-blue-100', 'text-blue-700');
+    }
+
+    const listEl = document.getElementById("alarmList");
+    listEl.innerHTML = ''; // 기존 내용 초기화
+
+    currentPage = 0;
+    isLastPage = false;
+    isLoading = false;
+
+    loadNextAlarms(() => {
+        listEl.onscroll = function () {
+//          console.log('스크롤');
+            const scrollBottom = listEl.scrollTop + listEl.clientHeight;
+            const scrollHeight = listEl.scrollHeight;
+            if (!isLoading && !isLastPage && scrollBottom >= scrollHeight - 5) {
+//                console.log("스크롤 바닥 도달 → 다음 페이지 로딩");
+                loadNextAlarms(null, isSent, isRead, alarmType);
+            }
+        };
+    }, isSent, isRead, alarmType);
 //    console.log('끝');
 }
 

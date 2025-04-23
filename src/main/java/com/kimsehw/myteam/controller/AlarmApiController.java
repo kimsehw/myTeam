@@ -32,7 +32,7 @@ public class AlarmApiController {
         String email = principal.getName();
         Pageable pageable = PageRequest.of(page, MAX_ALARM_SHOW);
         Map<String, String> errors = new HashMap<>();
-
+        log.info(alarmSearchDto.toString());
         Page<AlarmDto> alarms = alarmFacade.getMyAlarmPages(alarmSearchDto, email, pageable);
         log.info("done");
         return ResponseEntity.ok(new CustomPage<>(alarms));
