@@ -15,6 +15,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("response")
 public class ResponseAlarm extends Alarm {
+    public static final String RECEIVE_MATCH_RESPONSE_SUMMARY_TEMPLATE = "%s 팀이 %s을 %s 하였습니다.";
+    public static final String RECEIVE_TEAM_INVITE_RESPONSE_SUMMARY_TEMPLATE = "%s 님이 %s을 %s 하였습니다.";
+    public static final String SENT_RESPONSE_SUMMARY_TEMPLATE = "%s 팀에게 %s %s(을)를 보냈습니다.";
 
     private boolean response;
 
@@ -24,13 +27,27 @@ public class ResponseAlarm extends Alarm {
     }
 
     @Override
-    public String getSummary() {
-        return "";
+    public String getSummary(boolean isSent) {
+        return formatSummaryTemplate(isSent);
+    }
+
+    private String formatSummaryTemplate(boolean isSent) {
+        String response = this.response ? "수락" : "거절";
+        if (isSent) {
+            return String.format(SENT_RESPONSE_SUMMARY_TEMPLATE, getToTeam().getTeamName(), getType().getTypeName(),
+                    response);
+        }
+        if (isMatchResponse()) {
+            return String.format(RECEIVE_MATCH_RESPONSE_SUMMARY_TEMPLATE, getFromTeam().getTeamName(),
+                    getType().getTypeName(), response);
+        }
+        return String.format(RECEIVE_TEAM_INVITE_RESPONSE_SUMMARY_TEMPLATE, getFromMember().getName(),
+                getType().getTypeName(), response);
     }
 
     @Override
-    public String getDetailMessage() {
-        return "";
+    public String getDetailMessage(boolean isSent) {
+        return formatSummaryTemplate(isSent);
     }
 
     @Override
@@ -42,6 +59,6 @@ public class ResponseAlarm extends Alarm {
     }
 
     private boolean isMatchResponse() {
-        return getToTeam() != null;
+        return getFromTeam() != null;
     }
 }

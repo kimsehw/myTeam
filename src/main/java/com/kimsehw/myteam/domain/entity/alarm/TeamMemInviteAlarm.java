@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("team_invite")
 public class TeamMemInviteAlarm extends Alarm {
+    public static final String RECEIVE_TEAM_INVITE_SUMMARY_TEMPLATE = "%s 팀으로 부터 %s가 왔습니다.";
+    public static final String SENT_TEAM_INVITE_SUMMARY_TEMPLATE = "%s(%s)님에게 %s팀 %s를 보냈습니다.";
 
     private int playerNum;
 
@@ -23,12 +25,21 @@ public class TeamMemInviteAlarm extends Alarm {
     }
 
     @Override
-    public String getSummary() {
-        return "";
+    public String getSummary(boolean isSent) {
+        return formatSummaryTemplate(isSent);
+    }
+
+    private String formatSummaryTemplate(boolean isSent) {
+        if (isSent) {
+            return String.format(SENT_TEAM_INVITE_SUMMARY_TEMPLATE, getToMember().getName(),
+                    getToMember().getEmail(), getFromTeam().getTeamName(), getType().getTypeName());
+        }
+        return String.format(RECEIVE_TEAM_INVITE_SUMMARY_TEMPLATE, getFromTeam().getTeamName(),
+                getType().getTypeName());
     }
 
     @Override
-    public String getDetailMessage() {
+    public String getDetailMessage(boolean isSent) {
         return "";
     }
 

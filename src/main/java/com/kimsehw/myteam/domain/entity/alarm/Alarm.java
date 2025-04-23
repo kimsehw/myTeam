@@ -65,9 +65,10 @@ public abstract class Alarm extends BaseTimeEntity {
         this.toTeam = toTeam;
     }
 
-    public abstract String getSummary();
 
-    public abstract String getDetailMessage();
+    public abstract String getSummary(boolean isSent);
+
+    public abstract String getDetailMessage(boolean isSent);
 
     public void read() {
         isRead = true;

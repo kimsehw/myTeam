@@ -32,7 +32,12 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
 
     @Override
     public Page<AlarmDto> getMyAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable) {
-        return searchAlarms(alarmSearchDto, memberId, pageable).map(AlarmDto::of);
+        return searchAlarms(alarmSearchDto, memberId, pageable).map(alarm -> {
+            if (memberId.equals(alarm.getFromMember().getId())) {
+                return AlarmDto.ofSent(alarm);
+            }
+            return AlarmDto.ofReceive(alarm);
+        });
     }
 
     public abstract Page<T> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable);

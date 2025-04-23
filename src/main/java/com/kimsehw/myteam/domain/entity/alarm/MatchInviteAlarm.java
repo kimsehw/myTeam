@@ -17,7 +17,8 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("match_invite")
 public class MatchInviteAlarm extends Alarm {
 
-    public static final String MATCH_INVITE_SUMMARY_TEMPLATE = "%s 팀으로 부터 %s %s가 왔습니다.";
+    public static final String RECEIVE_MATCH_INVITE_SUMMARY_TEMPLATE = "%s 팀으로 부터 %s %d시간 %s가 왔습니다.";
+    public static final String SENT_MATCH_INVITE_SUMMARY_TEMPLATE = "%s 팀에게 %s를 보냈습니다.";
     private LocalDateTime matchDate;
 
     private int matchTime;
@@ -30,17 +31,22 @@ public class MatchInviteAlarm extends Alarm {
     }
 
     @Override
-    public String getSummary() {
-        return formatSummaryTemplate();
+    public String getSummary(boolean isSent) {
+        return formatSummaryTemplate(isSent);
     }
 
-    private String formatSummaryTemplate() {
-        return String.format(MATCH_INVITE_SUMMARY_TEMPLATE, getFromTeam().getTeamName(),
-                DateTimeUtil.formattingToString(matchDate, DateTimeUtil.Y_M_D_TYPE), getType().getTypeName());
+    private String formatSummaryTemplate(boolean isSent) {
+        if (isSent) {
+            return String.format(SENT_MATCH_INVITE_SUMMARY_TEMPLATE, getToTeam().getTeamName(),
+                    getType().getTypeName());
+        }
+        return String.format(RECEIVE_MATCH_INVITE_SUMMARY_TEMPLATE, getFromTeam().getTeamName(),
+                DateTimeUtil.formattingToString(matchDate, DateTimeUtil.Y_M_D_H_M_DATE_TYPE), matchTime,
+                getType().getTypeName());
     }
 
     @Override
-    public String getDetailMessage() {
+    public String getDetailMessage(boolean isSent) {
         return "";
     }
 

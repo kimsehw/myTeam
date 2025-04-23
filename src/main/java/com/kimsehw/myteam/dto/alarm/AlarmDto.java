@@ -34,10 +34,17 @@ public class AlarmDto {
         this.detail = detail;
     }
 
-    public static AlarmDto of(Alarm alarm) {
+    public static AlarmDto ofSent(Alarm alarm) {
         return new AlarmDto(alarm.getId(), alarm.getFromMember().getId(), alarm.getToMember().getId(),
                 alarm.getFromTeam().getId(), alarm.getToTeam() != null ? alarm.getToTeam().getId() : null,
-                alarm.getSummary(), alarm.getType(),
-                alarm.isRead(), alarm.getDetailMessage());
+                alarm.getSummary(true), alarm.getType(),
+                alarm.isRead(), alarm.getDetailMessage(true));
+    }
+
+    public static AlarmDto ofReceive(Alarm alarm) {
+        return new AlarmDto(alarm.getId(), alarm.getFromMember().getId(), alarm.getToMember().getId(),
+                alarm.getFromTeam().getId(), alarm.getToTeam() != null ? alarm.getToTeam().getId() : null,
+                alarm.getSummary(false), alarm.getType(),
+                alarm.isRead(), alarm.getDetailMessage(false));
     }
 }

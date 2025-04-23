@@ -19,10 +19,12 @@ function loadNextAlarms(callback) {
             const li = document.createElement("li");
             li.innerHTML = `
                 <label class="flex items-center space-x-2">
-                    <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg hover:bg-green-600">
-                        "${alarm.alarmType}"
+                    <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg hover:bg-green-600 w-[75px] text-center">
+                        ${alarm.alarmType}
                     </span>
-                    <a class="truncate w-full block text-xs">"${alarm.summary}"</a>
+                    <a class="text-gray-800 text-xs leading-snug block line-clamp-2 w-[300px]">
+                        ${alarm.summary}
+                    </a>
                 </label>
             `;
             listEl.appendChild(li);
@@ -78,7 +80,7 @@ function togglePopup() {
         alarms_btn.setAttribute('aria-expanded', 'true');
 
         const btnRect = alarms_btn.getBoundingClientRect();
-        alarms_popup.style.top = `${btnRect.top + window.scrollY}px`;
+        alarms_popup.style.top = `${btnRect.top + window.scrollY + 30}px`;
         alarms_popup.style.left = `${btnRect.left + window.scrollX - 350}px`; // 종 왼쪽으로 350px 이동
     }
 }
