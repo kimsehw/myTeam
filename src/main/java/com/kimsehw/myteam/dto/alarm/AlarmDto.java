@@ -15,7 +15,7 @@ public class AlarmDto {
 
     private String summary;
 
-    private AlarmType alarmType;
+    private String alarmType;
 
     private boolean isRead;
 
@@ -29,7 +29,7 @@ public class AlarmDto {
         this.fromTeamId = fromTeamId;
         this.toTeamId = toTeamId;
         this.summary = summary;
-        this.alarmType = alarmType;
+        this.alarmType = alarmType.getTypeName();
         this.isRead = isRead;
         this.detail = detail;
     }

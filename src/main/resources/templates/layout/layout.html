@@ -22,7 +22,8 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-    <!--자식 템플릿에서 추가할 스크립트 및 css-->
+
+    <script th:inline="javascript" src="/js/alarm/SearchMyAlarms.js"></script>    <!--자식 템플릿에서 추가할 스크립트 및 css-->
     <th:block layout:fragment="script"></th:block>
     <th:block layout:fragment="css"></th:block>
 </head>
@@ -58,21 +59,28 @@
                     </div>
                     <div class="flex justify-end space-x-4">
                         <!-- 로그인 상태 확인 -->
-                        <th:block sec:authorize="isAuthenticated()">
-                            <!-- 로그아웃 버튼 -->
-                            <form th:action="@{/members/logout}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <button type="submit"
-                                        class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
-                                    로그아웃
+                        <div class="flex">
+                            <th:block sec:authorize="isAuthenticated()">
+                                <button id="alarms_btn" class="mr-3" aria-expanded="false"
+                                        th:onclick="openAlarmPopup()">
+                                    <i class="fa-solid fa-bell"></i>
                                 </button>
-                            </form>
-                        </th:block>
+                                <div th:insert="~{alarm/alarmPopup}"></div>
+                                <!-- 로그아웃 버튼 -->
+                                <form th:action="@{/members/logout}" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <button type="submit"
+                                            class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-lg hover:bg-red-600">
+                                        로그아웃
+                                    </button>
+                                </form>
+                            </th:block>
+                        </div>
 
                         <th:block sec:authorize="isAnonymous()">
                             <!-- 로그인 버튼 -->
                             <button id="openModalBtn"
-                                    class="bg-custom text-white px-6 py-2 rounded-lg hover:bg-custom/90">
+                                    class="bg-custom text-white text-sm font-bold px-3 py-1 rounded-lg hover:bg-custom/90">
                                 로그인
                             </button>
                         </th:block>
