@@ -6,13 +6,13 @@ import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface AlarmService {
+public interface AlarmService<T extends Alarm> {
     /**
      * 알람을 보냅니다.(저장)
      *
      * @param alarm 알람 객체
      */
-    void send(Alarm alarm);
+    void send(T alarm);
 
     /**
      * 해당 알람을 읽습니다.

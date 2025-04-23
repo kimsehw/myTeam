@@ -13,14 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements AlarmService {
+public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements AlarmService<T> {
 
     private final BasicAlarmRepository<T> repository;
 
     @Transactional
     @Override
-    public void send(Alarm alarm) {
-        repository.save((T) alarm);
+    public void send(T alarm) {
+        repository.save(alarm);
     }
 
     @Transactional

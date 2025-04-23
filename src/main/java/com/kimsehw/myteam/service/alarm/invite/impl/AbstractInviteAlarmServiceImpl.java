@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public abstract class AbstractInviteAlarmServiceImpl<T extends Alarm> extends
         AbstractBasicAlarmServiceImpl<T> implements
-        InviteAlarmService {
+        InviteAlarmService<T> {
     public static final String DUPLICATE_MEMBER_INVITE = "이미 초대 완료한 회원입니다. 초대 응답을 기다려주세요.";
 
     public AbstractInviteAlarmServiceImpl(BasicAlarmRepository<T> repository) {
