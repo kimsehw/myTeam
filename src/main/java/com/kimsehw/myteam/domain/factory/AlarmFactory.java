@@ -1,6 +1,9 @@
-package com.kimsehw.myteam.domain.entity.alarm;
+package com.kimsehw.myteam.domain.factory;
 
 import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.alarm.MatchInviteAlarm;
+import com.kimsehw.myteam.domain.entity.alarm.ResponseAlarm;
+import com.kimsehw.myteam.domain.entity.alarm.TeamMemInviteAlarm;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import java.time.LocalDateTime;
 

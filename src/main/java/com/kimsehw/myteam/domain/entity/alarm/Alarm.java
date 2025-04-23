@@ -1,6 +1,8 @@
 package com.kimsehw.myteam.domain.entity.alarm;
 
+import com.kimsehw.myteam.constant.alarm.AlarmType;
 import com.kimsehw.myteam.domain.entity.Member;
+import com.kimsehw.myteam.domain.entity.baseentity.BaseTimeEntity;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -22,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "alarm_type")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class Alarm {
+public abstract class Alarm extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +49,9 @@ public abstract class Alarm {
     @JoinColumn(name = "toTeam_id")
     private Team toTeam;
 
+    @Column(name = "alarm_type", insertable = false, updatable = false)
+    private String alarmType;
+
     public Alarm(Member fromMember, Member toMember, Team fromTeam) {
         this.fromMember = fromMember;
         this.toMember = toMember;
@@ -67,4 +72,6 @@ public abstract class Alarm {
     public void read() {
         isRead = true;
     }
+
+    public abstract AlarmType getType();
 }

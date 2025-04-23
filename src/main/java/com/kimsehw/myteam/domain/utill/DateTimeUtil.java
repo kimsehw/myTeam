@@ -9,6 +9,7 @@ public class DateTimeUtil {
 
     public static final String Y_M_D_H_M_TYPE = "yyyy-MM-dd'T'HH:mm";
     public static final String Y_M_D_TYPE = "yyyy-MM-dd";
+    public static final String Y_M_D_H_M_DATE_TYPE = "yyyy-MM-dd HH:mm";
 
     public static LocalDateTime getToDateTime(String toDate, String pattern) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -30,6 +31,14 @@ public class DateTimeUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         if (date != null && !date.isBlank()) {
             return LocalDateTime.parse(date, formatter);
+        }
+        return null;
+    }
+
+    public static String formattingToString(LocalDateTime date, String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        if (date != null) {
+            return date.format(formatter);
         }
         return null;
     }

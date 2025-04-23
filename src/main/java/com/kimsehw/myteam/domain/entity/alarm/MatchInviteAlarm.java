@@ -1,7 +1,9 @@
 package com.kimsehw.myteam.domain.entity.alarm;
 
+import com.kimsehw.myteam.constant.alarm.AlarmType;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.domain.utill.DateTimeUtil;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("match_invite")
 public class MatchInviteAlarm extends Alarm {
 
+    public static final String MATCH_INVITE_SUMMARY_TEMPLATE = "%s 팀으로 부터 %s %s가 왔습니다.";
     private LocalDateTime matchDate;
 
     private int matchTime;
@@ -28,11 +31,21 @@ public class MatchInviteAlarm extends Alarm {
 
     @Override
     public String getSummary() {
-        return "";
+        return formatSummaryTemplate();
+    }
+
+    private String formatSummaryTemplate() {
+        return String.format(MATCH_INVITE_SUMMARY_TEMPLATE, getFromTeam().getTeamName(),
+                DateTimeUtil.formattingToString(matchDate, DateTimeUtil.Y_M_D_TYPE), getType().getTypeName());
     }
 
     @Override
     public String getDetailMessage() {
         return "";
+    }
+
+    @Override
+    public AlarmType getType() {
+        return AlarmType.MATCH_INVITE;
     }
 }

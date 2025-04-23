@@ -1,6 +1,7 @@
 package com.kimsehw.myteam.domain.entity.alarm;
 
 
+import com.kimsehw.myteam.constant.alarm.AlarmType;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import jakarta.persistence.DiscriminatorValue;
@@ -30,5 +31,17 @@ public class ResponseAlarm extends Alarm {
     @Override
     public String getDetailMessage() {
         return "";
+    }
+
+    @Override
+    public AlarmType getType() {
+        if (isMatchResponse()) {
+            return AlarmType.MATCH_RESPONSE;
+        }
+        return AlarmType.TEAM_INVITE_RESPONSE;
+    }
+
+    private boolean isMatchResponse() {
+        return getToTeam() != null;
     }
 }

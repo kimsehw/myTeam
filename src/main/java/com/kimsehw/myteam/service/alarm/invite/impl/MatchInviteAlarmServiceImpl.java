@@ -1,7 +1,7 @@
 package com.kimsehw.myteam.service.alarm.invite.impl;
 
 import com.kimsehw.myteam.domain.entity.alarm.MatchInviteAlarm;
-import com.kimsehw.myteam.repository.alarm.invite.MatchInviteAlarmRepository;
+import com.kimsehw.myteam.repository.alarm.invite.match.MatchInviteAlarmRepository;
 import java.util.List;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
