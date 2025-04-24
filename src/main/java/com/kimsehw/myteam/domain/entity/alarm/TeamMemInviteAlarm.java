@@ -20,7 +20,7 @@ public class TeamMemInviteAlarm extends Alarm {
     private int playerNum;
 
     public TeamMemInviteAlarm(Member fromMember, Member toMember, Team fromTeam, int playerNum) {
-        super(fromMember, toMember, fromTeam);
+        super(fromMember, toMember, fromTeam, AlarmType.TEAM_INVITE);
         this.playerNum = playerNum;
     }
 
@@ -32,19 +32,14 @@ public class TeamMemInviteAlarm extends Alarm {
     private String formatSummaryTemplate(boolean isSent) {
         if (isSent) {
             return String.format(SENT_TEAM_INVITE_SUMMARY_TEMPLATE, getToMember().getName(),
-                    getToMember().getEmail(), getFromTeam().getTeamName(), getType().getTypeName());
+                    getToMember().getEmail(), getFromTeam().getTeamName(), getAlarmType().getTypeName());
         }
         return String.format(RECEIVE_TEAM_INVITE_SUMMARY_TEMPLATE, getFromTeam().getTeamName(),
-                getType().getTypeName());
+                getAlarmType().getTypeName());
     }
 
     @Override
     public String getDetailMessage(boolean isSent) {
         return "";
-    }
-
-    @Override
-    public AlarmType getType() {
-        return AlarmType.TEAM_INVITE;
     }
 }

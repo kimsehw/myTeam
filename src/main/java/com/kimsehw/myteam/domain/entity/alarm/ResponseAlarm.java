@@ -21,8 +21,15 @@ public class ResponseAlarm extends Alarm {
 
     private boolean response;
 
-    public ResponseAlarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam, boolean response) {
-        super(fromMember, toMember, fromTeam, toTeam);
+    public ResponseAlarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam, AlarmType responseAlarmType,
+                         boolean response) {
+        super(fromMember, toMember, fromTeam, toTeam, responseAlarmType);
+        this.response = response;
+    }
+
+    public ResponseAlarm(Member fromMember, Member toMember, Team toTeam, AlarmType responseAlarmType,
+                         boolean response) {
+        super(fromMember, toMember, toTeam, responseAlarmType);
         this.response = response;
     }
 
@@ -34,15 +41,16 @@ public class ResponseAlarm extends Alarm {
     private String formatSummaryTemplate(boolean isSent) {
         String response = this.response ? "수락" : "거절";
         if (isSent) {
-            return String.format(SENT_RESPONSE_SUMMARY_TEMPLATE, getToTeam().getTeamName(), getType().getTypeName(),
+            return String.format(SENT_RESPONSE_SUMMARY_TEMPLATE, getToTeam().getTeamName(),
+                    getAlarmType().getTypeName(),
                     response);
         }
         if (isMatchResponse()) {
             return String.format(RECEIVE_MATCH_RESPONSE_SUMMARY_TEMPLATE, getFromTeam().getTeamName(),
-                    getType().getTypeName(), response);
+                    getAlarmType().getTypeName(), response);
         }
         return String.format(RECEIVE_TEAM_INVITE_RESPONSE_SUMMARY_TEMPLATE, getFromMember().getName(),
-                getType().getTypeName(), response);
+                getAlarmType().getTypeName(), response);
     }
 
     @Override
@@ -50,15 +58,7 @@ public class ResponseAlarm extends Alarm {
         return formatSummaryTemplate(isSent);
     }
 
-    @Override
-    public AlarmType getType() {
-        if (isMatchResponse()) {
-            return AlarmType.MATCH_RESPONSE;
-        }
-        return AlarmType.TEAM_INVITE_RESPONSE;
-    }
-
     private boolean isMatchResponse() {
-        return getFromTeam() != null;
+        return getAlarmType().equals(AlarmType.MATCH_RESPONSE);
     }
 }

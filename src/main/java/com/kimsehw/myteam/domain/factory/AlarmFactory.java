@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.domain.factory;
 
+import com.kimsehw.myteam.constant.alarm.AlarmType;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.alarm.MatchInviteAlarm;
 import com.kimsehw.myteam.domain.entity.alarm.ResponseAlarm;
@@ -19,8 +20,14 @@ public class AlarmFactory {
         return new MatchInviteAlarm(fromMember, toMember, fromTeam, toTeam, matchDate, matchTime);
     }
 
-    public static ResponseAlarm createResponseAlarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam,
-                                                    boolean response) {
-        return new ResponseAlarm(fromMember, toMember, fromTeam, toTeam, response);
+    public static ResponseAlarm createTeamInviteResponseAlarm(Member fromMember, Member toMember, Team toTeam,
+                                                              boolean response) {
+        return new ResponseAlarm(fromMember, toMember, toTeam, AlarmType.TEAM_INVITE_RESPONSE, response);
+    }
+
+    public static ResponseAlarm createMatchInviteResponseAlarm(Member fromMember, Member toMember, Team fromTeam,
+                                                               Team toTeam,
+                                                               boolean response) {
+        return new ResponseAlarm(fromMember, toMember, fromTeam, toTeam, AlarmType.MATCH_RESPONSE, response);
     }
 }

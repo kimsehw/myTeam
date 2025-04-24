@@ -94,8 +94,8 @@ class AlarmServiceTest {
         alarmService.send(AlarmFactory.createMatchInviteAlarm(m2, m1, t2, t1, null, 2));
         alarmService.send(AlarmFactory.createMatchInviteAlarm(m3, m1, t3, t1, null, 2));
 
-        alarmService.send(AlarmFactory.createResponseAlarm(m3, m2, t2, t3, false));
-        alarmService.send(AlarmFactory.createResponseAlarm(m1, m3, t1, t3, false));
+        alarmService.send(AlarmFactory.createMatchInviteResponseAlarm(m3, m2, t2, t3, false));
+        alarmService.send(AlarmFactory.createMatchInviteResponseAlarm(m1, m3, t1, t3, false));
     }
 
     @ParameterizedTest

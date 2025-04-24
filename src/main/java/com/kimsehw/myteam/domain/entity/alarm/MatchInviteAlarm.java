@@ -25,7 +25,7 @@ public class MatchInviteAlarm extends Alarm {
 
     public MatchInviteAlarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam, LocalDateTime matchDate,
                             int matchTime) {
-        super(fromMember, toMember, fromTeam, toTeam);
+        super(fromMember, toMember, fromTeam, toTeam, AlarmType.MATCH_INVITE);
         this.matchDate = matchDate;
         this.matchTime = matchTime;
     }
@@ -38,20 +38,15 @@ public class MatchInviteAlarm extends Alarm {
     private String formatSummaryTemplate(boolean isSent) {
         if (isSent) {
             return String.format(SENT_MATCH_INVITE_SUMMARY_TEMPLATE, getToTeam().getTeamName(),
-                    getType().getTypeName());
+                    getAlarmType().getTypeName());
         }
         return String.format(RECEIVE_MATCH_INVITE_SUMMARY_TEMPLATE, getFromTeam().getTeamName(),
                 DateTimeUtil.formattingToString(matchDate, DateTimeUtil.Y_M_D_H_M_DATE_TYPE), matchTime,
-                getType().getTypeName());
+                getAlarmType().getTypeName());
     }
 
     @Override
     public String getDetailMessage(boolean isSent) {
         return "";
-    }
-
-    @Override
-    public AlarmType getType() {
-        return AlarmType.MATCH_INVITE;
     }
 }

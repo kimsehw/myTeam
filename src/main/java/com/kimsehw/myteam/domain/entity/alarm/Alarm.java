@@ -7,6 +7,8 @@ import com.kimsehw.myteam.domain.entity.team.Team;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -49,20 +51,32 @@ public abstract class Alarm extends BaseTimeEntity {
     @JoinColumn(name = "toTeam_id")
     private Team toTeam;
 
-    @Column(name = "alarm_type", insertable = false, updatable = false)
-    private String alarmType;
+    @Column(name = "detail_type")
+    @Enumerated(EnumType.STRING)
+    private AlarmType alarmType;
 
-    public Alarm(Member fromMember, Member toMember, Team fromTeam) {
+    public Alarm(Member fromMember, Member toMember, Team fromOrToTeam, AlarmType alarmType) {
         this.fromMember = fromMember;
         this.toMember = toMember;
-        this.fromTeam = fromTeam;
+        injectAboutTeamInvite(fromOrToTeam, alarmType);
+        this.alarmType = alarmType;
     }
 
-    public Alarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam) {
+    private void injectAboutTeamInvite(Team fromOrToTeam, AlarmType alarmType) {
+        if (alarmType.equals(AlarmType.TEAM_INVITE)) {
+            this.fromTeam = fromOrToTeam;
+        }
+        if (alarmType.equals(AlarmType.TEAM_INVITE_RESPONSE)) {
+            this.toTeam = fromOrToTeam;
+        }
+    }
+
+    public Alarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam, AlarmType alarmType) {
         this.fromMember = fromMember;
         this.toMember = toMember;
         this.fromTeam = fromTeam;
         this.toTeam = toTeam;
+        this.alarmType = alarmType;
     }
 
 
@@ -73,6 +87,4 @@ public abstract class Alarm extends BaseTimeEntity {
     public void read() {
         isRead = true;
     }
-
-    public abstract AlarmType getType();
 }
