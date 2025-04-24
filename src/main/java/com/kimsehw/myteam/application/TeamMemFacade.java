@@ -4,6 +4,7 @@ import com.kimsehw.myteam.constant.teammember.TeamRole;
 import com.kimsehw.myteam.domain.FieldError;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
+import com.kimsehw.myteam.domain.entity.alarm.TeamMemInviteAlarm;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.domain.factory.AlarmFactory;
 import com.kimsehw.myteam.dto.teammember.TeamMemInviteFormDto;
@@ -44,11 +45,11 @@ public class TeamMemFacade {
     private final TeamMemberService teamMemberService;
     private final TeamService teamService;
     private final MemberService memberService;
-    private final InviteAlarmService inviteAlarmService;
+    private final InviteAlarmService<TeamMemInviteAlarm> inviteAlarmService;
     private final MatchService matchService;
 
     public TeamMemFacade(TeamMemberService teamMemberService, TeamService teamService, MemberService memberService,
-                         @Qualifier("teamMemInviteAlarmServiceImpl") InviteAlarmService inviteAlarmService,
+                         @Qualifier("teamMemInviteAlarmServiceImpl") InviteAlarmService<TeamMemInviteAlarm> inviteAlarmService,
                          MatchService matchService) {
         this.teamMemberService = teamMemberService;
         this.teamService = teamService;
@@ -143,7 +144,7 @@ public class TeamMemFacade {
                             teamMemInviteFormDto.getPlayerNum()));
             return;
         }
-        teamMemberService.addTeamMemberIn(team, teamMemInviteFormDto.getName(), TeamRole.MEMBER,
+        teamMemberService.addNotUserTeamMemberIn(team, teamMemInviteFormDto.getName(), TeamRole.MEMBER,
                 teamMemInviteFormDto.getPlayerNum(), teamMemInviteFormDto.getPosition());
     }
 

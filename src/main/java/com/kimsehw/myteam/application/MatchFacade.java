@@ -91,7 +91,8 @@ public class MatchFacade {
                             matchInviteFormDto.getMatchTime()));
             return;
         }
-        matchService.addMatchOn(myTeam, matchInviteFormDto.getInviteeTeamName(), matchInviteFormDto.getMatchDate(),
+        matchService.addNotUserMatchOn(myTeam, matchInviteFormDto.getInviteeTeamName(),
+                matchInviteFormDto.getMatchDate(),
                 matchInviteFormDto.getMatchTime());
     }
 

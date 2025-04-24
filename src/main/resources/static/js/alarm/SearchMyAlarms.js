@@ -23,7 +23,7 @@ function loadNextAlarms(callback, isSent = null, isRead = null, alarmType = null
             li.innerHTML = `
                 <label class="flex items-center space-x-2">
                     <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg hover:bg-green-600 w-[75px] text-center">
-                        ${alarm.alarmType}
+                        ${alarm.alarmTypeName}
                     </span>
                     <a class="text-gray-800 text-xs leading-snug block line-clamp-2 w-[300px]">
                         ${alarm.summary}

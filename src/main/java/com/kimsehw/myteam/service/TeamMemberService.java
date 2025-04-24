@@ -58,7 +58,7 @@ public class TeamMemberService {
      * @param position
      */
     @Transactional
-    public Long addTeamMemberIn(Team team, String name, TeamRole teamRole, Integer playerNum, Position position) {
+    public Long addNotUserTeamMemberIn(Team team, String name, TeamRole teamRole, Integer playerNum, Position position) {
         TeamMember teamMember = TeamMember.createNotUserTeamMember(team, name, teamRole, playerNum, position);
         return teamMember.getId();
     }

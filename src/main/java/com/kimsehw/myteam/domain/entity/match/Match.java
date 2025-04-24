@@ -74,8 +74,20 @@ public class Match {
         this.isDone = false;
     }
 
-    public static Match createMatchOf(Team myTeam, String inviteeTeamName, String matchDate, Integer matchTime) {
+    public Match(Team myTeam, Team opposingTeam, LocalDateTime matchDate, Integer matchTime) {
+        this.myTeam = myTeam;
+        this.opposingTeam = opposingTeam;
+        this.matchDate = matchDate;
+        this.matchTime = matchTime;
+        this.isDone = false;
+    }
+
+    public static Match createNotUserMatchOf(Team myTeam, String inviteeTeamName, String matchDate, Integer matchTime) {
         return new Match(myTeam, inviteeTeamName, matchDate, matchTime);
+    }
+
+    public static Match createMatchOf(Team myTeam, Team opposingTeam, LocalDateTime matchDate, Integer matchTime) {
+        return new Match(myTeam, opposingTeam, matchDate, matchTime);
     }
 
     public String getResult() {

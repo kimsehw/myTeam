@@ -5,6 +5,7 @@ import com.kimsehw.myteam.dto.alarm.AlarmDto;
 import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
 import com.kimsehw.myteam.repository.alarm.basic.BasicAlarmRepository;
 import com.kimsehw.myteam.service.alarm.AlarmService;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,12 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements AlarmService<T> {
 
+    public static final String NO_ALARM_ERROR = "존재하지 않는 알람에 접근하였습니다. 알람 정보를 확인해주세요.";
+
     private final BasicAlarmRepository<T> repository;
 
     @Transactional
     @Override
-    public void send(T alarm) {
-        repository.save(alarm);
+    public Long send(T alarm) {
+        return repository.save(alarm).getId();
     }
 
     @Transactional
@@ -41,4 +44,10 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
     }
 
     public abstract Page<T> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable);
+
+    @Override
+    public T getAlarm(Long alarmId) {
+        return repository.findById(alarmId)
+                .orElseThrow(() -> new EntityNotFoundException(NO_ALARM_ERROR));
+    }
 }

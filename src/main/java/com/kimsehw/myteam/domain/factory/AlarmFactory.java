@@ -1,9 +1,7 @@
 package com.kimsehw.myteam.domain.factory;
 
-import com.kimsehw.myteam.constant.alarm.AlarmType;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.alarm.MatchInviteAlarm;
-import com.kimsehw.myteam.domain.entity.alarm.ResponseAlarm;
 import com.kimsehw.myteam.domain.entity.alarm.TeamMemInviteAlarm;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import java.time.LocalDateTime;
@@ -20,14 +18,14 @@ public class AlarmFactory {
         return new MatchInviteAlarm(fromMember, toMember, fromTeam, toTeam, matchDate, matchTime);
     }
 
-    public static ResponseAlarm createTeamInviteResponseAlarm(Member fromMember, Member toMember, Team toTeam,
-                                                              boolean response) {
-        return new ResponseAlarm(fromMember, toMember, toTeam, AlarmType.TEAM_INVITE_RESPONSE, response);
+    public static TeamMemInviteAlarm createTeamInviteResponseAlarm(Member fromMember, Member toMember, Team toTeam,
+                                                                   boolean response) {
+        return new TeamMemInviteAlarm(fromMember, toMember, toTeam, response);
     }
 
-    public static ResponseAlarm createMatchInviteResponseAlarm(Member fromMember, Member toMember, Team fromTeam,
-                                                               Team toTeam,
-                                                               boolean response) {
-        return new ResponseAlarm(fromMember, toMember, fromTeam, toTeam, AlarmType.MATCH_RESPONSE, response);
+    public static MatchInviteAlarm createMatchInviteResponseAlarm(Member fromMember, Member toMember, Team fromTeam,
+                                                                  Team toTeam,
+                                                                  boolean response) {
+        return new MatchInviteAlarm(fromMember, toMember, fromTeam, toTeam, response);
     }
 }

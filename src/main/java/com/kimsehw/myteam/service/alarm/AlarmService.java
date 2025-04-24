@@ -3,6 +3,7 @@ package com.kimsehw.myteam.service.alarm;
 import com.kimsehw.myteam.domain.entity.alarm.Alarm;
 import com.kimsehw.myteam.dto.alarm.AlarmDto;
 import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,7 +13,7 @@ public interface AlarmService<T extends Alarm> {
      *
      * @param alarm 알람 객체
      */
-    void send(T alarm);
+    Long send(T alarm);
 
     /**
      * 해당 알람을 읽습니다.
@@ -20,6 +21,15 @@ public interface AlarmService<T extends Alarm> {
      * @param alarmId 알람 식별자
      */
     void read(Long alarmId);
+
+    /**
+     * 해당 알람을 조회합니다.
+     *
+     * @param alarmId 알람 아이디
+     * @return Alarm
+     * @throws EntityNotFoundException 응답 정보에 담긴 알람이 존재하지 않음
+     */
+    T getAlarm(Long alarmId);
 
     /**
      * 검색 조건에 맞는 알람들을 조회합니다.
