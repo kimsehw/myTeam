@@ -18,8 +18,10 @@ function loadNextAlarms(callback, isSent = null, isRead = null, alarmType = null
         const listEl = document.getElementById("alarmList");
 
         data.content.forEach(alarm => {
-            console.log(alarm)
+//            console.log(alarm)
             const li = document.createElement("li");
+            li.classList.add("cursor-pointer");
+
             li.innerHTML = `
                 <label class="flex items-center space-x-2">
                     <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg hover:bg-green-600 w-[75px] text-center">
@@ -30,6 +32,8 @@ function loadNextAlarms(callback, isSent = null, isRead = null, alarmType = null
                     </a>
                 </label>
             `;
+
+            li.addEventListener('click', () => openAlarmDetailModal(alarm));
             listEl.appendChild(li);
         });
 
@@ -69,6 +73,25 @@ function openAlarmPopup() {
 //    console.log('끝');
 }
 
+function togglePopup() {
+    const alarms_popup = document.getElementById('alarms_popup');
+    const alarms_btn = document.getElementById('alarms_btn');
+
+     const expanded = alarms_btn.getAttribute('aria-expanded') === 'true';
+
+    if (expanded) {
+        alarms_popup.classList.add('hidden');
+        alarms_btn.setAttribute('aria-expanded', 'false');
+    } else {
+        alarms_popup.classList.remove('hidden');
+        alarms_btn.setAttribute('aria-expanded', 'true');
+
+        const btnRect = alarms_btn.getBoundingClientRect();
+        alarms_popup.style.top = `${btnRect.top + window.scrollY + 30}px`;
+        alarms_popup.style.left = `${btnRect.left + window.scrollX - 350}px`; // 종 왼쪽으로 350px 이동
+    }
+}
+
 function filterAlarmPopup(isSent = null, isRead = null, alarmType = null, btnEl = null) {
 //    console.log("필터 파라미터 확인:", { isSent, isRead, alarmType });
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -99,21 +122,23 @@ function filterAlarmPopup(isSent = null, isRead = null, alarmType = null, btnEl 
 //    console.log('끝');
 }
 
-function togglePopup() {
-    const alarms_popup = document.getElementById('alarms_popup');
-    const alarms_btn = document.getElementById('alarms_btn');
+function openAlarmDetailModal(alarm) {
+    const modal = document.getElementById("alarm_detail_modal");
+    const content = document.getElementById("alarm_detail_content");
+    content.innerText = alarm.detail || "상세 정보가 없습니다.";
 
-     const expanded = alarms_btn.getAttribute('aria-expanded') === 'true';
+    modal.classList.remove("hidden");
 
-    if (expanded) {
-        alarms_popup.classList.add('hidden');
-        alarms_btn.setAttribute('aria-expanded', 'false');
-    } else {
-        alarms_popup.classList.remove('hidden');
-        alarms_btn.setAttribute('aria-expanded', 'true');
-
-        const btnRect = alarms_btn.getBoundingClientRect();
-        alarms_popup.style.top = `${btnRect.top + window.scrollY + 30}px`;
-        alarms_popup.style.left = `${btnRect.left + window.scrollX - 350}px`; // 종 왼쪽으로 350px 이동
-    }
+    // 버튼 동작 예시
+    document.getElementById("alarm_accept_btn").onclick = () => {
+        alert("수락 처리: " + alarm.id);
+        modal.classList.add("hidden");
+    };
+    document.getElementById("alarm_reject_btn").onclick = () => {
+        alert("거절 처리: " + alarm.id);
+        modal.classList.add("hidden");
+    };
+    document.getElementById("alarm_close_btn").onclick = () => {
+        modal.classList.add("hidden");
+    };
 }

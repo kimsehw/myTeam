@@ -24,7 +24,7 @@ public class MatchInviteAlarm extends Alarm {
 
     private LocalDateTime matchDate;
 
-    private boolean response;
+    private Boolean response;
     private int matchTime;
 
     public MatchInviteAlarm(Member fromMember, Member toMember, Team fromTeam, Team toTeam, LocalDateTime matchDate,

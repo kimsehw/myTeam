@@ -20,7 +20,7 @@ public class TeamMemInviteAlarm extends Alarm {
     public static final String SENT_RESPONSE_SUMMARY_TEMPLATE = "%s 팀에게 %s %s(을)를 보냈습니다.";
 
     private int playerNum;
-    private boolean response;
+    private Boolean response;
 
     public TeamMemInviteAlarm(Member fromMember, Member toMember, Team fromTeam, int playerNum) {
         super(fromMember, toMember, fromTeam, AlarmType.TEAM_INVITE);
