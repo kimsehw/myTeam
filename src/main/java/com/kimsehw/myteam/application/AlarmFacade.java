@@ -121,7 +121,7 @@ public class AlarmFacade {
      */
     public void delete(Long alarmId, String email) {
         AlarmService alarmService = alarmServiceFactory.getService(AlarmType.ALARM);
-        Alarm alarm = alarmService.getAlarm(alarmId);
+        Alarm alarm = alarmService.getAlarmWithFromToMemberInfo(alarmId);
 
         alarmService = alarmServiceFactory.getService(alarm.getAlarmType());
         alarmService.validateAuthFrom(alarm, email);

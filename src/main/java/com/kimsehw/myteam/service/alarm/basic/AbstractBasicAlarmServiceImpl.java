@@ -6,6 +6,7 @@ import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
 import com.kimsehw.myteam.repository.alarm.basic.BasicAlarmRepository;
 import com.kimsehw.myteam.service.alarm.AlarmService;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,7 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
     @Transactional
     @Override
     public void read(Long alarmId, String email) {
-        T alarm = getAlarm(alarmId);
+        T alarm = getAlarmWithFromToMemberInfo(alarmId);
         validateAuthFrom(alarm, email);
         alarm.read(email);
     }
@@ -48,13 +49,21 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
         return searchAlarms(alarmSearchDto, memberId, pageable).map(alarm -> AlarmDto.from(alarm, memberId));
     }
 
-    public abstract Page<T> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable);
+    protected abstract Page<T> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable);
 
     @Override
     public T getAlarm(Long alarmId) {
         return repository.findById(alarmId)
                 .orElseThrow(() -> new EntityNotFoundException(NO_ALARM_ERROR));
     }
+
+    @Override
+    public T getAlarmWithFromToMemberInfo(Long alarmId) {
+        return findByIdWithFromToMember(alarmId)
+                .orElseThrow(() -> new EntityNotFoundException(NO_ALARM_ERROR));
+    }
+
+    protected abstract Optional<T> findByIdWithFromToMember(Long alarmId);
 
     @Override
     public void validateAuthFrom(Alarm alarm, String email) {

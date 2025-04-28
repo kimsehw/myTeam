@@ -40,6 +40,15 @@ public interface AlarmService<T extends Alarm> {
     T getAlarm(Long alarmId);
 
     /**
+     * 해당 알람을 조회합니다(fromMember와 toMember 정보를 fetch join).
+     *
+     * @param alarmId 알람 아이디
+     * @return Alarm
+     * @throws EntityNotFoundException 응답 정보에 담긴 알람이 존재하지 않음
+     */
+    T getAlarmWithFromToMemberInfo(Long alarmId);
+
+    /**
      * 검색 조건에 맞는 알람들을 조회합니다.
      *
      * @param alarmSearchDto 검색 조건 Dto

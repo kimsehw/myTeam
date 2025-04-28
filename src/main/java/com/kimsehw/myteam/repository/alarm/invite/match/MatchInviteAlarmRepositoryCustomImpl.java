@@ -8,6 +8,7 @@ import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
 import com.kimsehw.myteam.repository.alarm.basic.AbstractBasicAlarmRepositoryCustomImpl;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,8 @@ public class MatchInviteAlarmRepositoryCustomImpl extends
                 .join(alarm.toMember, toMember).fetchJoin()
                 .leftJoin(alarm.fromTeam, fromTeam).fetchJoin()
                 .leftJoin(alarm.toTeam, toTeam).fetchJoin()
-                .where(searchIsRead(isRead, alarm), searchIsSent(isSent, memberId, fromMember, toMember))
+                .where(searchIsRead(isRead, alarm), searchIsSent(isSent, memberId, fromMember, toMember),
+                        exceptHide(memberId, fromMember, toMember, alarm))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -45,5 +47,14 @@ public class MatchInviteAlarmRepositoryCustomImpl extends
                 .fetchOne();
 
         return new PageImpl<>(alarms, pageable, total == null ? 0 : total);
+    }
+
+    @Override
+    public Optional<MatchInviteAlarm> findByIdWithFromToMember(Long alarmId) {
+        QMatchInviteAlarm alarm = QMatchInviteAlarm.matchInviteAlarm;
+        return Optional.ofNullable(queryFactory.select(alarm).from(alarm)
+                .join(alarm.fromMember).fetchJoin()
+                .join(alarm.toMember).fetchJoin()
+                .fetchOne());
     }
 }

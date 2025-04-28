@@ -47,4 +47,20 @@ public abstract class AbstractBasicAlarmRepositoryCustomImpl<T extends Alarm> {
         }
         return toMember.id.eq(memberId);
     }
+
+    public BooleanExpression exceptHide(Long memberId, QMember fromMember, QMember toMember, QAlarm alarm) {
+        return fromMember.id.eq(memberId).and(alarm.isHide.eq(false)).or(toMember.id.eq(memberId).and(
+                alarm.isHideByToMember.eq(false)));
+    }
+
+    public BooleanExpression exceptHide(Long memberId, QMember fromMember, QMember toMember,
+                                        QTeamMemInviteAlarm alarm) {
+        return fromMember.id.eq(memberId).and(alarm.isHide.eq(false)).or(toMember.id.eq(memberId).and(
+                alarm.isHideByToMember.eq(false)));
+    }
+
+    public BooleanExpression exceptHide(Long memberId, QMember fromMember, QMember toMember, QMatchInviteAlarm alarm) {
+        return fromMember.id.eq(memberId).and(alarm.isHide.eq(false)).or(toMember.id.eq(memberId).and(
+                alarm.isHideByToMember.eq(false)));
+    }
 }

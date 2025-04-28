@@ -4,6 +4,7 @@ import com.kimsehw.myteam.domain.entity.alarm.Alarm;
 import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
 import com.kimsehw.myteam.repository.alarm.AlarmRepository;
 import com.kimsehw.myteam.service.alarm.basic.AbstractBasicAlarmServiceImpl;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,10 @@ public class AlarmServiceImpl extends AbstractBasicAlarmServiceImpl<Alarm> {
     @Override
     public Page<Alarm> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable) {
         return alarmRepository.searchAlarms(alarmSearchDto, memberId, pageable);
+    }
+
+    @Override
+    protected Optional<Alarm> findByIdWithFromToMember(Long alarmId) {
+        return alarmRepository.findByIdWithFromToMember(alarmId);
     }
 }

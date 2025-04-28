@@ -4,6 +4,7 @@ import com.kimsehw.myteam.domain.entity.alarm.TeamMemInviteAlarm;
 import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
 import com.kimsehw.myteam.repository.alarm.invite.team.TeamMemInviteAlarmRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,5 +38,10 @@ public class TeamMemInviteAlarmServiceImpl extends AbstractInviteAlarmServiceImp
     @Override
     public Page<TeamMemInviteAlarm> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable) {
         return teamMemInviteAlarmRepository.searchAlarms(alarmSearchDto, memberId, pageable);
+    }
+
+    @Override
+    protected Optional<TeamMemInviteAlarm> findByIdWithFromToMember(Long alarmId) {
+        return teamMemInviteAlarmRepository.findByIdWithFromToMember(alarmId);
     }
 }
