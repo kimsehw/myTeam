@@ -57,27 +57,29 @@ function openAlarmPopup() {
     isLastPage = false;
     isLoading = false;
 
-    togglePopup();
+    const alarms_btn = document.getElementById('alarms_btn');
+    const expanded = alarms_btn.getAttribute('aria-expanded') === 'true';
+    togglePopup(expanded);
 
-    loadNextAlarms(() => {
-        listEl.onscroll = function () {
-//          console.log('스크롤');
-            const scrollBottom = listEl.scrollTop + listEl.clientHeight;
-            const scrollHeight = listEl.scrollHeight;
-            if (!isLoading && !isLastPage && scrollBottom >= scrollHeight - 5) {
-//                console.log("스크롤 바닥 도달 → 다음 페이지 로딩");
-                loadNextAlarms(null, null, null, "ALARM");
-            }
-        };
-    }, null, null, "ALARM");
+    if (!expanded) {
+        loadNextAlarms(() => {
+                listEl.onscroll = function () {
+        //          console.log('스크롤');
+                    const scrollBottom = listEl.scrollTop + listEl.clientHeight;
+                    const scrollHeight = listEl.scrollHeight;
+                    if (!isLoading && !isLastPage && scrollBottom >= scrollHeight - 5) {
+        //                console.log("스크롤 바닥 도달 → 다음 페이지 로딩");
+                        loadNextAlarms(null, null, null, "ALARM");
+                    }
+                };
+            }, null, null, "ALARM");
+    }
 //    console.log('끝');
 }
 
-function togglePopup() {
+function togglePopup(expanded) {
     const alarms_popup = document.getElementById('alarms_popup');
     const alarms_btn = document.getElementById('alarms_btn');
-
-     const expanded = alarms_btn.getAttribute('aria-expanded') === 'true';
 
     if (expanded) {
         alarms_popup.classList.add('hidden');
@@ -120,25 +122,4 @@ function filterAlarmPopup(isSent = null, isRead = null, alarmType = null, btnEl 
         };
     }, isSent, isRead, alarmType);
 //    console.log('끝');
-}
-
-function openAlarmDetailModal(alarm) {
-    const modal = document.getElementById("alarm_detail_modal");
-    const content = document.getElementById("alarm_detail_content");
-    content.innerText = alarm.detail || "상세 정보가 없습니다.";
-
-    modal.classList.remove("hidden");
-
-    // 버튼 동작 예시
-    document.getElementById("alarm_accept_btn").onclick = () => {
-        alert("수락 처리: " + alarm.id);
-        modal.classList.add("hidden");
-    };
-    document.getElementById("alarm_reject_btn").onclick = () => {
-        alert("거절 처리: " + alarm.id);
-        modal.classList.add("hidden");
-    };
-    document.getElementById("alarm_close_btn").onclick = () => {
-        modal.classList.add("hidden");
-    };
 }

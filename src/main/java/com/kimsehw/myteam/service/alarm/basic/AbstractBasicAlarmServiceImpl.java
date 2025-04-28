@@ -28,6 +28,12 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
 
     @Transactional
     @Override
+    public void delete(T alarm) {
+        repository.delete(alarm);
+    }
+
+    @Transactional
+    @Override
     public void read(Long alarmId) {
         Optional<T> alarm = repository.findById(alarmId);
         alarm.ifPresent(Alarm::read);

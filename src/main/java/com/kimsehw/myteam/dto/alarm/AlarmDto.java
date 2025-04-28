@@ -2,6 +2,7 @@ package com.kimsehw.myteam.dto.alarm;
 
 import com.kimsehw.myteam.constant.alarm.AlarmType;
 import com.kimsehw.myteam.domain.entity.alarm.Alarm;
+import com.kimsehw.myteam.domain.entity.team.Team;
 import lombok.Data;
 
 @Data
@@ -41,16 +42,21 @@ public class AlarmDto {
     public static AlarmDto ofSent(Alarm alarm) {
         boolean isSent = true;
         return new AlarmDto(alarm.getId(), alarm.getFromMember().getId(), alarm.getToMember().getId(),
-                alarm.getFromTeam().getId(), alarm.getToTeam() != null ? alarm.getToTeam().getId() : null,
-                alarm.getSummary(isSent), alarm.getAlarmType(),
-                alarm.isRead(), isSent, alarm.getDetailMessage(isSent));
+                getTeamIdOf(alarm.getFromTeam()), getTeamIdOf(alarm.getToTeam()), alarm.getSummary(isSent),
+                alarm.getAlarmType(), alarm.isRead(), isSent, alarm.getDetailMessage(isSent));
+    }
+
+    private static Long getTeamIdOf(Team fromOrToTeam) {
+        if (fromOrToTeam != null) {
+            return fromOrToTeam.getId();
+        }
+        return null;
     }
 
     public static AlarmDto ofReceive(Alarm alarm) {
         boolean isSent = false;
         return new AlarmDto(alarm.getId(), alarm.getFromMember().getId(), alarm.getToMember().getId(),
-                alarm.getFromTeam().getId(), alarm.getToTeam() != null ? alarm.getToTeam().getId() : null,
-                alarm.getSummary(isSent), alarm.getAlarmType(),
-                alarm.isRead(), isSent, alarm.getDetailMessage(isSent));
+                getTeamIdOf(alarm.getFromTeam()), getTeamIdOf(alarm.getToTeam()), alarm.getSummary(isSent),
+                alarm.getAlarmType(), alarm.isRead(), isSent, alarm.getDetailMessage(isSent));
     }
 }

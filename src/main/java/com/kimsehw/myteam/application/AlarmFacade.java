@@ -57,11 +57,13 @@ public class AlarmFacade {
         InviteAlarmService alarmService = alarmServiceFactory.getInviteService(alarmType);
         Alarm alarm = alarmService.getAlarm(alarmResponseFormDto.getInviteAlarmId());
         alarmService.validateResponseForm(alarm, member.getId(), alarmResponseFormDto);
-        if (alarmType.equals(AlarmType.TEAM_INVITE_RESPONSE)) {
+        if (alarmType.equals(AlarmType.TEAM_INVITE)) {
             sendTeamInviteResponse(alarmResponseFormDto, toMember, (TeamMemInviteAlarm) alarm, member, alarmService);
+            alarmService.delete(alarm);
             return;
         }
         sendMatchInviteResponse(alarmResponseFormDto, toMember, member, (MatchInviteAlarm) alarm, alarmService);
+        alarmService.delete(alarm);
     }
 
     private void sendTeamInviteResponse(AlarmResponseFormDto alarmResponseFormDto, Member toMember,

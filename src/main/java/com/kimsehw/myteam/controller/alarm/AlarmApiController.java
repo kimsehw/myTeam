@@ -46,6 +46,7 @@ public class AlarmApiController {
     public ResponseEntity response(Principal principal, @RequestBody AlarmResponseFormDto alarmResponseFormDto) {
         String email = principal.getName();
         Map<String, String> errors = new HashMap<>();
+        log.info(alarmResponseFormDto.toString());
         try {
             alarmFacade.sendResponseWithAction(alarmResponseFormDto, email);
         } catch (IllegalArgumentException | EntityNotFoundException e) {

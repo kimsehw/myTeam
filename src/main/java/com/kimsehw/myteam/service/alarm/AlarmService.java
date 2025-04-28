@@ -16,6 +16,13 @@ public interface AlarmService<T extends Alarm> {
     Long send(T alarm);
 
     /**
+     * 알람을 삭제 합니다.
+     *
+     * @param alarm 알람 객체
+     */
+    void delete(T alarm);
+
+    /**
      * 해당 알람을 읽습니다.
      *
      * @param alarmId 알람 식별자
