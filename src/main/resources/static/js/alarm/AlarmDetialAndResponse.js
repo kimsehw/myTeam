@@ -1,4 +1,4 @@
-function openAlarmDetailModal(alarm) {
+function openAlarmDetailModal(alarm, liEl) {
     const modal = document.getElementById("alarm_detail_modal");
     const content = document.getElementById("alarm_detail_content");
     content.innerText = alarm.detail || "상세 정보가 없습니다.";
@@ -7,11 +7,11 @@ function openAlarmDetailModal(alarm) {
 
     // 버튼 동작 예시
     document.getElementById("alarm_accept_btn").onclick = () => {
-        responseWithAction(alarm, true);
+        responseWithAction(alarm, true, liEl);
         modal.classList.add("hidden");
     };
     document.getElementById("alarm_reject_btn").onclick = () => {
-        responseWithAction(alarm, false);
+        responseWithAction(alarm, false, liEl);
         modal.classList.add("hidden");
     };
     document.getElementById("alarm_close_btn").onclick = () => {
@@ -19,7 +19,7 @@ function openAlarmDetailModal(alarm) {
     };
 }
 
-function responseWithAction(alarm, response) {
+function responseWithAction(alarm, response, liEl) {
 
     const responseFromDto = {
         inviteAlarmId: alarm.id,
@@ -43,6 +43,8 @@ function responseWithAction(alarm, response) {
         if (!response.ok) {
             return response.json()
         }
+        alert("초대 응답 완료하였습니다.")
+        liEl.remove();
     })
     .then(errors => {
         if (errors) {

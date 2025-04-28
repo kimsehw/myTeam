@@ -40,7 +40,7 @@ public class AlarmDto {
     }
 
     public static AlarmDto from(Alarm alarm, Long memberId) {
-        boolean isSent = alarm.isSent(memberId);
+        boolean isSent = alarm.isFrom(memberId);
         return new AlarmDto(alarm.getId(), alarm.getFromMember().getId(), alarm.getToMember().getId(),
                 getTeamIdOf(alarm.getFromTeam()), getTeamIdOf(alarm.getToTeam()), alarm.getSummary(isSent),
                 alarm.getAlarmType(), alarm.isRead(), isSent, alarm.getDetailMessage(isSent));

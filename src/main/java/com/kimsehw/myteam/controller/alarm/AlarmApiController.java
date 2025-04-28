@@ -16,8 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,4 +58,16 @@ public class AlarmApiController {
         return ResponseEntity.ok(Collections.emptyMap());
     }
 
+    @DeleteMapping("/alarms/{alarmId}")
+    public ResponseEntity delete(Principal principal, @PathVariable("alarmId") Long alarmId) {
+        String email = principal.getName();
+        Map<String, String> errors = new HashMap<>();
+        try {
+            alarmFacade.delete(alarmId, email);
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
+            errors.put("errorMessage", e.getMessage());
+            return ResponseEntity.badRequest().body(errors);
+        }
+        return ResponseEntity.ok(Collections.emptyMap());
+    }
 }

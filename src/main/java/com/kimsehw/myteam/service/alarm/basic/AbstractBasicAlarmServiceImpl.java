@@ -8,16 +8,19 @@ import com.kimsehw.myteam.service.alarm.AlarmService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Log
 public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements AlarmService<T> {
 
     public static final String NO_ALARM_ERROR = "존재하지 않는 알람에 접근하였습니다. 알람 정보를 확인해주세요.";
     public static final String NO_AUTH_ALARM_ACCESS = "접근 권한이 없는 알람에 접근하였습니다.";
+    public static final String CANT_DELETE_MY_ALARM = "상대방이 확인한 알람은 삭제할 수 없습니다.";
 
     private final BasicAlarmRepository<T> repository;
 
@@ -51,5 +54,22 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
     public T getAlarm(Long alarmId) {
         return repository.findById(alarmId)
                 .orElseThrow(() -> new EntityNotFoundException(NO_ALARM_ERROR));
+    }
+
+    @Override
+    public void validateAuthFrom(Alarm alarm, String email) {
+        if (alarm.checkAuth(email)) {
+            return;
+        }
+        throw new IllegalArgumentException(NO_AUTH_ALARM_ACCESS);
+    }
+
+    @Transactional
+    @Override
+    public void deleteOrHide(T alarm, String email) {
+        if (alarm.deleteOrHide(email)) {
+            delete(alarm);
+        }
+        log.info("basicAlarmDelete");
     }
 }

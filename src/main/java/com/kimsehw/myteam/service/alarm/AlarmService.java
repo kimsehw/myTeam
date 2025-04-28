@@ -47,4 +47,14 @@ public interface AlarmService<T extends Alarm> {
      * @return Page<AlarmDto>
      */
     Page<AlarmDto> getMyAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable);
+
+    /**
+     * 해당 알람에 대한 인가 검사를 실시합니다.
+     *
+     * @param alarm 알람
+     * @param email 접근 회원 아이디
+     */
+    void validateAuthFrom(Alarm alarm, String email);
+
+    void deleteOrHide(T alarm, String email);
 }

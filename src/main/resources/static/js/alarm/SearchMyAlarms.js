@@ -21,10 +21,11 @@ function loadNextAlarms(callback, isSent = null, isRead = null, alarmType = null
 //            console.log(alarm)
             const li = document.createElement("li");
             li.classList.add("cursor-pointer");
+            li.dataset.alarmId = alarm.id;
 
             li.innerHTML = `
                 <label class="flex items-center space-x-2">
-                    <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg hover:bg-green-600 w-[75px] text-center">
+                    <span class="bg-green-500 text-white text-xs px-1 py-1 rounded-lg hover:bg-green-600 w-[75px] text-center">
                         ${alarm.alarmTypeName}
                     </span>
                     <a class="text-gray-800 text-xs leading-snug block line-clamp-2 w-[300px]">
@@ -33,7 +34,7 @@ function loadNextAlarms(callback, isSent = null, isRead = null, alarmType = null
                 </label>
             `;
 
-            li.addEventListener('click', () => openAlarmDetailModal(alarm));
+            li.addEventListener('click', () => openAlarmDetailModal(alarm, li));
             listEl.appendChild(li);
         });
 

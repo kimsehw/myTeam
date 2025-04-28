@@ -20,12 +20,14 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 
 @Entity
 @Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "alarm_type")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Log
 public abstract class Alarm extends BaseTimeEntity {
 
     @Id
@@ -34,6 +36,10 @@ public abstract class Alarm extends BaseTimeEntity {
     private Long id;
 
     private boolean isRead;
+    private boolean isReadByToMember;
+
+    private boolean isHide;
+    private boolean isHideByToMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_mem_id")
@@ -89,22 +95,68 @@ public abstract class Alarm extends BaseTimeEntity {
     }
 
     /**
-     * 해당 유저가 보낸 메일인지 검사합니다.
+     * 해당 유저가 보낸 알람인지 검사합니다.
      *
      * @param email 해당 유저의 아이디
      * @return boolean
      */
-    public boolean isSent(String email) {
+    public boolean isFrom(String email) {
         return fromMember.getEmail().equals(email);
     }
 
     /**
-     * 해당 유저가 보낸 메일인지 검사합니다.
+     * 해당 유저가 보낸 알람인지 검사합니다.
      *
      * @param memberId 해당 유저 식별자
      * @return boolean
      */
-    public boolean isSent(Long memberId) {
+    public boolean isFrom(Long memberId) {
         return fromMember.getId().equals(memberId);
+    }
+
+    /**
+     * 해당 유저가 받은 알람인지 검사합니다.
+     *
+     * @param memberId 해당 유저 식별자
+     * @return boolean
+     */
+    public boolean isFor(Long memberId) {
+        return toMember.getId().equals(memberId);
+    }
+
+    /**
+     * 해당 유저가 받은 알람인지 검사합니다.
+     *
+     * @param email 해당 유저 식별자
+     * @return boolean
+     */
+    public boolean isFor(String email) {
+        return toMember.getEmail().equals(email);
+    }
+
+    public boolean checkAuth(String email) {
+        return fromMember.getEmail().equals(email) || toMember.getEmail().equals(email);
+    }
+
+    public boolean isResponseType() {
+        return alarmType.equals(AlarmType.MATCH_RESPONSE) || alarmType.equals(AlarmType.TEAM_INVITE_RESPONSE);
+    }
+
+    public boolean hide(String email) {
+        if (isFrom(email)) {
+            isHide = true;
+            return false;
+        }
+        isHideByToMember = true;
+        return false;
+    }
+
+    public boolean deleteOrHide(String email) {
+        if ((isFrom(email) && isHideByToMember) || (isFor(email) && isHide)) {
+            log.info(email + "can delete");
+            return true;
+        }
+        log.info(email + "can just Hide");
+        return hide(email);
     }
 }

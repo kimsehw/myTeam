@@ -5,9 +5,11 @@ import com.kimsehw.myteam.dto.alarm.AlarmResponseFormDto;
 import com.kimsehw.myteam.repository.alarm.basic.BasicAlarmRepository;
 import com.kimsehw.myteam.service.alarm.basic.AbstractBasicAlarmServiceImpl;
 import com.kimsehw.myteam.service.alarm.invite.InviteAlarmService;
+import lombok.extern.java.Log;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
+@Log
 public abstract class AbstractInviteAlarmServiceImpl<T extends Alarm> extends
         AbstractBasicAlarmServiceImpl<T> implements
         InviteAlarmService<T> {
@@ -24,7 +26,7 @@ public abstract class AbstractInviteAlarmServiceImpl<T extends Alarm> extends
 
     @Override
     public void validateResponseForm(T inviteAlarm, Long responseMemberId, AlarmResponseFormDto alarmResponseFormDto) {
-        if (!inviteAlarm.getToMember().getId().equals(responseMemberId)) {
+        if (!inviteAlarm.isFor(responseMemberId)) {
             throw new IllegalArgumentException(NO_AUTH_ALARM);
         }
         if (!isRightResponseFormFor(inviteAlarm, alarmResponseFormDto)) {
@@ -34,7 +36,30 @@ public abstract class AbstractInviteAlarmServiceImpl<T extends Alarm> extends
     }
 
     private boolean isRightResponseFormFor(T inviteAlarm, AlarmResponseFormDto alarmResponseFormDto) {
-        return inviteAlarm.getFromMember().getId().equals(alarmResponseFormDto.getToMemId()) &&
-                inviteAlarm.getToMember().getId().equals(alarmResponseFormDto.getFromMemId());
+        return inviteAlarm.isFrom(alarmResponseFormDto.getToMemId()) &&
+                inviteAlarm.isFor(alarmResponseFormDto.getFromMemId());
+    }
+
+    @Transactional
+    @Override
+    public void deleteOrHide(T alarm, String email) {
+        if (alarm.isResponseType()) {
+            super.deleteOrHide(alarm, email);
+            return;
+        }
+        log.info("inviteAlarmDelete");
+        if (alarm.isFrom(email)) {
+            if (!alarm.isReadByToMember()) {
+                delete(alarm);
+                return;
+            }
+            if (alarm.isHideByToMember()) {
+                delete(alarm);
+                return;
+            }
+            throw new IllegalArgumentException(CANT_DELETE_MY_ALARM);
+        }
+        alarm.hide(email);
+        log.info(email + "can just hide");
     }
 }

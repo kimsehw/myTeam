@@ -112,4 +112,12 @@ public class AlarmFacade {
             matchService.addMatchOn(fromTeam, toTeam, matchInviteAlarm.getMatchDate(), matchInviteAlarm.getMatchTime());
         }
     }
+
+    public void delete(Long alarmId, String email) {
+        AlarmService alarmService = alarmServiceFactory.getService(AlarmType.ALARM);
+        Alarm alarm = alarmService.getAlarm(alarmId);
+        alarmService = alarmServiceFactory.getService(alarm.getAlarmType());
+        alarmService.validateAuthFrom(alarm, email);
+        alarmService.deleteOrHide(alarm, email);
+    }
 }
