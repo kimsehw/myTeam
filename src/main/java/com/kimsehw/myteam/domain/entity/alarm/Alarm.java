@@ -90,8 +90,13 @@ public abstract class Alarm extends BaseTimeEntity {
 
     public abstract String getDetailMessage(boolean isSent);
 
-    public void read() {
-        isRead = true;
+    public void read(String email) {
+        if (isFrom(email) && !isRead) {
+            isRead = true;
+        }
+        if (isFor(email) && !isReadByToMember) {
+            isReadByToMember = true;
+        }
     }
 
     /**
@@ -134,6 +139,12 @@ public abstract class Alarm extends BaseTimeEntity {
         return toMember.getEmail().equals(email);
     }
 
+    /**
+     * 알람에 대한 해당 유저의 인가 검사를 실시합니다.
+     *
+     * @param email 요청 유저 이메일
+     * @return boolean
+     */
     public boolean checkAuth(String email) {
         return fromMember.getEmail().equals(email) || toMember.getEmail().equals(email);
     }
@@ -145,12 +156,20 @@ public abstract class Alarm extends BaseTimeEntity {
     public boolean hide(String email) {
         if (isFrom(email)) {
             isHide = true;
+            isRead = true;
             return false;
         }
         isHideByToMember = true;
+        isReadByToMember = true;
         return false;
     }
 
+    /**
+     * 알람 상태에 따라 알람을 삭제 혹은 숨깁니다.
+     *
+     * @param email 요청 유저 이메일
+     * @return boolean
+     */
     public boolean deleteOrHide(String email) {
         if ((isFrom(email) && isHideByToMember) || (isFor(email) && isHide)) {
             log.info(email + "can delete");

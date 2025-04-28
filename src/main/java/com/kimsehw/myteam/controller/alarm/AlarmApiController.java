@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,6 +69,20 @@ public class AlarmApiController {
             errors.put("errorMessage", e.getMessage());
             return ResponseEntity.badRequest().body(errors);
         }
+        return ResponseEntity.ok(Collections.emptyMap());
+    }
+
+    @PatchMapping("/alarms/{alarmId}/read")
+    public ResponseEntity read(Principal principal, @PathVariable("alarmId") Long alarmId) {
+        String email = principal.getName();
+        Map<String, String> errors = new HashMap<>();
+        try {
+            alarmFacade.read(alarmId, email);
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
+            errors.put("errorMessage", e.getMessage());
+            return ResponseEntity.badRequest().body(errors);
+        }
+        log.info(alarmId.toString() + "isRead By " + email);
         return ResponseEntity.ok(Collections.emptyMap());
     }
 }

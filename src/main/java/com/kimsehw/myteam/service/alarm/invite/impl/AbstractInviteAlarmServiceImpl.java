@@ -59,7 +59,7 @@ public abstract class AbstractInviteAlarmServiceImpl<T extends Alarm> extends
             }
             throw new IllegalArgumentException(CANT_DELETE_MY_ALARM);
         }
-        alarm.hide(email);
+        alarm.hide(email); // 받은 사람은 숨기기 가능
         log.info(email + "can just hide");
     }
 }

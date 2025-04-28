@@ -3,7 +3,7 @@ function openAlarmDetailModal(alarm, liEl) {
     const content = document.getElementById("alarm_detail_content");
     content.innerText = alarm.detail || "상세 정보가 없습니다.";
 
-    modal.classList.remove("hidden");
+    readAndOpenModal(alarm,modal)
 
     // 버튼 동작 예시
     document.getElementById("alarm_accept_btn").onclick = () => {
@@ -50,11 +50,36 @@ function responseWithAction(alarm, response, liEl) {
         if (errors) {
             alert(errors.errorMessage)
         }
-        togglePopup(true)
     })
     .catch(error => {
         console.error("Error:", error);
         alert('초대 응답 요청 중 오류가 발생했습니다.');
+    });
+}
+
+function readAndOpenModal(alarm, modal) {
+
+    fetch(`/alarms/${alarm.id}/read`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json()
+        }
+        modal.classList.remove("hidden");
+    })
+    .then(errors => {
+        if (errors) {
+            alert(errors.errorMessage)
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert('응답 세부 내용 요청 중 오류가 발생했습니다.');
     });
 }
 

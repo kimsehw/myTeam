@@ -113,11 +113,29 @@ public class AlarmFacade {
         }
     }
 
+    /**
+     * 해당 알람의 삭제 권한을 검사하고 알람의 상태에 따라 알람을 삭제 혹은 요청한 유저로부터 숨깁니다.
+     *
+     * @param alarmId 알람 식별자
+     * @param email   요청 유저 이메일
+     */
     public void delete(Long alarmId, String email) {
         AlarmService alarmService = alarmServiceFactory.getService(AlarmType.ALARM);
         Alarm alarm = alarmService.getAlarm(alarmId);
+
         alarmService = alarmServiceFactory.getService(alarm.getAlarmType());
         alarmService.validateAuthFrom(alarm, email);
         alarmService.deleteOrHide(alarm, email);
+    }
+
+    /**
+     * 해당 알람을 읽습니다.
+     *
+     * @param alarmId 알람 식별자
+     * @param email   요청 유저 이메일
+     */
+    public void read(Long alarmId, String email) {
+        AlarmService alarmService = alarmServiceFactory.getService(AlarmType.ALARM);
+        alarmService.read(alarmId, email);
     }
 }

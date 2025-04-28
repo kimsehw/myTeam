@@ -26,8 +26,9 @@ public interface AlarmService<T extends Alarm> {
      * 해당 알람을 읽습니다.
      *
      * @param alarmId 알람 식별자
+     * @param email   요청 유저 이메일
      */
-    void read(Long alarmId);
+    void read(Long alarmId, String email);
 
     /**
      * 해당 알람을 조회합니다.

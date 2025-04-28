@@ -6,7 +6,6 @@ import com.kimsehw.myteam.dto.alarm.AlarmSearchDto;
 import com.kimsehw.myteam.repository.alarm.basic.BasicAlarmRepository;
 import com.kimsehw.myteam.service.alarm.AlarmService;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
@@ -38,9 +37,10 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
 
     @Transactional
     @Override
-    public void read(Long alarmId) {
-        Optional<T> alarm = repository.findById(alarmId);
-        alarm.ifPresent(Alarm::read);
+    public void read(Long alarmId, String email) {
+        T alarm = getAlarm(alarmId);
+        validateAuthFrom(alarm, email);
+        alarm.read(email);
     }
 
     @Override
