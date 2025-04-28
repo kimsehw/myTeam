@@ -31,6 +31,6 @@ public class AlarmServiceFactory {
     }
 
     private static boolean isTypeOfInvite(AlarmType alarmType) {
-        return alarmType.equals(AlarmType.TEAM_INVITE) || alarmType.equals(AlarmType.MATCH_INVITE);
+        return alarmType.isTypeOfInvite();
     }
 }
