@@ -87,4 +87,24 @@ public abstract class Alarm extends BaseTimeEntity {
     public void read() {
         isRead = true;
     }
+
+    /**
+     * 해당 유저가 보낸 메일인지 검사합니다.
+     *
+     * @param email 해당 유저의 아이디
+     * @return boolean
+     */
+    public boolean isSent(String email) {
+        return fromMember.getEmail().equals(email);
+    }
+
+    /**
+     * 해당 유저가 보낸 메일인지 검사합니다.
+     *
+     * @param memberId 해당 유저 식별자
+     * @return boolean
+     */
+    public boolean isSent(Long memberId) {
+        return fromMember.getId().equals(memberId);
+    }
 }

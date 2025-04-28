@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements AlarmService<T> {
 
     public static final String NO_ALARM_ERROR = "존재하지 않는 알람에 접근하였습니다. 알람 정보를 확인해주세요.";
+    public static final String NO_AUTH_ALARM_ACCESS = "접근 권한이 없는 알람에 접근하였습니다.";
 
     private final BasicAlarmRepository<T> repository;
 
@@ -41,12 +42,7 @@ public abstract class AbstractBasicAlarmServiceImpl<T extends Alarm> implements 
 
     @Override
     public Page<AlarmDto> getMyAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable) {
-        return searchAlarms(alarmSearchDto, memberId, pageable).map(alarm -> {
-            if (memberId.equals(alarm.getFromMember().getId())) {
-                return AlarmDto.ofSent(alarm);
-            }
-            return AlarmDto.ofReceive(alarm);
-        });
+        return searchAlarms(alarmSearchDto, memberId, pageable).map(alarm -> AlarmDto.from(alarm, memberId));
     }
 
     public abstract Page<T> searchAlarms(AlarmSearchDto alarmSearchDto, Long memberId, Pageable pageable);
