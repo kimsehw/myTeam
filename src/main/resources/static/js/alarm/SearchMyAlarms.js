@@ -20,11 +20,27 @@ function loadNextAlarms(callback, isSent = null, isRead = null, alarmType = null
         data.content.forEach(alarm => {
 //            console.log(alarm)
             const li = document.createElement("li");
-            li.classList.add("cursor-pointer");
+            li.classList.add(
+                "cursor-pointer",
+                "px-2", "py-2",
+                "min-h-[50px]",
+                "rounded", "transition",
+                "hover:bg-gray-50",
+                "flex", "items-center",
+                "space-x-3"
+            );
             li.dataset.alarmId = alarm.id;
+            if (alarm.isRead) {
+                li.classList.add("bg-gray-100");
+            }
+            let readCheckSpan = '';
+            if (alarm.isReadByOpposite) {
+                readCheckSpan = `<span class="text-xs text-red" title="상대방이 읽음">✔️</span>`;
+            }
 
             li.innerHTML = `
                 <label class="flex items-center space-x-2">
+                    ${readCheckSpan}
                     <span class="bg-green-500 text-white text-xs px-1 py-1 rounded-lg hover:bg-green-600 w-[75px] text-center">
                         ${alarm.alarmTypeName}
                     </span>

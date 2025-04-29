@@ -178,4 +178,11 @@ public abstract class Alarm extends BaseTimeEntity {
         log.info(email + "can just Hide");
         return hide(email);
     }
+
+    public boolean isReadByOpposite(Long memberId) {
+        if (isFrom(memberId)) {
+            return isReadByToMember;
+        }
+        return false;
+    }
 }

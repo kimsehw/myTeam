@@ -19,13 +19,14 @@ public class AlarmDto {
     private AlarmType alarmType;
     private String alarmTypeName;
 
-    private boolean isRead;
-    private boolean isSent;
+    private Boolean isRead;
+    private Boolean isReadByOpposite;
+    private Boolean isSent;
 
     private String detail;
 
     public AlarmDto(Long id, Long fromMemId, Long toMemId, Long fromTeamId, Long toTeamId, String summary,
-                    AlarmType alarmType, boolean isRead, boolean isSent, String detail) {
+                    AlarmType alarmType, boolean isRead, boolean isReadByOpposite, boolean isSent, String detail) {
         this.id = id;
         this.fromMemId = fromMemId;
         this.toMemId = toMemId;
@@ -35,6 +36,7 @@ public class AlarmDto {
         this.alarmType = alarmType;
         this.alarmTypeName = alarmType.getTypeName();
         this.isRead = isRead;
+        this.isReadByOpposite = isReadByOpposite;
         this.isSent = isSent;
         this.detail = detail;
     }
@@ -43,7 +45,12 @@ public class AlarmDto {
         boolean isSent = alarm.isFrom(memberId);
         return new AlarmDto(alarm.getId(), alarm.getFromMember().getId(), alarm.getToMember().getId(),
                 getTeamIdOf(alarm.getFromTeam()), getTeamIdOf(alarm.getToTeam()), alarm.getSummary(isSent),
-                alarm.getAlarmType(), alarm.isRead(), isSent, alarm.getDetailMessage(isSent));
+                alarm.getAlarmType(), isRead(alarm, isSent), alarm.isReadByOpposite(memberId), isSent,
+                alarm.getDetailMessage(isSent));
+    }
+
+    private static boolean isRead(Alarm alarm, boolean isSent) {
+        return isSent ? alarm.isRead() : alarm.isReadByToMember();
     }
 
     private static Long getTeamIdOf(Team fromOrToTeam) {

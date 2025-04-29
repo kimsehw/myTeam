@@ -1,16 +1,27 @@
 function openAlarmDetailModal(alarm, liEl) {
     const modal = document.getElementById("alarm_detail_modal");
     const content = document.getElementById("alarm_detail_content");
+    const acceptBtn = document.getElementById("alarm_accept_btn");
+    const rejectBtn = document.getElementById("alarm_reject_btn");
+
     content.innerText = alarm.detail || "상세 정보가 없습니다.";
 
-    readAndOpenModal(alarm,modal)
+    // 버튼 표시 여부
+    if (["TEAM_INVITE", "MATCH_INVITE"].includes(alarm.alarmType) && !alarm.isSent) {
+        acceptBtn.style.display = 'inline-block';
+        rejectBtn.style.display = 'inline-block';
+    } else {
+        acceptBtn.style.display = 'none';
+        rejectBtn.style.display = 'none';
+    }
 
-    // 버튼 동작 예시
-    document.getElementById("alarm_accept_btn").onclick = () => {
-        responseWithAction(alarm, true, liEl);
-        modal.classList.add("hidden");
+    readAndOpenModal(alarm,modal,liEl)
+
+    acceptBtn.onclick = () => {
+            responseWithAction(alarm, true, liEl);
+            modal.classList.add("hidden");
     };
-    document.getElementById("alarm_reject_btn").onclick = () => {
+    rejectBtn.onclick = () => {
         responseWithAction(alarm, false, liEl);
         modal.classList.add("hidden");
     };
@@ -57,7 +68,7 @@ function responseWithAction(alarm, response, liEl) {
     });
 }
 
-function readAndOpenModal(alarm, modal) {
+function readAndOpenModal(alarm, modal,liEl) {
 
     fetch(`/alarms/${alarm.id}/read`, {
         method: 'PATCH',
@@ -70,6 +81,7 @@ function readAndOpenModal(alarm, modal) {
         if (!response.ok) {
             return response.json()
         }
+        liEl.classList.add("bg-gray-100");
         modal.classList.remove("hidden");
     })
     .then(errors => {
