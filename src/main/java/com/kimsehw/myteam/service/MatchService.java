@@ -112,7 +112,21 @@ public class MatchService {
     }
 
     /**
-     * 매치를 저장합니다.
+     * 매치를 저장합니다. (회원)
+     *
+     * @param myTeam       내 팀
+     * @param opposingTeam 상대 팀
+     * @param matchDate    매치 날짜
+     * @param matchTime    매치 시간
+     */
+    @Transactional
+    public void addMatchOn(Team myTeam, Team opposingTeam, LocalDateTime matchDate, Integer matchTime) {
+        Match match = Match.createMatchOf(myTeam, opposingTeam, matchDate, matchTime);
+        matchRepository.save(match);
+    }
+
+    /**
+     * 매치를 저장합니다. (비회원)
      *
      * @param myTeam          내 팀
      * @param inviteeTeamName 상대 팀 이름
@@ -120,8 +134,8 @@ public class MatchService {
      * @param matchTime       매치 시간
      */
     @Transactional
-    public void addMatchOn(Team myTeam, String inviteeTeamName, String matchDate, Integer matchTime) {
-        Match match = Match.createMatchOf(myTeam, inviteeTeamName, matchDate, matchTime);
+    public void addNotUserMatchOn(Team myTeam, String inviteeTeamName, String matchDate, Integer matchTime) {
+        Match match = Match.createNotUserMatchOf(myTeam, inviteeTeamName, matchDate, matchTime);
         matchRepository.save(match);
     }
 

@@ -1,43 +1,55 @@
 package com.kimsehw.myteam.application;
 
-import com.kimsehw.myteam.domain.entity.Alarm;
 import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
+import com.kimsehw.myteam.domain.factory.AlarmFactory;
+import com.kimsehw.myteam.domain.utill.DateTimeUtil;
 import com.kimsehw.myteam.dto.match.AddMemberFormDto;
 import com.kimsehw.myteam.dto.match.MatchInviteFormDto;
 import com.kimsehw.myteam.dto.match.MatchListResponse;
 import com.kimsehw.myteam.dto.match.MatchSearchDto;
 import com.kimsehw.myteam.dto.match.MatchUpdateFormDto;
 import com.kimsehw.myteam.dto.team.TeamInfoDto;
-import com.kimsehw.myteam.service.AlarmService;
 import com.kimsehw.myteam.service.MatchService;
 import com.kimsehw.myteam.service.MemberService;
 import com.kimsehw.myteam.service.TeamMemberService;
 import com.kimsehw.myteam.service.TeamService;
+import com.kimsehw.myteam.service.alarm.invite.InviteAlarmService;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 @Log
 public class MatchFacade {
 
     public static final String ADD_MEMBER_ERROR = "유효하지 않은 팀원이 참여 인원에 추가 요청 되었습니다. 다시 시도해주세요.";
     public static final String NO_TEAM_NAME_ERROR = "팀 이름을 입력해주세요.";
+
     private final MemberService memberService;
     private final MatchService matchService;
     private final TeamService teamService;
     private final TeamMemberService teamMemberService;
-    private final AlarmService alarmService;
+    private final InviteAlarmService inviteAlarmService;
+
+    public MatchFacade(MemberService memberService, MatchService matchService, TeamService teamService,
+                       TeamMemberService teamMemberService,
+                       @Qualifier("matchInviteAlarmServiceImpl") InviteAlarmService inviteAlarmService) {
+        this.memberService = memberService;
+        this.matchService = matchService;
+        this.teamService = teamService;
+        this.teamMemberService = teamMemberService;
+        this.inviteAlarmService = inviteAlarmService;
+    }
 
     /**
      * 검색 조건에 맞춰 해당 회원이 속한 팀들의 일정 정보와 팀 이름 및 아이디를 반환합니다.
@@ -67,26 +79,33 @@ public class MatchFacade {
      */
     @Transactional
     public void invite(String email, MatchInviteFormDto matchInviteFormDto, Long myTeamId) {
+        Team myTeam = teamService.findById(myTeamId);
         if (!matchInviteFormDto.getIsNotUser()) {
             Member fromMember = memberService.getMemberByEmail(email);
             Member toMember = memberService.getMemberByEmail(matchInviteFormDto.getInviteeEmail());
-            alarmService.save(
-                    Alarm.createMatchInviteAlarm(fromMember, toMember, myTeamId, matchInviteFormDto));
+            LocalDateTime matchDate = DateTimeUtil.formatting(matchInviteFormDto.getMatchDate(),
+                    DateTimeUtil.Y_M_D_H_M_TYPE);
+            Team inviteeTeam = teamService.findById(matchInviteFormDto.getInviteeTeamId());
+            inviteAlarmService.send(
+                    AlarmFactory.createMatchInviteAlarm(fromMember, toMember, myTeam, inviteeTeam, matchDate,
+                            matchInviteFormDto.getMatchTime()));
             return;
         }
-        Team myTeam = teamService.findById(myTeamId);
-        matchService.addMatchOn(myTeam, matchInviteFormDto.getInviteeTeamName(), matchInviteFormDto.getMatchDate(),
+        matchService.addNotUserMatchOn(myTeam, matchInviteFormDto.getInviteeTeamName(),
+                matchInviteFormDto.getMatchDate(),
                 matchInviteFormDto.getMatchTime());
     }
 
-    public void validateInviteForm(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
-        validateInviteeTeam(matchInviteFormDto, errors);
+    public void validateInviteForm(String email, Long sessionTeamId, MatchInviteFormDto matchInviteFormDto,
+                                   Map<String, String> errors) {
+        validateInviteeTeam(email, sessionTeamId, matchInviteFormDto, errors);
         validateMatchDateTime(matchInviteFormDto, errors);
     }
 
-    private void validateInviteeTeam(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors) {
+    private void validateInviteeTeam(String email, Long sessionTeamId, MatchInviteFormDto matchInviteFormDto,
+                                     Map<String, String> errors) {
         if (!matchInviteFormDto.getIsNotUser()) {
-            validateInviteeTeamInfo(matchInviteFormDto, errors, "invitee");
+            validateInviteeTeamInfo(email, sessionTeamId, matchInviteFormDto, errors, "invitee");
             return;
         }
         String inviteeTeamName = matchInviteFormDto.getInviteeTeamName();
@@ -96,11 +115,14 @@ public class MatchFacade {
         }
     }
 
-    private void validateInviteeTeamInfo(MatchInviteFormDto matchInviteFormDto, Map<String, String> errors,
+    private void validateInviteeTeamInfo(String email, Long sessionTeamId, MatchInviteFormDto matchInviteFormDto,
+                                         Map<String, String> errors,
                                          String fieldName) {
         try {
             memberService.isMyTeam(matchInviteFormDto.getInviteeEmail(), matchInviteFormDto.getInviteeTeamId(),
                     matchInviteFormDto.getInviteeTeamName());
+            Long memberId = memberService.getMemberByEmail(email).getId();
+            inviteAlarmService.validateDuplicateInvite(sessionTeamId, memberId, matchInviteFormDto.getInviteeTeamId());
         } catch (EntityNotFoundException | IllegalArgumentException e) {
             errors.put(fieldName, e.getMessage());
         }
