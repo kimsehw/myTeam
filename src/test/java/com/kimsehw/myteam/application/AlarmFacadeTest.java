@@ -6,7 +6,6 @@ import com.kimsehw.myteam.domain.entity.Member;
 import com.kimsehw.myteam.domain.entity.TeamMember;
 import com.kimsehw.myteam.domain.entity.team.Team;
 import com.kimsehw.myteam.domain.factory.AlarmFactory;
-import com.kimsehw.myteam.dto.alarm.AlarmResponseFormDto;
 import com.kimsehw.myteam.dto.member.MemberFormDto;
 import com.kimsehw.myteam.dto.team.TeamFormDto;
 import com.kimsehw.myteam.repository.TeamRepository;
@@ -15,13 +14,11 @@ import com.kimsehw.myteam.service.alarm.AlarmService;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -81,14 +78,8 @@ class AlarmFacadeTest {
         alarmService.send(AlarmFactory.createMatchInviteAlarm(m2, m1, t2, t1, null, 2));
         alarmService.send(AlarmFactory.createMatchInviteAlarm(m3, m1, t3, t1, null, 2));
 
-        alarmService.send(AlarmFactory.createMatchInviteResponseAlarm(m3, m2, t2, t3, false));
-        alarmService.send(AlarmFactory.createMatchInviteResponseAlarm(m1, m3, t1, t3, false));
+        alarmService.send(AlarmFactory.createMatchInviteResponseAlarm(m3, m2, t2, t3, null, 2, false));
+        alarmService.send(AlarmFactory.createMatchInviteResponseAlarm(m1, m3, t1, t3, null, 2, false));
     }
 
-    @ParameterizedTest
-    @Transactional
-    void t() {
-        AlarmResponseFormDto alarmResponseFormDto = new AlarmResponseFormDto();
-        alarmFacade.sendResponseWithAction(alarmResponseFormDto, "aaa@test.com");
-    }
 }

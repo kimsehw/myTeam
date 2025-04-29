@@ -98,6 +98,7 @@ public class AlarmFacade {
             Team fromTeam = teamService.findById(alarmResponseFormDto.getFromTeamId());
             addMatch(alarmResponseFormDto.getResponse(), matchInviteAlarm, toTeam, fromTeam);
             alarmService.send(AlarmFactory.createMatchInviteResponseAlarm(member, toMember, fromTeam, toTeam,
+                    matchInviteAlarm.getMatchDate(), matchInviteAlarm.getMatchTime(),
                     alarmResponseFormDto.getResponse()));
         } catch (IllegalArgumentException e) {
             if (!to_info_pass) {
@@ -110,6 +111,7 @@ public class AlarmFacade {
     private void addMatch(boolean response, MatchInviteAlarm matchInviteAlarm, Team toTeam, Team fromTeam) {
         if (response) {
             matchService.addMatchOn(fromTeam, toTeam, matchInviteAlarm.getMatchDate(), matchInviteAlarm.getMatchTime());
+            matchService.addMatchOn(toTeam, fromTeam, matchInviteAlarm.getMatchDate(), matchInviteAlarm.getMatchTime());
         }
     }
 

@@ -24,8 +24,8 @@ public class AlarmFactory {
     }
 
     public static MatchInviteAlarm createMatchInviteResponseAlarm(Member fromMember, Member toMember, Team fromTeam,
-                                                                  Team toTeam,
+                                                                  Team toTeam, LocalDateTime matchDate, int matchTime,
                                                                   boolean response) {
-        return new MatchInviteAlarm(fromMember, toMember, fromTeam, toTeam, response);
+        return new MatchInviteAlarm(fromMember, toMember, fromTeam, toTeam, matchDate, matchTime, response);
     }
 }
