@@ -55,6 +55,7 @@ public class AlarmRepositoryCustomImpl extends AbstractBasicAlarmRepositoryCusto
         return Optional.ofNullable(queryFactory.select(alarm).from(alarm)
                 .join(alarm.fromMember).fetchJoin()
                 .join(alarm.toMember).fetchJoin()
+                .where(alarm.id.eq(alarmId))
                 .fetchOne());
     }
 }

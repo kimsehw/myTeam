@@ -1,5 +1,6 @@
 package com.kimsehw.myteam.repository.alarm.invite.team;
 
+import com.kimsehw.myteam.constant.alarm.AlarmType;
 import com.kimsehw.myteam.domain.entity.QMember;
 import com.kimsehw.myteam.domain.entity.alarm.QTeamMemInviteAlarm;
 import com.kimsehw.myteam.domain.entity.alarm.TeamMemInviteAlarm;
@@ -55,6 +56,17 @@ public class TeamMemInviteAlarmRepositoryCustomImpl extends
         return Optional.ofNullable(queryFactory.select(alarm).from(alarm)
                 .join(alarm.fromMember).fetchJoin()
                 .join(alarm.toMember).fetchJoin()
+                .where(alarm.id.eq(alarmId))
                 .fetchOne());
+    }
+
+    @Override
+    public List<Long> findToMemberIdsByFromMemberIdAndFromTeamId(Long fromMemId, Long teamId) {
+        QTeamMemInviteAlarm alarm = QTeamMemInviteAlarm.teamMemInviteAlarm;
+        return queryFactory.select(alarm.toTeam.id).from(alarm)
+                .where(alarm.fromMember.id.eq(fromMemId)
+                        .and(alarm.fromTeam.id.eq(teamId))
+                        .and(alarm.alarmType.eq(AlarmType.TEAM_INVITE)))
+                .fetch();
     }
 }
